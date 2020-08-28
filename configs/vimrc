@@ -1,0 +1,49 @@
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/fzf.vim'
+Plug 'chrisbra/colorizer'
+Plug 'tpope/vim-dispatch'
+Plug 'vim-scripts/paredit.vim'
+Plug 'tpope/vim-fireplace'
+call plug#end()
+
+filetype indent plugin on
+syntax on
+set hlsearch
+set ignorecase
+set smartcase
+set nowrap
+set number relativenumber
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set spelllang=en,es spell
+set colorcolumn=80
+colorscheme elflord
+
+" remove trailing whitespaces
+au BufWritePre * %s/\s\+$//e
+
+" underline spell errors
+hi clear SpellBad
+hi SpellBad cterm=underline ctermbg=red ctermfg=white
+
+" better preview window
+set splitbelow
+au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" paredit
+let g:paredit_electric_return=0
+
+" bindings
+let mapleader=","
+let maplocalleader="\<Space>"
+nnoremap <leader><leader> :Files<CR>
+nnoremap <leader><localleader> :Buffers<CR>
+nnoremap <leader>r :Start lein repl<CR>
+nnoremap <leader>s :set spell!<CR>
+nnoremap <leader>c :Start! compile %<CR>

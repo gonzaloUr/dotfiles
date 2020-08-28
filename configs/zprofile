@@ -1,0 +1,22 @@
+# add to path
+export PATH=$PATH:~/.local/bin
+
+# programs
+export EDITOR=vim
+export BROWSER=chromium
+export READER=zathura
+export VIEWER=sxiv
+export PLAYER=mpv
+export TERMINAL=st
+
+# xdg
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+# less bloated home dir
+export LESSHISTFILE='-'
+export GOPATH="$XDG_DATA_HOME"/go
+
+# startx if dwm is not running
+[ "$(tty)" = "/dev/tty1" ] && ( pgrep -x dwm || startx )

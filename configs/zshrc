@@ -1,0 +1,49 @@
+autoload -U colors && colors
+PROMPT="%B%{$fg[green]%}%n@%M%{$fg[white]%}:%1/%b "
+
+autoload -Uz compinit
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)
+
+# Use vim keys in tab complete menu:
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+
+HISTSIZE=10000
+SAVEHIST=10000
+mkdir -p ~/.cache/zsh
+HISTFILE=~/.cache/zsh/history
+
+bindkey -v
+
+alias ls='ls --color=auto --group-directories-first'
+alias rm='rm -i'
+alias su='sudo -i'
+alias grep='grep --color=auto'
+alias v="$EDITOR"
+alias c=clear
+alias l=ls
+alias la='ls -a'
+alias ll='ls -la'
+alias d=cd
+alias e=exit
+
+bindkey -s '^o' 'lfcd\n'
+
+lfcd() {
+    tmp="$(mktemp)"
+    rover -last-dir-path="$tmp"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        if [ -d "$dir" ]; then
+            if [ "$dir" != "$(pwd)" ]; then
+                cd "$dir"
+            fi
+        fi
+    fi
+}
