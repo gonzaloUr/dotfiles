@@ -1,0 +1,16 @@
+src/dmenu/*.o
+src/dmenu/dmenu
+src/dmenu/stest
+src/dmenu/config.h
+
+src/dwm/*.o
+src/dwm/dwm
+src/dwm/config.h
+
+src/slock/*.o
+src/slock/slock
+src/slock/config.h
+
+src/st/*.o
+src/st/st
+src/st/config.h
