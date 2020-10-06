@@ -14,3 +14,9 @@ src/slock/config.h
 src/st/*.o
 src/st/st
 src/st/config.h
+
+src/slstatus/slstatus
+src/slstatus/slstatus.o
+src/slstatus/config.h
+src/slstatus/util.o
+src/slstatus/components/*.o

@@ -1,3 +1,5 @@
 dunst &
-statusbar &
+slstatus &
+xcompmgr &
+[ -x ~/.setbg ] && ~/.setbg
 exec dwm

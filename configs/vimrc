@@ -19,7 +19,6 @@ set number relativenumber
 set tabstop=2
 set shiftwidth=2
 set expandtab
-set colorcolumn=81
 colorscheme desert
 
 " remove trailing whitespaces
@@ -33,7 +32,7 @@ hi SpellBad cterm=underline ctermbg=none ctermfg=red
 set splitbelow
 au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" indent go code with tabs
+" indent go with tabs
 au FileType go set expandtab&
 
 " bindings
@@ -44,4 +43,4 @@ nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>s :set spell!<CR>
 nnoremap <leader>e :set spelllang=es<CR>
 nnoremap <leader>i :set spelllang=en<CR>
-nnoremap <leader>c :!pdflatex %<CR>
+nnoremap <leader>c :!pdflatex -halt-on-error %<CR>

@@ -13,6 +13,8 @@ xbps-install -y tlp
 # xorg
 xbps-install -y xorg
 xbps-install -y dunst
+xbps-install -y xcompmgr
+xbps-install -y xwallpaper
 
 # multimedia
 xbps-install -y alsa-utils

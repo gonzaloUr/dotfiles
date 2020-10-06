@@ -19,3 +19,6 @@ export XDG_CACHE_HOME="$HOME/.cache"
 # less bloated home dir
 export LESSHISTFILE='-'
 export GOPATH="$XDG_DATA_HOME"/go
+
+# add go binaries to path
+export PATH=$PATH:$GOPATH/bin
