@@ -15,12 +15,13 @@ xbps-install -y xorg
 xbps-install -y dunst
 xbps-install -y xcompmgr
 xbps-install -y xwallpaper
+xbps-install -y pywal
 
 # multimedia
 xbps-install -y alsa-utils
 xbps-install -y alsa-plugins-pulseaudio
 xbps-install -y pulseaudio
-xbps-install -y pavucontrol
+xbps-install -y ncpamixer
 
 # utilities
 xbps-install -y fzf
@@ -30,9 +31,9 @@ xbps-install -y acpi
 xbps-install -y xbacklight
 
 # programs
-xbps-install -y vim-x11
+xbps-install -y vim-huge
 xbps-install -y lf
-xbps-install -y icecat
+xbps-install -y firefox
 xbps-install -y mpv
 xbps-install -y sxiv
 xbps-install -y zathura
