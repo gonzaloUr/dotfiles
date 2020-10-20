@@ -15,7 +15,7 @@ xbps-install -y xorg
 xbps-install -y dunst
 xbps-install -y xcompmgr
 xbps-install -y xwallpaper
-xbps-install -y pywal
+xbps-install -y xbacklight
 
 # multimedia
 xbps-install -y alsa-utils
@@ -28,7 +28,6 @@ xbps-install -y fzf
 xbps-install -y entr
 xbps-install -y simple-mtpfs
 xbps-install -y acpi
-xbps-install -y xbacklight
 
 # programs
 xbps-install -y vim-huge

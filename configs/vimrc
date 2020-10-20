@@ -6,7 +6,7 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf.vim'
 Plug 'chrisbra/colorizer'
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
 filetype indent plugin on
@@ -34,7 +34,7 @@ au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " golang
 au FileType go set expandtab&
-let g:go_fmt_command="goimports"
+let g:go_play_browser_comand="$BROWSER %URL% &"
 
 " bindings
 let mapleader=","
@@ -44,4 +44,4 @@ nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>s :set spell!<CR>
 nnoremap <leader>e :set spelllang=es<CR>
 nnoremap <leader>i :set spelllang=en<CR>
-nnoremap <leader>c :!pdflatex -halt-on-error %<CR>
+nnoremap <leader>c :!pdflatex -halt-on-error --shell-escape %<CR>
