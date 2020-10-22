@@ -1,5 +1,6 @@
 dunst &
-statusbar &
 xcompmgr &
+statusbar &
+sxhkd &
 ~/.setbg
 exec dwm

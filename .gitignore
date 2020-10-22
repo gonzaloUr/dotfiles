@@ -20,3 +20,6 @@ src/slstatus/slstatus.o
 src/slstatus/config.h
 src/slstatus/util.o
 src/slstatus/components/*.o
+
+src/dwmblocks/dwmblocks
+src/dwmblocks/blocks.h

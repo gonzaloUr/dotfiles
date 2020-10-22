@@ -7,6 +7,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf.vim'
 Plug 'chrisbra/colorizer'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'yggdroot/indentline'
 call plug#end()
 
 filetype indent plugin on
@@ -16,8 +17,8 @@ set ignorecase
 set smartcase
 set nowrap
 set number relativenumber
-set tabstop=2
-set shiftwidth=2
+set tabstop=4
+set shiftwidth=4
 set expandtab
 colorscheme desert
 
@@ -35,6 +36,14 @@ au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " golang
 au FileType go set expandtab&
 let g:go_play_browser_comand="$BROWSER %URL% &"
+
+" indentline
+let g:indentLine_char='>'
+let g:indentLine_leadingSpaceEnabled=1
+let g:indentLine_leadingSpaceChar='-'
+
+" gruvbox
+let g:gruvbox_termcolors=16
 
 " bindings
 let mapleader=","

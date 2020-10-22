@@ -16,6 +16,7 @@ xbps-install -y dunst
 xbps-install -y xcompmgr
 xbps-install -y xwallpaper
 xbps-install -y xbacklight
+xbps-install -y sxhkd
 
 # multimedia
 xbps-install -y alsa-utils
@@ -41,6 +42,7 @@ xbps-install -y git
 xbps-install -y tig
 xbps-install -y htop
 xbps-install -y calcurse
+xbps-install -y shellcheck
 
 # src dependencies
 xbps-install -y base-devel
