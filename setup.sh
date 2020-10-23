@@ -43,6 +43,7 @@ xbps-install -y tig
 xbps-install -y htop
 xbps-install -y calcurse
 xbps-install -y shellcheck
+xbps-install -y scrot
 
 # src dependencies
 xbps-install -y base-devel
