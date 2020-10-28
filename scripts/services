@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# setup acpid service
+[ -e /var/service/acpid ] || ln -s /etc/sv/acpid /var/service
+
+# setup dbus service
+[ -e /var/service/dbus ] || ln -s /etc/sv/dbus /var/service
+
+# setup tlp service
+[ -e /var/service/tlp ] || ln -s /etc/sv/tlp /var/service
+
+# setup crond service
+[ -e /var/service/crond ] || ln -s /etc/sv/crond /var/service
+
+# setup NetworkManager service
+[ -e /var/service/dhcpcd ] && rm /var/service/dhcpcd
+[ -e /var/service/wpa_supplicant ] && rm /var/service/wpa_supplicant
+[ -e /var/service/wicd ] && rm /var/service/wicd
+[ -e /var/service/NetworkManager ] || ln -s /etc/sv/NetworkManager /var/service
+
+# setup bluez service
+[ -e /var/service/bluetoothd ] || ln -s /etc/sv/bluetoothd /var/service
+
+# setup alsa service
+[ -e /var/service/alsa ] || ln -s /etc/sv/alsa /var/service
