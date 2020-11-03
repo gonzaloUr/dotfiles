@@ -19,6 +19,8 @@ set number relativenumber
 set tabstop=2
 set shiftwidth=2
 set expandtab
+set splitbelow
+set splitright
 colorscheme desert
 
 " remove trailing whitespaces

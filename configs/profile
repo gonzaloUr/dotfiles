@@ -25,3 +25,6 @@ export FZF_DEFAULT_OPTS='--color=16 --no-unicode'
 
 # add go binaries to path
 export PATH=$PATH:$GOPATH/bin
+
+# fix java apps
+export _JAVA_AWT_WM_NONREPARENTING=1

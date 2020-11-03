@@ -30,7 +30,6 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
-	{ "IceCat",   NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
 /* layout(s) */
@@ -46,6 +45,15 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
+
+/* https://cgit.freedesktop.org/xorg/proto/x11proto/tree/XF86keysym.h */
+#define XF86MonBrightnessDown 0x1008ff03
+#define XF86MonBrightnessUp   0x1008ff02
+#define XF86AudioMute         0x1008ff12
+#define XF86AudioLowerVolume  0x1008ff11
+#define XF86AudioRaiseVolume  0x1008ff13
+#define XF86AudioMicMute      0x1008FFB2
+
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -61,10 +69,25 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
+static const char *brigdown[] = { "xbacklight", "-dec", "10", NULL };
+static const char *brigup[]   = { "xbacklight", "-inc", "10", NULL };
+static const char *volmute[]  = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
+static const char *volup[]    = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%", NULL };
+static const char *voldown[]  = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-10%", NULL };
+static const char *micmute[]  = { "pactl", "set-source-mute", "@DEFAULT_SOURCE@", "toggle", NULL };
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+
+	{ 0,                            XF86MonBrightnessDown, spawn, {.v = brigdown } },
+	{ 0,                            XF86MonBrightnessUp,   spawn, {.v = brigup } },
+	{ 0,                            XF86AudioMute,         spawn, {.v = volmute } },
+	{ 0,                            XF86AudioRaiseVolume,  spawn, {.v = volup } },
+	{ 0,                            XF86AudioLowerVolume,  spawn, {.v = voldown } },
+	{ 0,                            XF86AudioMicMute,      spawn, {.v = micmute } },
+
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -80,7 +103,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY,                       XK_s,      togglesticky,   {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },

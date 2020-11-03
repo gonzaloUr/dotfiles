@@ -1,4 +1,2 @@
 dunst &
-statusbar &
-sxhkd &
 exec dwm

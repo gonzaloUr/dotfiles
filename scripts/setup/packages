@@ -4,7 +4,6 @@
 xbps-install -y curl
 xbps-install -y wget
 xbps-install -y unzip
-xbps-install -y zsh
 xbps-install -y cronie
 xbps-install -y tlp
 
@@ -16,7 +15,6 @@ xbps-install -y NetworkManager
 xbps-install -y xorg
 xbps-install -y xbacklight
 xbps-install -y dunst
-xbps-install -y sxhkd
 
 # multimedia
 xbps-install -y alsa-utils
@@ -31,6 +29,8 @@ xbps-install -y simple-mtpfs
 xbps-install -y acpi
 
 # programs
+xbps-install -y slock
+xbps-install -y dmenu
 xbps-install -y vim-x11
 xbps-install -y lf
 xbps-install -y firefox
@@ -42,7 +42,7 @@ xbps-install -y git
 xbps-install -y htop
 xbps-install -y shellcheck
 xbps-install -y scrot
-xbps-install -y dropbox
+xbps-install -y MEGAcmd
 
 # src dependencies
 xbps-install -y base-devel
@@ -52,4 +52,4 @@ xbps-install -y libXft-devel
 xbps-install -y libXrandr-devel
 
 # fonts
-xbps-install -y font-sourcecodepro
+xbps-install -y terminus-font
