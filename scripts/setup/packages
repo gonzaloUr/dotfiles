@@ -6,6 +6,7 @@ xbps-install -y wget
 xbps-install -y unzip
 xbps-install -y cronie
 xbps-install -y tlp
+xbps-install -y zsh
 
 # wireless
 xbps-install -y bluez
@@ -52,4 +53,4 @@ xbps-install -y libXft-devel
 xbps-install -y libXrandr-devel
 
 # fonts
-xbps-install -y terminus-font
+xbps-install -y font-hack-ttf

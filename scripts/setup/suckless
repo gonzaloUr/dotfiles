@@ -7,7 +7,6 @@ cd /usr/local/src
 # clone suckless programs
 git clone https://git.suckless.org/dwm
 git clone https://git.suckless.org/st
-git clone https://git.suckless.org/scroll
 
 # dwm patches
 mkdir -p dwm/patches
@@ -21,4 +20,5 @@ cd ../..
 mkdir -p st/patches
 cd st/patches
 wget https://st.suckless.org/patches/anysize/st-anysize-0.8.1.diff
+wget https://st.suckless.org/patches/scrollback/st-scrollback-20200419-72e3f6c.diff
 cd ../..
