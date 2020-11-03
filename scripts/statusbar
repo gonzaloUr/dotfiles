@@ -1,0 +1,42 @@
+#!/bin/sh
+now=0
+update=0
+
+while true
+do
+  # clock
+  if [ $((now % 60)) -eq 0 ]
+  then
+    clock="$(date '+%b %d %a %H:%M')"
+    update=1
+  fi
+
+  # battery
+  if [ $((now % 30)) -eq 0 ]
+  then
+    batt="$(cat /sys/class/power_supply/BAT0/capacity)"
+    update=1
+  fi
+
+  # memory
+  if [ $((now % 15)) -eq 0 ]
+  then
+    mem="$(free -h | awk '(NR==2){ print $3 }' | sed 's/i//')"
+    update=1
+  fi
+
+  # update now
+  now="$(date '+%S')"
+  now="${now#0}"
+  now=$((now + 1))
+
+  # update status bar
+  if [ $update -eq 1 ]
+  then
+    xsetroot -name " [$mem $batt%] [$clock] "
+  fi
+
+  # sleep
+  sleep 1
+  update=0
+done
