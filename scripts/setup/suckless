@@ -7,18 +7,5 @@ cd /usr/local/src
 # clone suckless programs
 git clone https://git.suckless.org/dwm
 git clone https://git.suckless.org/st
-
-# dwm patches
-mkdir -p dwm/patches
-cd dwm/patches
-wget https://dwm.suckless.org/patches/alpha/dwm-fixborders-6.2.diff
-wget https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.2.diff
-wget https://dwm.suckless.org/patches/statusallmons/dwm-statusallmons-6.2.diff
-cd ../..
-
-# st patches
-mkdir -p st/patches
-cd st/patches
-wget https://st.suckless.org/patches/anysize/st-anysize-0.8.1.diff
-wget https://st.suckless.org/patches/scrollback/st-scrollback-20200419-72e3f6c.diff
-cd ../..
+git clone https://git.suckless.org/slock
+git clone https://git.suckless.org/dmenu

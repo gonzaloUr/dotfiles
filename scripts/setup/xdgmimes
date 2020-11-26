@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Registered apps /usr/share/applications/*.desktop
+
+# pdf
+xdg-mime default org.pwmt.zathura.desktop application/pdf
+
+# video
+xdg-mime default mpv.desktop video/avi
+xdg-mime default mpv.desktop video/mpeg
+xdg-mime default mpv.desktop video/mpv
+xdg-mime default mpv.desktop video/mp4
+xdg-mime default mpv.desktop video/webm
+xdg-mime default mpv.desktop video/ogg
+
+# image
+xdg-mime default sxiv.desktop image/bmp
+xdg-mime default sxiv.desktop image/gif
+xdg-mime default sxiv.desktop image/jpeg
+xdg-mime default sxiv.desktop image/png
+xdg-mime default sxiv.desktop image/webp
+
+# web
+xdg-mime default firefox.desktop application/xml
+xdg-mime default firefox.desktop text/html

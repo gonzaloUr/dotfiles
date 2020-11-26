@@ -1,6 +1,0 @@
-#!/bin/sh
-case "$(file --mime-type "$1" -b )" in
-  application/pdf) "$READER" "$1" ;;
-  image/*) "$VIEWER" "$1" ;;
-  video/*) "$PLAYER" "$1" ;;
-esac

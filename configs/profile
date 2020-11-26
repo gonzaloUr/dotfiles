@@ -9,7 +9,6 @@ export READER=zathura
 export VIEWER=sxiv
 export PLAYER=mpv
 export TERMINAL=st
-export OPENER=open
 
 # xdg
 export XDG_CONFIG_HOME="$HOME/.config"
