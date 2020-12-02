@@ -95,34 +95,41 @@ unsigned int tabspaces = 8;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-  /* 8 normal colors */
-	[0] = "#fbf1c7", /* hard contrast: #f9f5d7 / soft contrast: #f2e5bc */
-	[1] = "#cc241d", /* red     */
-	[2] = "#98971a", /* green   */
-	[3] = "#d79921", /* yellow  */
-	[4] = "#458588", /* blue    */
-	[5] = "#b16286", /* magenta */
-	[6] = "#689d6a", /* cyan    */
-	[7] = "#7c6f64", /* white   */
+	/* 8 normal colors */
+	"#212121", /* black   */
+	"#c30771", /* red     */
+	"#10a778", /* green   */
+	"#a89c14", /* yellow  */
+	"#008ec4", /* blue    */
+	"#523c79", /* magenta */
+	"#20a5ba", /* cyan    */
+	"#e0e0e0", /* white   */
 
 	/* 8 bright colors */
-	[8]  = "#928374", /* black   */
-	[9]  = "#9d0006", /* red     */
-	[10] = "#79740e", /* green   */
-	[11] = "#b57614", /* yellow  */
-	[12] = "#076678", /* blue    */
-	[13] = "#8f3f71", /* magenta */
-	[14] = "#427b58", /* cyan    */
-  [15] = "#3c3836", /* white   */
+	"#424242", /* black   */
+	"#fb007a", /* red     */
+	"#5fd7af", /* green   */
+	"#f3e430", /* yellow  */
+	"#20bbfc", /* blue    */
+	"#6855de", /* magenta */
+	"#4fb8cc", /* cyan    */
+	"#f1f1f1", /* white   */
+
+	[255] = 0,
+
+	/* more colors can be added after 255 to use with DefaultXX */
+	"#212121",
+	"#e0e0e0",
 };
 
 /*
  * Default colors (colorname index)
  * foreground, background, cursor
  */
-unsigned int defaultfg = 15;
-unsigned int defaultbg = 0;
-static unsigned int defaultcs = 15;
+
+unsigned int defaultfg = 8;
+unsigned int defaultbg = 15;
+static unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
 
 /*
@@ -192,6 +199,9 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+	{ MODKEY,               XK_k,           kscrollup,      {.i = +5} },
+	{ MODKEY,               XK_j,           kscrolldown,    {.i = +5} },
+	{ MODKEY,               XK_l,           kscrolldown,    {.i = -1} },
 };
 
 /*

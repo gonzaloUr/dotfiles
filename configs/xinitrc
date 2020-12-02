@@ -1,3 +1,4 @@
 dunst &
 statusbar &
+[ -x ~/.setbg ] && ~/.setbg
 exec dwm

@@ -43,6 +43,7 @@ xbps-install -y scrot
 xbps-install -y MEGAcmd
 xbps-install -y remind
 xbps-install -y ncpamixer
+xbps-install -y xwallpaper
 
 # src dependencies
 xbps-install -y base-devel

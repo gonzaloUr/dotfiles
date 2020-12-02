@@ -1,5 +1,5 @@
 autoload -U colors && colors
-PROMPT="%B%{$fg[green]%}%n@%M%{$fg[white]%}:%1/%b "
+PROMPT="%B%{$fg[green]%}%n@%M%{$fg[blue]%}:%1/%b "
 
 autoload -Uz compinit
 zstyle ':completion:*' menu select
