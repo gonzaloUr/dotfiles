@@ -6,6 +6,7 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf.vim'
 Plug 'chrisbra/colorizer'
+Plug 'lervag/vimtex'
 call plug#end()
 
 filetype indent plugin on
@@ -36,6 +37,9 @@ au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " golang
 au FileType go set expandtab&
 
+" vimtex
+let g:vimtex_matchparen_enabled=0
+
 " bindings
 let mapleader=","
 let maplocalleader="\<Space>"
@@ -44,5 +48,3 @@ nnoremap <leader>. :Buffers<CR>
 nnoremap <leader>s :set spell!<CR>
 nnoremap <leader>e :set spelllang=es<CR>
 nnoremap <leader>i :set spelllang=en<CR>
-nnoremap <leader>c :!pdflatex -halt-on-error --shell-escape %<CR>
-nnoremap <leader>p :!zathura %:r.pdf &<CR>
