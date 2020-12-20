@@ -3,9 +3,9 @@ static const char *user  = "nobody";
 static const char *group = "nogroup";
 
 static const char *colorname[NUMCOLS] = {
-	[INIT] =   "#282828",     /* after initialization */
-	[INPUT] =  "#fbf1c7",   /* during input */
-	[FAILED] = "#cc241d",   /* wrong password */
+	[INIT] =   "black",     /* after initialization */
+	[INPUT] =  "#ffffff",   /* during input */
+	[FAILED] = "#f66151",   /* wrong password */
 };
 
 /* treat a cleared input like a wrong password (color) */

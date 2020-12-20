@@ -95,32 +95,39 @@ unsigned int tabspaces = 8;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
+  /* 'GNOME Light' theme from GNOME Terminal.
+   *
+   * Specifically, extracted from this file in the GNOME Terminal source:
+   * https://gitlab.gnome.org/GNOME/gnome-terminal/-/blob/25c96f18ac270c3d1cf5b2b5e320ce29ebc8282a/src/profile-editor.c.
+   */
+
 	/* 8 normal colors */
-	"#fbf1c7", /* black   */
-	"#cc241d", /* red     */
-	"#98971a", /* green   */
-	"#d79921", /* yellow  */
-	"#458588", /* blue    */
-	"#b16286", /* magenta */
-	"#689d6a", /* cyan    */
-	"#7c6f64", /* white   */
+	"#171421", /* black   */
+	"#c01c28", /* red     */
+	"#26a269", /* green   */
+	"#a2734c", /* yellow  */
+	"#12488b", /* blue    */
+	"#a347ba", /* magenta */
+	"#2aa1b3", /* cyan    */
+	"#d0cfcc", /* white   */
 
 	/* 8 bright colors */
-	"#928374", /* black   */
-	"#9d0006", /* red     */
-	"#79740e", /* green   */
-	"#b57614", /* yellow  */
-	"#076678", /* blue    */
-	"#8f3f71", /* magenta */
-	"#427b58", /* cyan    */
-	"#3c3836", /* white   */
+	"#5e5c64", /* black   */
+	"#f66151", /* red     */
+	"#33d17a", /* green   */
+	"#e9ad0c", /* yellow  */
+	"#2a7bde", /* blue    */
+	"#c061cb", /* magenta */
+	"#33c7de", /* cyan    */
+	"#ffffff", /* white   */
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#3c3836", /* foreground */
-	"#fbf1c7", /* background */
-	"#3c3836", /* cursor     */
+	"#171421", /* foreground     */
+	"#ffffff", /* background     */
+	"#171421", /* cursor         */
+	"#ffffff", /* reverse cursor */
 };
 
 /*
@@ -131,7 +138,7 @@ static const char *colorname[] = {
 unsigned int defaultfg = 256;
 unsigned int defaultbg = 257;
 static unsigned int defaultcs = 258;
-static unsigned int defaultrcs = 257;
+static unsigned int defaultrcs = 259;
 
 /*
  * Default shape of cursor
