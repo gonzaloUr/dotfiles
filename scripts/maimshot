@@ -1,0 +1,3 @@
+#!/bin/sh
+
+maim -q -f png -s ~/$(date '+out_%d_%b_%H:%M:%S').png

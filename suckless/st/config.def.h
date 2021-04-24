@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "monospace:style=Regular:pixelsize=16:antialias=true:autohint=true";
+static char *font = "DejavuSansMono:pixelsize=14:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
@@ -93,41 +93,38 @@ char *termname = "st-256color";
  */
 unsigned int tabspaces = 8;
 
+/* bg opacity */
+float alpha = 0.8;
+
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-  /* 'GNOME Light' theme from GNOME Terminal.
-   *
-   * Specifically, extracted from this file in the GNOME Terminal source:
-   * https://gitlab.gnome.org/GNOME/gnome-terminal/-/blob/25c96f18ac270c3d1cf5b2b5e320ce29ebc8282a/src/profile-editor.c.
-   */
-
 	/* 8 normal colors */
-	"#171421", /* black   */
-	"#c01c28", /* red     */
-	"#26a269", /* green   */
-	"#a2734c", /* yellow  */
-	"#12488b", /* blue    */
-	"#a347ba", /* magenta */
-	"#2aa1b3", /* cyan    */
-	"#d0cfcc", /* white   */
+	"#282828", /* black hard contrast: #1d2021 / soft contrast: #32302f */
+	"#cc241d", /* red     */
+	"#98971a", /* green   */
+	"#d79921", /* yellow  */
+	"#458588", /* blue    */
+	"#b16286", /* magenta */
+	"#689d6a", /* cyan    */
+	"#a89984", /* white   */
 
 	/* 8 bright colors */
-	"#5e5c64", /* black   */
-	"#f66151", /* red     */
-	"#33d17a", /* green   */
-	"#e9ad0c", /* yellow  */
-	"#2a7bde", /* blue    */
-	"#c061cb", /* magenta */
-	"#33c7de", /* cyan    */
-	"#ffffff", /* white   */
+	"#928374", /* black   */
+	"#fb4934", /* red     */
+	"#b8bb26", /* green   */
+	"#fabd2f", /* yellow  */
+	"#83a598", /* blue    */
+	"#d3869b", /* magenta */
+	"#8ec07c", /* cyan    */
+	"#ebdbb2", /* white   */
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#171421", /* foreground     */
-	"#ffffff", /* background     */
-	"#171421", /* cursor         */
-	"#ffffff", /* reverse cursor */
+	"#ebdbb2", /* foreground     */
+	"#282828", /* background     */
+	"#ebdbb2", /* cursor         */
+	"#282828", /* reverse cursor */
 };
 
 /*

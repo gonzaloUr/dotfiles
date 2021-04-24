@@ -1,9 +1,10 @@
 # add to path
+export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:~/.local/bin/scripts
 
 # programs
-export EDITOR=vim
+export EDITOR=nvim
 export BROWSER=firefox
 export READER=zathura
 export VIEWER=sxiv
@@ -20,7 +21,7 @@ export LESSHISTFILE='-'
 export GOPATH="$XDG_DATA_HOME"/go
 
 # simplify fzf style
-export FZF_DEFAULT_OPTS='--color=16 --no-unicode'
+# export FZF_DEFAULT_OPTS='--color=16 --no-unicode'
 
 # add go binaries to path
 export PATH=$PATH:$GOPATH/bin

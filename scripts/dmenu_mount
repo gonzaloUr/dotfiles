@@ -1,0 +1,65 @@
+#!/bin/sh
+
+better_output='
+1d
+s/="/=/g
+s/" */:/g
+s/:$//g
+'
+
+filter_no_mountpoint='
+BEGIN {
+    OFS = ":"
+}
+
+$8 == "MOUNTPOINT=" {
+    print $1, $2, $3, $4, $5, $6, $7
+}
+'
+
+combine_part_and_disk='
+BEGIN {
+    OFS = ":"
+}
+
+$7 == "TYPE=disk" {
+    vendor = $2
+    model = $3
+}
+
+$7 == "TYPE=part" {
+    print $1, vendor, model, $4, $5, $6, $7
+}
+'
+
+pretty_print='
+s/ *:/:/g
+s/= */=/g
+s/:TYPE=part//
+s/:[[:alnum:]][[:alnum:]]*=/:/g
+s/[[:alnum:]][[:alnum:]]*=//g
+'
+
+out="$(lsblk -p -P -o 'LABEL,VENDOR,MODEL,SIZE,NAME,FSTYPE,TYPE,MOUNTPOINT' |\
+    sed "$better_output" |\
+    awk -F: "$filter_no_mountpoint" |\
+    awk -F: "$combine_part_and_disk" |\
+    sed "$pretty_print" |\
+    dmenu -l 10 -p 'Mount drive')"
+
+label="$(echo "$out" | awk -F: '{ print $1 }')"
+path="$(echo "$out" | awk -F: '{ print $5 }')"
+fstype="$(echo "$out" | awk -F: '{ print $6 }')"
+
+sudo -A mkdir -p "/mnt/$label"
+
+case "$fstype" in
+    'vfat') sudo -A mount -t vfat "$path" "/mnt/$label" -o rw,umask=0000 ;;
+    'exfat') sudo -A mount "$path" "$/mnt/$label" -o uid="$(id -u)",gid="$(id -g)" ;;
+    *)
+        sudo -A mount "$path" "/mnt/$label"
+        user="$(whoami)"
+        ug="$(groups | awk '{ print $1 }')"
+        sudo -A chown "$user":"$ug" "/mnt/$label"
+    ;;
+esac

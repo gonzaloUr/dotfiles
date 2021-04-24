@@ -1,0 +1,10 @@
+#!/bin/sh
+
+monitor="$(xrandr --listactivemonitors |\
+    sed '1d ; s/^ *//g' |\
+    awk '{ print $4 }' |\
+    dmenu -p 'Select monitor' -l 10)"
+
+[ -z "$monitor" ] && exit
+
+xrandr --output "$monitor" --off

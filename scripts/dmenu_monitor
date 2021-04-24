@@ -1,0 +1,21 @@
+#!/bin/sh
+
+connected="$(xrandr --listactivemonitors |\
+    sed '1d ; s/^ *//g' |\
+    awk 'BEGIN { ORS = "|" } { print $4 }' |\
+    sed 's/|$//')"
+
+monitor="$(xrandr --query |\
+    grep '\<connected\>' |\
+    grep -v -E "$connected" |\
+    sed 's/ connected.*$//' |\
+    dmenu -p 'Select monitor' -l 10)"
+
+relative_to="$(echo $connected | dmenu -p 'Relative to' -l 10)"
+
+position="$(printf 'right\nleft' | dmenu -p "Relative position to $relative_to" -l 10)"
+
+case $position in
+    'left') xrandr --output "$monitor" --auto --left-of "$relative_to" ;;
+    'right') xrandr --output "$monitor" --auto --right-of "$relative_to" ;;
+esac
