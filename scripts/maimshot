@@ -1,3 +1,15 @@
 #!/bin/sh
 
-maim -q -f png -s ~/$(date '+out_%d_%b_%H:%M:%S').png
+name="$(date '+out_%d_%b_%H:%M:%S').png"
+
+if [ -e ~/Images/screenshots ]
+then
+    out=~/Images/screenshots/"$name"
+elif [ -e ~/Images ]
+then
+    out=~/Images/"$name"
+else
+    out=~/"$name"
+fi
+
+maim -q -f png -s "$out"

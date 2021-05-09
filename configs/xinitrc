@@ -1,4 +1,5 @@
+dwmbar &
+xwallpaper --zoom ~/Images/wallpapers/chihiro1.jpg
+xcompmgr &
 dunst &
-statusbar &
-[ -x ~/.setbg ] && ~/.setbg
-exec dwm
+exec dbus-launch --exit-with-session dwm

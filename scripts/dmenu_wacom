@@ -1,0 +1,15 @@
+#!/bin/sh
+
+devices="$(xsetwacom list devices)"
+out="$(echo "$devices" | awk -F'\t' '{ print $1 }' | dmenu -l 10 -p 'Select device')"
+match="$(echo "$devices" | grep "$out" | head -n1)"
+
+[ -z "$match" ] && exit
+
+id="$(echo "$match" | awk -F'\t' '{ print $2 }')"
+id=${id##id: }
+
+monitors="$(xrandr --listactivemonitors | sed '1d' | awk '{ print $4 }')"
+out="$(echo "$monitors" | dmenu -l 10 -p 'Select display to map to')"
+
+xsetwacom --set "$id" MapToOutput "$out"

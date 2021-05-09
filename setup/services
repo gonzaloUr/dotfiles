@@ -6,6 +6,9 @@
 # setup dbus service
 [ -e /var/service/dbus ] || ln -s /etc/sv/dbus /var/service
 
+# setup elogind
+[ -e /var/service/elogind ] || ln -s /etc/sv/elogind /var/service
+
 # setup tlp service
 [ -e /var/service/tlp ] || ln -s /etc/sv/tlp /var/service
 
@@ -20,6 +23,3 @@
 
 # setup bluez service
 [ -e /var/service/bluetoothd ] || ln -s /etc/sv/bluetoothd /var/service
-
-# setup alsa service
-[ -e /var/service/alsa ] || ln -s /etc/sv/alsa /var/service

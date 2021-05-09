@@ -47,6 +47,8 @@ out="$(lsblk -p -P -o 'LABEL,VENDOR,MODEL,SIZE,NAME,FSTYPE,TYPE,MOUNTPOINT' |\
     sed "$pretty_print" |\
     dmenu -l 10 -p 'Mount drive')"
 
+[ -z "$out" ] && exit
+
 label="$(echo "$out" | awk -F: '{ print $1 }')"
 path="$(echo "$out" | awk -F: '{ print $5 }')"
 fstype="$(echo "$out" | awk -F: '{ print $6 }')"

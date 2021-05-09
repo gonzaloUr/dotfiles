@@ -7,6 +7,9 @@ xbps-install -y unzip
 xbps-install -y cronie
 xbps-install -y tlp
 xbps-install -y zsh
+xbps-install -y zsh-completions
+xbps-install -y zsh-history-substring-search
+xbps-install -y zsh-syntax-highlighting
 
 # wireless
 xbps-install -y bluez
@@ -15,7 +18,11 @@ xbps-install -y NetworkManager
 # xorg
 xbps-install -y xorg
 xbps-install -y xbacklight
+xbps-install -y xclip
+xbps-install -y xsel
 xbps-install -y dunst
+xbps-install -y xcompmgr
+xbps-install -y xwallpaper
 
 # multimedia
 xbps-install -y alsa-plugins-pulseaudio
@@ -38,12 +45,11 @@ xbps-install -y zathura
 xbps-install -y zathura-pdf-mupdf
 xbps-install -y git
 xbps-install -y htop
-xbps-install -y shellcheck
-xbps-install -y scrot
-xbps-install -y MEGAcmd
-xbps-install -y remind
+xbps-install -y maim
 xbps-install -y ncpamixer
-xbps-install -y xwallpaper
+xbps-install -y tig
+xbps-install -y texlive-minimal
+xbps-install -y texlive-science
 
 # src dependencies
 xbps-install -y base-devel
@@ -54,3 +60,6 @@ xbps-install -y libXrandr-devel
 
 # fonts
 xbps-install -y dejavu-fonts-ttf
+xbps-install -y font-mplus-ttf
+xbps-install -y noto-fonts-emoji
+xbps-install -y noto-fonts-ttf

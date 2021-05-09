@@ -1,10 +1,5 @@
-# add to path
-export PATH=$PATH:~/bin
-export PATH=$PATH:~/.local/bin
-export PATH=$PATH:~/.local/bin/scripts
-
 # programs
-export EDITOR=nvim
+export EDITOR=vim
 export BROWSER=firefox
 export READER=zathura
 export VIEWER=sxiv
@@ -16,15 +11,17 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 
-# less bloated home dir
+# https://wiki.archlinux.org/index.php/XDG_Base_Directory#Partial
 export LESSHISTFILE='-'
 export GOPATH="$XDG_DATA_HOME"/go
-
-# simplify fzf style
-# export FZF_DEFAULT_OPTS='--color=16 --no-unicode'
-
-# add go binaries to path
-export PATH=$PATH:$GOPATH/bin
+alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
+alias yarn="yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config"
 
 # fix java apps
 export _JAVA_AWT_WM_NONREPARENTING=1
+
+# path
+export PATH=$PATH:~/bin
+export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/.local/bin/scripts
+export PATH=$PATH:$GOPATH/bin

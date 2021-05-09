@@ -1,0 +1,12 @@
+#!/bin/sh
+devices="$(simple-mtpfs -l)"
+out="$(echo "$devices" | dmenu -l 10 -p 'Select device to mount')"
+match="$(echo "$devices" | grep "$out")"
+
+[ -z "$match" ] && exit
+
+id="$(echo "$match" | awk '{ print $1 }' | tr -d ':')"
+name="$(echo "$match" | awk '{ print $2 }')"
+
+sudo mkdir -p "/mnt/$name"
+sudo simple-mtpfs --device "$id" -o allow_other "/mnt/$name"

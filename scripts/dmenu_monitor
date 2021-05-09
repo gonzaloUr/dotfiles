@@ -1,21 +1,87 @@
 #!/bin/sh
 
-connected="$(xrandr --listactivemonitors |\
-    sed '1d ; s/^ *//g' |\
-    awk 'BEGIN { ORS = "|" } { print $4 }' |\
-    sed 's/|$//')"
+add_monitor="Add monitor"
+remove_monitor="Remove connected monitor"
 
-monitor="$(xrandr --query |\
-    grep '\<connected\>' |\
-    grep -v -E "$connected" |\
-    sed 's/ connected.*$//' |\
-    dmenu -p 'Select monitor' -l 10)"
+# Preguntar al usuario que hacer.
+option="$(printf '%s\n%s' "$add_monitor" "$remove_monitor" | dmenu -l 10)"
 
-relative_to="$(echo $connected | dmenu -p 'Relative to' -l 10)"
+echo $option
 
-position="$(printf 'right\nleft' | dmenu -p "Relative position to $relative_to" -l 10)"
+# Checkear que la opción elegida es valida.
+if !(echo "$option" | grep -xq -E "$add_monitor|$remove_monitor")
+then
+    notify-send 'Invalid option' 'dmenu_monitor'
+    exit 1
+fi
 
-case $position in
-    'left') xrandr --output "$monitor" --auto --left-of "$relative_to" ;;
-    'right') xrandr --output "$monitor" --auto --right-of "$relative_to" ;;
-esac
+if [ "$option" = "$add_monitor" ]
+then
+    # Obtener monitores activos como una regex extendida (para grep -E).
+    active="$(xrandr --listactivemonitors |\
+        sed '1d ; s/^ *//g' |\
+        awk 'BEGIN { ORS = "|" } { print $4 }' |\
+        sed 's/|$//')"
+
+    # Obtener todos los monitores inactivos.
+    unactive="$(xrandr --query |\
+        grep '\<connected\>' |\
+        grep -v -E "$active" |\
+        sed 's/ connected.*$//')"
+
+    # Si no hay monitores inactivos notificar y salir.
+    [ -z "$unactive" ] && notify-send 'No monitors to add!' 'dmenu_monitor' && exit
+
+    # Preguntar al usuario que monitor activar.
+    monitor="$(echo "$unactive" | dmenu -p 'Select monitor' -l 10)"
+
+    # Checkear que el usuario haya elegido un monitor correcto.
+    if !( echo "$unactive" | grep -xq "$monitor" )
+    then
+        notify-send "Invalid monitor $monitor!" 'dmenu_monitor'
+        exit 1
+    fi
+
+    # Elegir un monitor relativo para agregar el nuevo monitor.
+    relative_to="$(echo "$active" | dmenu -p 'Relative to' -l 10)"
+
+    # Checkear que el usuario haya elegido un monitor relativo correcto.
+    if !( echo "$relative_to" | grep -xq "$active" )
+    then
+        notify-send 'Invalid relative monitor!' 'dmenu_monitor'
+        exit 1
+    fi
+
+    # Elegir una posición relativa al monitor relativo.
+    position="$(printf 'right\nleft' |\
+        dmenu -p "Relative position to $relative_to" -l 10)"
+
+    # Checkear que la posición relativa es correcta.
+    if !( printf 'right\nleft' | grep -xq "$position" )
+    then
+        notify-send 'Invalid relative position!' 'dmenu_monitor'
+        exit 1
+    fi
+
+    case $position in
+     'left') xrandr --output "$monitor" --auto --left-of "$relative_to" ;;
+     'right') xrandr --output "$monitor" --auto --right-of "$relative_to" ;;
+    esac
+else
+    # Obtener monitores activos.
+    active="$(xrandr --listactivemonitors |\
+        sed '1d ; s/^ *//g' |\
+        awk '{ print $4 }')"
+
+    # Selecionar monitor a remover.
+    monitor="$(echo "$active" | dmenu -p 'Monitor to remove' -l 10)"
+
+    # Checkear que es un monitor valido.
+    if !(echo "$monitor" | grep -xq "$active")
+    then
+        notify-send 'Invalid monitor to remove' 'dmenu_monitor'
+        exit 1
+    fi
+
+    xrandr --output "$monitor" --off
+fi

@@ -1,11 +1,11 @@
 let link = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-let data_dir = stdpath('data') . '/site'
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 
 if empty(glob(data_dir . '/autoload/plug.vim'))
   silent execute '!curl -fLo ' . data_dir . '/autoload/plug.vim --create-dirs ' . link
 endif
 
-call plug#begin(stdpath('data') . '/plugged')
+call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 Plug 'junegunn/fzf'
 Plug 'chrisbra/colorizer'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -20,9 +20,14 @@ set number relativenumber
 set tabstop=4
 set shiftwidth=4
 set expandtab
-
 set undofile
 set undodir=/tmp
+colorscheme desert
+
+" vim beam/block cursor depending on mode.
+let &t_SI = "\<Esc>[5 q"
+let &t_SR = "\<Esc>[1 q"
+let &t_EI = "\<Esc>[1 q"
 
 " remove trailing whitespaces
 au BufWritePre * %s/\s\+$//e
