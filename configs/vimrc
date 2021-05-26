@@ -6,9 +6,22 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
 endif
 
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
+" misc.
 Plug 'junegunn/fzf'
 Plug 'chrisbra/colorizer'
+
+" syntax.
+Plug 'mxw/vim-jsx'
+Plug 'aklt/plantuml-syntax'
+
+" omnicomplete and extras for programming languages.
+"
+" golang
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" python
+Plug 'davidhalter/jedi-vim'
+" c/c++
+Plug 'rip-rip/clang_complete'
 call plug#end()
 
 filetype indent plugin on
@@ -25,9 +38,9 @@ set undodir=/tmp
 colorscheme desert
 
 " vim beam/block cursor depending on mode.
-let &t_SI = "\<Esc>[5 q"
-let &t_SR = "\<Esc>[1 q"
-let &t_EI = "\<Esc>[1 q"
+" let &t_SI = "\<Esc>[5 q"
+" let &t_SR = "\<Esc>[1 q"
+" let &t_EI = "\<Esc>[1 q"
 
 " remove trailing whitespaces
 au BufWritePre * %s/\s\+$//e
@@ -83,8 +96,8 @@ augroup ft_tex
 augroup end
 
 " bindings
-let mapleader="\<Space>"
-let maplocalleader="-"
+let mapleader="-"
+let maplocalleader="\\"
 
 nnoremap <leader>9 :w \| bp<CR>
 nnoremap <leader>0 :w \| bn<CR>

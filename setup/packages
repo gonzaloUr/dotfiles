@@ -5,8 +5,10 @@ xbps-install -y curl
 xbps-install -y wget
 xbps-install -y unzip
 xbps-install -y cronie
+xbps-install -y wireless_tools
+xbps-install -y net_tools
+xbps-install -y net_tools
 xbps-install -y tlp
-xbps-install -y zsh
 xbps-install -y zsh-completions
 xbps-install -y zsh-history-substring-search
 xbps-install -y zsh-syntax-highlighting
@@ -14,6 +16,10 @@ xbps-install -y zsh-syntax-highlighting
 # wireless
 xbps-install -y bluez
 xbps-install -y NetworkManager
+
+# ntp
+xbps-install -y ntp
+xbps-install -y openntpd
 
 # xorg
 xbps-install -y xorg
@@ -33,10 +39,13 @@ xbps-install -y fzf
 xbps-install -y entr
 xbps-install -y simple-mtpfs
 xbps-install -y acpi
+xbps-install -y tree
 xbps-install -y xdg-utils
+xbps-install -y clipnotify
 
 # programs
-xbps-install -y vim-x11
+xbps-install -y vim-huge # xorg support and python, ruby, lua scripting.
+xbps-install -y abduco
 xbps-install -y lf
 xbps-install -y firefox
 xbps-install -y mpv
@@ -46,10 +55,13 @@ xbps-install -y zathura-pdf-mupdf
 xbps-install -y git
 xbps-install -y htop
 xbps-install -y maim
-xbps-install -y ncpamixer
+xbps-install -y pavucontrol
 xbps-install -y tig
 xbps-install -y texlive-minimal
 xbps-install -y texlive-science
+xbps-install -y shellcheck
+xbps-install -y python3-jedi # python autocompletation used by vim plugin.
+xbps-install -y clang # clang c/c++ compeltation for vim plugin.
 
 # src dependencies
 xbps-install -y base-devel

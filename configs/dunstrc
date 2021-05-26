@@ -29,7 +29,7 @@
     # the top and down respectively.
     # The width can be negative.  In this case the actual width is the
     # screen width minus the width defined in within the geometry option.
-    geometry = "300x0-10+30"
+    geometry = "400x0-10+30"
 
     # Show how many messages are currently hidden (because of geometry).
     indicate_hidden = yes
@@ -57,7 +57,7 @@
     padding = 8
 
     # Horizontal padding.
-    horizontal_padding = 8
+    horizontal_padding = 16
 
     # Defines width in pixels of frame around the notification window.
     # Set to 0 to disable.

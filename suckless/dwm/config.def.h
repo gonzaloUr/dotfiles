@@ -2,11 +2,13 @@
 
 /* Required patches:
  * https://dwm.suckless.org/patches/deck/dwm-deck-double-6.2.diff
+ * https://dwm.suckless.org/patches/push/dwm-push-20201112-61bb8b2.diff
  *
  * Other patches:
  * https://dwm.suckless.org/patches/alpha/dwm-fixborders-6.2.diff
  * https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.2.diff
  * https://dwm.suckless.org/patches/statusallmons/dwm-statusallmons-6.2.diff
+ * https://dwm.suckless.org/patches/save_floats/dwm-savefloats-20181212-b69c870.diff
  */
 
 /* appearance */
@@ -77,10 +79,12 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
-static const char *htopcmd[]  = { "st", "-e", "htop", NULL };
-static const char *mixercmd[] = { "st", "-e", "ncpamixer", NULL };
+static const char *dmenucmd[]   = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *termcmd[]    = { "st", NULL };
+static const char *htopcmd[]    = { "st", "-e", "htop", NULL };
+static const char *mixercmd[]   = { "pavucontrol", NULL };
+static const char *firefoxcmd[] = { "firefox", NULL };
+static const char *zathuracmd[] = { "zathura", NULL };
 
 static const char *brigdown[] = { "xbacklight", "-dec", "10", NULL };
 static const char *brigup[]   = { "xbacklight", "-inc", "10", NULL };
@@ -94,9 +98,11 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_w,      spawn,          {.v = htopcmd } },
-	{ MODKEY,                       XK_s,      spawn,          {.v = mixercmd } },
 	{ 0,                            XK_Print,  spawn,          {.v = maim } },
+	{ MODKEY|ShiftMask,             XK_t,      spawn,          {.v = htopcmd } },
+	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = mixercmd } },
+	{ MODKEY|ShiftMask,             XK_f,      spawn,          {.v = firefoxcmd } },
+	{ MODKEY|ShiftMask,             XK_z,      spawn,          {.v = zathuracmd } },
 
 	{ 0,                            XF86MonBrightnessDown, spawn, {.v = brigdown } },
 	{ 0,                            XF86MonBrightnessUp,   spawn, {.v = brigup } },
@@ -113,6 +119,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
+	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
+	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },

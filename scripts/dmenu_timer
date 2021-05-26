@@ -1,0 +1,4 @@
+#!/bin/sh
+out="$(echo '' | dmenu -p 'Notify me in ... minutes')"
+sleep "$((out * 60))"
+notify-send -t $((60 * 60 * 1000)) 'Timer is done' 'dmenu_timer'

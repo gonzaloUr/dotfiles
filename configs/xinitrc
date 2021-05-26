@@ -1,5 +1,5 @@
-dwmbar &
-xwallpaper --zoom ~/Images/wallpapers/chihiro1.jpg
+xwallpaper --zoom ~/Images/wallpapers/nausicaa1.jpg
 xcompmgr &
 dunst &
+dwmbar &
 exec dbus-launch --exit-with-session dwm

@@ -4,11 +4,12 @@
 # https://www.x.org/releases/current/doc/man/man5/xorg.conf.5.xhtml
 # https://tldp.org/HOWTO/Battery-Powered/displaytypes.html
 
+APP_NAME='dmenu_monitor_suspend'
 DEFAULT_STANDBY=600
 DEFAULT_SUSPEND=600
 DEFAULT_OFF=600
 
-OPTION_1='Suspend screen after default time'
+OPTION_1='Suspend screen after 10 min (default time)'
 OPTION_2='Suspend screen after 30 min'
 OPTION_3='Suspend screen after 1 hr'
 OPTION_4='Suspend screen after 4 hr'
@@ -17,14 +18,18 @@ option="$(printf '%s\n%s\n%s\n%s' "$OPTION_1" "$OPTION_2" "$OPTION_3" "$OPTION_4
 
 if echo "$OPTION_1" | grep -q "$option"
 then
-    xset dpms "$DEFAULT_STANDBY" "$DEFAULT_SUSPEND" "$DEFAULT_OFF"
+    xset dpms "$DEFAULT_STANDBY" "$DEFAULT_SUSPEND" "$DEFAULT_OFF" &&
+    notify-send 'Suspend time is 10min (default) now' "$APP_NAME"
 elif echo "$OPTION_2" | grep -q "$option"
 then
-    xset dpms 1800 1800 1800
+    xset dpms 1800 1800 1800 &&
+    notify-send 'Suspend time is 30min now' "$APP_NAME"
 elif echo "$OPTION_3" | grep -q "$option"
 then
-    xset dpms 3600 3600 3600
+    xset dpms 3600 3600 3600 &&
+    notify-send 'Suspend time is 1hr now' "$APP_NAME"
 elif echo "$OPTION_4" | grep -q "$option"
 then
-    xset dpms 14400 14400 14400
+    xset dpms 14400 14400 14400 &&
+    notify-send 'Suspend time is 4hr now' "$APP_NAME"
 fi

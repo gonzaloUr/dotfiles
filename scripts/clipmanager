@@ -1,0 +1,14 @@
+#!/bin/sh
+
+while clipnotify
+do
+    primary="$(xclip -selection primary -o 2>/dev/null)"
+    secondary="$(xclip -selection secondary -o 2>/dev/null)"
+    clipboard="$(xclip -selection clipboard -o 2>/dev/null)"
+
+    echo "$primary"   | wc -c
+    echo "$secondary" | wc -c
+    echo "$clipboard" | wc -c
+
+    echo '-------------------------------------------------------------'
+done
