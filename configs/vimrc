@@ -6,22 +6,8 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
 endif
 
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
-" misc.
 Plug 'junegunn/fzf'
 Plug 'chrisbra/colorizer'
-
-" syntax.
-Plug 'mxw/vim-jsx'
-Plug 'aklt/plantuml-syntax'
-
-" omnicomplete and extras for programming languages.
-"
-" golang
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-" python
-Plug 'davidhalter/jedi-vim'
-" c/c++
-Plug 'rip-rip/clang_complete'
 call plug#end()
 
 filetype indent plugin on
@@ -35,12 +21,13 @@ set shiftwidth=4
 set expandtab
 set undofile
 set undodir=/tmp
-colorscheme desert
 
-" vim beam/block cursor depending on mode.
-" let &t_SI = "\<Esc>[5 q"
-" let &t_SR = "\<Esc>[1 q"
-" let &t_EI = "\<Esc>[1 q"
+set laststatus=2
+set statusline=%f\ %m
+set statusline+=%=
+set statusline+=%y\ (%l
+set statusline+=/
+set statusline+=%L)
 
 " remove trailing whitespaces
 au BufWritePre * %s/\s\+$//e
@@ -55,34 +42,14 @@ au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " golang
 au FileType go set expandtab&
 
-" runs after the default syntax file for tex
-"
-" syntax files are vim scripts that run every time a buffer filetype is set and
-" they setup all the necessary options for highlighting, which not only includes
-" determining keywords and the like but entire syntactical entities for the
-" given filetype (for example: functions and classes in programming languages)
 augroup ft_tex
-  " calls some tex.vim functions that make amsmath environments be treated as
-  " traditional tex math syntax.
+  " Make amsmath environments traditional tex math enviroments
   autocmd Syntax tex call TexNewMathZone("E", "align", 1)
   autocmd Syntax tex call TexNewMathZone("F", "multline", 1)
   autocmd Syntax tex call TexNewMathZone("H", "equation", 1)
   autocmd Syntax tex call TexNewMathZone("I", "gather", 1)
 
-  " tex compared to other formats is very complicated, detecting syntactical
-  " entities requires parsing some parts of the file (for example lines close to
-  " the current position of the cursor) or searching for keywords (for example C
-  " like comments in programming languages), detecting theses entities is
-  " essential for knowing where to spell check, for example in a programming
-  " language you wouldn't treat var or int as a typo, because of how complicated
-  " tex is if a file is too big tex.vim can fail at this task resulting in parts
-  " of the file being skipped from spellchecking, something pretty essential
-  " for writing tex documents, the following options make it so that there is
-  " less trouble with that.
-  "
-  " See :help :syn-sync
-
-  " spellcheck the toplevel syntactical entity
+  " spellcheck the toplevel syntactical entity (outside begin document)
   autocmd Syntax tex syntax spell toplevel
 
   " parsing always starts at least this many lines backwards
@@ -90,9 +57,6 @@ augroup ft_tex
 
   " parsing always stops after this many lines backwards from minlines
   autocmd Syntax tex syntax sync maxlines=500
-
-  " these values where taken from
-  " https://github.com/lervag/vimtex/blob/master/autoload/vimtex/syntax/core.vim
 augroup end
 
 " bindings
@@ -101,8 +65,8 @@ let maplocalleader="\\"
 
 nnoremap <leader>9 :w \| bp<CR>
 nnoremap <leader>0 :w \| bn<CR>
-nnoremap <leader><localleader> :noh<CR>
-nnoremap <leader><leader> :FZF<CR>
+nnoremap <leader><leader> :noh<CR>
+nnoremap <leader><localleader> :FZF<CR>
 
 nnoremap <leader>s :set nospell<CR>
 nnoremap <leader>e :set spell spelllang=es<CR>
