@@ -3,6 +3,6 @@
 (
   pactl subscribe &
   acpi_listen &
-  udevadm monitor --udev --subsystem-match=backlight &
+  udevadm monitor --udev --property &
   while true; do date '+%H %M %S'; sleep 1; done
 ) | dwmbar.awk

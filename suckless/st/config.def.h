@@ -1,6 +1,15 @@
 /* See LICENSE file for copyright and license details. */
 
 /*
+ * Required patches:
+ * https://st.suckless.org/patches/alpha/st-alpha-0.8.2.diff
+ *
+ * Other patches:
+ * https://st.suckless.org/patches/anysize/st-anysize-0.8.4.diff
+ * https://st.suckless.org/patches/scrollback/st-scrollback-0.8.4.diff
+ */
+
+/*
  * appearance
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
@@ -94,37 +103,42 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 /* bg opacity */
-float alpha = 0.8;
+float alpha = 0.9;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
+	/*
+	 * VSCode default terminal colors
+     * ('Developer: Generate Color Theme From Current Settings' from command palette)
+	 */
+
 	/* 8 normal colors */
-	"#282828", /* black hard contrast: #1d2021 / soft contrast: #32302f */
-	"#cc241d", /* red     */
-	"#98971a", /* green   */
-	"#d79921", /* yellow  */
-	"#458588", /* blue    */
-	"#b16286", /* magenta */
-	"#689d6a", /* cyan    */
-	"#a89984", /* white   */
+	"#000000", /* black   */
+	"#cd3131", /* red     */
+	"#0dbc79", /* green   */
+	"#e5e510", /* yellow  */
+	"#2472c8", /* blue    */
+	"#bc3fbc", /* magenta */
+	"#11a8cd", /* cyan    */
+	"#e5e5e5", /* white   */
 
 	/* 8 bright colors */
-	"#928374", /* black   */
-	"#fb4934", /* red     */
-	"#b8bb26", /* green   */
-	"#fabd2f", /* yellow  */
-	"#83a598", /* blue    */
-	"#d3869b", /* magenta */
-	"#8ec07c", /* cyan    */
-	"#ebdbb2", /* white   */
+	"#666666", /* black   */
+	"#f14c4c", /* red     */
+	"#23d18b", /* green   */
+	"#f5f543", /* yellow  */
+	"#3b8eea", /* blue    */
+	"#d670d6", /* magenta */
+	"#29b8db", /* cyan    */
+	"#e5e5e5", /* white   */
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#ebdbb2", /* foreground     */
-	"#282828", /* background     */
-	"#ebdbb2", /* cursor         */
-	"#282828", /* reverse cursor */
+	"#cccccc", /* foreground      */
+	"#1e1e1e", /* background      */
+	"#d4d4d4", /* cursor          */
+	"#404040", /* selected cursor */
 };
 
 /*

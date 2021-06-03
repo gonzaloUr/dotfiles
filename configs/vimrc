@@ -25,15 +25,16 @@ set undodir=/tmp
 set laststatus=2
 set statusline=%f\ %m
 set statusline+=%=
-set statusline+=%y\ (%l
+set statusline+=%y\ %c
+set statusline+=\ (%l
 set statusline+=/
 set statusline+=%L)
 
 " remove trailing whitespaces
 au BufWritePre * %s/\s\+$//e
 
-" remove | characters from the vertical split separator
-set fillchars=
+" ascii vertical split separator
+set fillchars=vert:\|
 
 " better preview window
 set splitbelow
@@ -62,6 +63,16 @@ augroup end
 " bindings
 let mapleader="-"
 let maplocalleader="\\"
+
+function ToggleColorColumn()
+    if &colorcolumn == ""
+        set colorcolumn=80
+    else
+        set colorcolumn&
+    endif
+endfunction
+
+nnoremap <leader>r :call ToggleColorColumn()<CR>
 
 nnoremap <leader>9 :w \| bp<CR>
 nnoremap <leader>0 :w \| bn<CR>

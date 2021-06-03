@@ -9,8 +9,7 @@ autoload -U colors && colors
 
 setopt prompt_subst
 
-# PROMPT="%B%{$fg[green]%}%3~ %b"
-PROMPT="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%3~%{$fg[red]%}]%{$reset_color%}$%b "
+PROMPT="%B%{$fg[green]%}%n@%M%{$fg[white]%}:%{$fg[blue]%}%d%b"$'\n'"%{$fg[cyan]%}%#%{$fg[white]%} "
 RPROMPT="%B%{$fg[white]%}\$vcs_info_msg_0_%b"
 
 autoload -Uz compinit
@@ -34,24 +33,24 @@ HISTFILE=~/.cache/zsh/history
 bindkey -v
 
 # beam cursor insert mode
-#
-# zle-keymap-select() {
-#     case $KEYMAP in
-#         vicmd) echo -ne '\e[1 q';;
-#         viins|main) echo -ne '\e[5 q';;
-#     esac
-# }
-# zle -N zle-keymap-select
-#
-# zle-line-init() {
-#     zle -K viins
-#     echo -ne '\e[5 q'
-# }
-# zle -N zle-line-init
-#
-# preexec() {
-#     echo -ne '\e[1 q'
-# }
+
+zle-keymap-select() {
+    case $KEYMAP in
+        vicmd) echo -ne '\e[1 q';;
+        viins|main) echo -ne '\e[5 q';;
+    esac
+}
+zle -N zle-keymap-select
+
+zle-line-init() {
+    zle -K viins
+    echo -ne '\e[5 q'
+}
+zle -N zle-line-init
+
+preexec() {
+    echo -ne '\e[1 q'
+}
 
 alias ls='ls --color=auto --group-directories-first'
 alias rm='rm -i'

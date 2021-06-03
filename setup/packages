@@ -4,9 +4,8 @@
 xbps-install -y curl
 xbps-install -y wget
 xbps-install -y unzip
+xbps-install -y zip
 xbps-install -y cronie
-xbps-install -y wireless_tools
-xbps-install -y net_tools
 xbps-install -y tlp
 xbps-install -y zsh-completions
 xbps-install -y zsh-history-substring-search
@@ -27,7 +26,6 @@ xbps-install -y xclip
 xbps-install -y xsel
 xbps-install -y dunst
 xbps-install -y xcompmgr
-xbps-install -y xwallpaper
 
 # multimedia
 xbps-install -y alsa-plugins-pulseaudio
@@ -44,7 +42,6 @@ xbps-install -y clipnotify
 
 # programs
 xbps-install -y neovim
-xbps-install -y abduco
 xbps-install -y lf
 xbps-install -y firefox
 xbps-install -y mpv
@@ -56,6 +53,7 @@ xbps-install -y htop
 xbps-install -y maim
 xbps-install -y pavucontrol
 xbps-install -y tig
+xbps-install -y nitrogen
 
 # src dependencies
 xbps-install -y base-devel

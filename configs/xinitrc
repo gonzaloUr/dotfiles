@@ -1,5 +1,5 @@
-xwallpaper --zoom ~/Images/wallpapers/nausicaa1.jpg
-xcompmgr &
+nitrogen --restore &
 dunst &
-dwmbar &
+xcompmgr &
+awkscripts &
 exec dbus-launch --exit-with-session dwm

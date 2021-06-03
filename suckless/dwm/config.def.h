@@ -1,6 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
-/* Required patches:
+/*
+ * Required patches:
  * https://dwm.suckless.org/patches/deck/dwm-deck-double-6.2.diff
  * https://dwm.suckless.org/patches/push/dwm-push-20201112-61bb8b2.diff
  *

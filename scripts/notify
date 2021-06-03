@@ -1,0 +1,3 @@
+#!/bin/sh
+
+udevadm monitor --udev --property | notify.awk

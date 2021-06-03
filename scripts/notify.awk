@@ -1,4 +1,8 @@
 #!/bin/awk -f
+#
+# Takes udevadm monitor --udev --property as input.
+
+# Utils.
 
 function get_pair(str) {
   i = match(str, "=")
@@ -6,11 +10,13 @@ function get_pair(str) {
   value = substr(str, i + 1)
 }
 
-/^UDEV +\[[[:digit:]]+\.[[:digit:]]+\] +add +.*usb.* \(block\)$/ {
+# Detect events and save their properties.
+
+/^UDEV +\[.+\] +add +.*block.* +\(block\)$/ {
   usb_block = 1
 }
 
-/^UDEV +\[[[:digit:]]+\.[[:digit:]]+\] +add +.*input\/input[[:digit:]]+ \(input\)$/ {
+/^UDEV +\[.+\] +add +.*input\/input[[:digit:]]+ +\(input\)$/ {
   input = 1
 }
 
