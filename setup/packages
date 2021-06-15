@@ -1,69 +1,69 @@
 #!/bin/sh
 
 # essentials
-xbps-install -y curl
-xbps-install -y wget
-xbps-install -y unzip
-xbps-install -y zip
-xbps-install -y cronie
-xbps-install -y tlp
-xbps-install -y zsh-completions
-xbps-install -y zsh-history-substring-search
-xbps-install -y zsh-syntax-highlighting
+pacman -S --noconfirm --needed curl
+pacman -S --noconfirm --needed wget
+pacman -S --noconfirm --needed unzip
+pacman -S --noconfirm --needed zip
+pacman -S --noconfirm --needed cronie
+pacman -S --noconfirm --needed tlp
+pacman -S --noconfirm --needed zsh-completions
+pacman -S --noconfirm --needed zsh-history-substring-search
+pacman -S --noconfirm --needed zsh-syntax-highlighting
 
 # wireless
-xbps-install -y bluez
-xbps-install -y NetworkManager
+pacman -S --noconfirm --needed bluez
+pacman -S --noconfirm --needed NetworkManager
 
 # ntp
-xbps-install -y ntp
-xbps-install -y openntpd
+pacman -S --noconfirm --needed openntpd
 
 # xorg
-xbps-install -y xorg
-xbps-install -y xbacklight
-xbps-install -y xclip
-xbps-install -y xsel
-xbps-install -y dunst
-xbps-install -y xcompmgr
+pacman -S --noconfirm --needed xorg
+pacman -S --noconfirm --needed xorg-drivers
+pacman -S --noconfirm --needed xorg-xinit
+pacman -S --noconfirm --needed xclip
+pacman -S --noconfirm --needed dunst
+pacman -S --noconfirm --needed libnotify
+pacman -S --noconfirm --needed xcompmgr
 
 # multimedia
-xbps-install -y alsa-plugins-pulseaudio
-xbps-install -y pulseaudio
+pacman -S --noconfirm --needed pulseaudio-alsa
+pacman -S --noconfirm --needed pulseaudio
+
+# acpi server
+pacman -S --noconfirm --needed acpid
 
 # utilities
-xbps-install -y fzf
-xbps-install -y entr
-xbps-install -y simple-mtpfs
-xbps-install -y acpi
-xbps-install -y tree
-xbps-install -y xdg-utils
-xbps-install -y clipnotify
+pacman -S --noconfirm --needed fzf
+pacman -S --noconfirm --needed entr
+pacman -S --noconfirm --needed simple-mtpfs
+pacman -S --noconfirm --needed acpi
+pacman -S --noconfirm --needed tree
+pacman -S --noconfirm --needed xdg-utils
+pacman -S --noconfirm --needed clipnotify
 
 # programs
-xbps-install -y neovim
-xbps-install -y lf
-xbps-install -y firefox
-xbps-install -y mpv
-xbps-install -y sxiv
-xbps-install -y zathura
-xbps-install -y zathura-pdf-mupdf
-xbps-install -y git
-xbps-install -y htop
-xbps-install -y maim
-xbps-install -y pavucontrol
-xbps-install -y tig
-xbps-install -y nitrogen
+pacman -S --noconfirm --needed slock
+pacman -S --noconfirm --needed neovim
+pacman -S --noconfirm --needed firefox
+pacman -S --noconfirm --needed mpv
+pacman -S --noconfirm --needed sxiv
+pacman -S --noconfirm --needed zathura
+pacman -S --noconfirm --needed zathura-pdf-mupdf
+pacman -S --noconfirm --needed git
+pacman -S --noconfirm --needed htop
+pacman -S --noconfirm --needed maim
+pacman -S --noconfirm --needed pavucontrol
+pacman -S --noconfirm --needed tig
+pacman -S --noconfirm --needed nitrogen
+pacman -S --noconfirm --needed pacman-contrib
 
 # src dependencies
-xbps-install -y base-devel
-xbps-install -y libX11-devel
-xbps-install -y libXinerama-devel
-xbps-install -y libXft-devel
-xbps-install -y libXrandr-devel
+pacman -S --noconfirm --needed base-devel
 
 # fonts
-xbps-install -y dejavu-fonts-ttf
-xbps-install -y font-mplus-ttf
-xbps-install -y noto-fonts-emoji
-xbps-install -y noto-fonts-ttf
+pacman -S --noconfirm --needed ttf-dejavu
+pacman -S --noconfirm --needed noto-fonts-emoji
+pacman -S --noconfirm --needed noto-fonts
+pacman -S --noconfirm --needed otf-ipafont

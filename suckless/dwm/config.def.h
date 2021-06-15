@@ -93,13 +93,13 @@ static const char *volmute[]  = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "t
 static const char *volup[]    = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%", NULL };
 static const char *voldown[]  = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-10%", NULL };
 static const char *micmute[]  = { "pactl", "set-source-mute", "@DEFAULT_SOURCE@", "toggle", NULL };
-static const char *maim[]     = { "maimshot", NULL };
+static const char *prtscr[]   = { "sh", "-c", "maim -s | xclip -selection clipboard -t image/png", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ 0,                            XK_Print,  spawn,          {.v = maim } },
+	{ 0,                            XK_Print,  spawn,          {.v = prtscr } },
 	{ MODKEY|ShiftMask,             XK_t,      spawn,          {.v = htopcmd } },
 	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = mixercmd } },
 	{ MODKEY|ShiftMask,             XK_f,      spawn,          {.v = firefoxcmd } },

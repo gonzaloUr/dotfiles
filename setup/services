@@ -1,26 +1,19 @@
 #!/bin/sh
 
 # setup acpid service
-[ -e /var/service/acpid ] || ln -s /etc/sv/acpid /var/service
+systemctl enable acpid
 
-# setup dbus service
-[ -e /var/service/dbus ] || ln -s /etc/sv/dbus /var/service
-
-# setup crond service
-[ -e /var/service/crond ] || ln -s /etc/sv/crond /var/service
+# setup cronie service
+systemctl enable cronie
 
 # setup bluez service
-[ -e /var/service/bluetoothd ] || ln -s /etc/sv/bluetoothd /var/service
+systemctl enable bluetooth
 
 # setup NetworkManager service
-[ -e /var/service/dhcpcd ] && rm /var/service/dhcpcd
-[ -e /var/service/wpa_supplicant ] && rm /var/service/wpa_supplicant
-[ -e /var/service/wicd ] && rm /var/service/wicd
-[ -e /var/service/NetworkManager ] || ln -s /etc/sv/NetworkManager /var/service
+systemctl enable NetworkManager
 
-# setup ntp services
-[ -e /var/service/ntpd ] || ln -s /etc/sv/ntpd /var/service
-[ -e /var/service/isc-ntpd ] || ln -s /etc/sv/isc-ntpd /var/service
+# setup openntp services
+systemctl enable openntpd
 
 # setup tlp service
-[ -e /var/service/tlp ] || ln -s /etc/sv/tlp /var/service
+systemctl enable tlp

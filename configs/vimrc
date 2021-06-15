@@ -8,6 +8,9 @@ endif
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 Plug 'junegunn/fzf'
 Plug 'chrisbra/colorizer'
+Plug 'scrooloose/nerdtree'
+Plug 'xuyuanp/nerdtree-git-plugin'
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 filetype indent plugin on
@@ -29,6 +32,12 @@ set statusline+=%y\ %c
 set statusline+=\ (%l
 set statusline+=/
 set statusline+=%L)
+
+highlight clear SignColumn
+highlight GitGutterAdd ctermbg=none guibg=none
+highlight GitGutterChange ctermbg=none guibg=none
+highlight GitGutterDelete ctermbg=none guibg=none
+highlight GitGutterChangeDelete ctermbg=none guibg=none
 
 " remove trailing whitespaces
 au BufWritePre * %s/\s\+$//e
@@ -94,3 +103,7 @@ endfunction
 nnoremap <leader>p :call PreviewPdf()<CR>
 nnoremap <leader>l :call Latexmk()<CR>
 nnoremap <leader>c :call Latexmk()<CR> :call PreviewPdf()<CR>
+
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
