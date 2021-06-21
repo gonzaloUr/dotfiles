@@ -1,0 +1,8 @@
+[Desktop Entry]
+
+# xdg desktop entry for opening pdf documents
+# install under ~/.local/share/applications
+
+Type=Application
+Name=PDF reader
+Exec=/usr/bin/zathura %u

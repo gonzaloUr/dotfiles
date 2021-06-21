@@ -1,0 +1,8 @@
+[Desktop Entry]
+
+# xdg desktop entry for opening videos
+# install under ~/.local/share/applications
+
+Type=Application
+Name=Video player
+Exec=/usr/bin/mpv %f

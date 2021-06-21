@@ -1,0 +1,8 @@
+[Desktop Entry]
+
+# xdg desktop entry for opening directories
+# install under ~/.local/share/applications
+
+Type=Application
+Name=File Manager
+Exec=/usr/local/bin/st -e lf %u
