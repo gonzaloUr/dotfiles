@@ -9,6 +9,7 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 Plug 'junegunn/fzf'
 Plug 'chrisbra/colorizer'
 Plug 'scrooloose/nerdtree'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
 filetype indent plugin on
@@ -17,8 +18,8 @@ set hlsearch
 set ignorecase
 set smartcase
 set number relativenumber
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 set undofile
 set undodir=/tmp
