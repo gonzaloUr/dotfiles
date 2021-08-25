@@ -9,8 +9,8 @@ autoload -U colors && colors
 
 setopt prompt_subst
 
-PROMPT="%B%{$fg[green]%}%n@%M%{$fg[white]%}:%{$fg[blue]%}%d%b"$'\n'"%{$fg[cyan]%}%#%{$fg[white]%} "
-RPROMPT="%B%{$fg[white]%}\$vcs_info_msg_0_%b"
+PROMPT="%B%{$fg[default]%}%d%b"$'\n'"%# "
+RPROMPT="%B%{$fg[default]%}\$vcs_info_msg_0_%b"
 
 autoload -Uz compinit
 zstyle ':completion:*' menu select

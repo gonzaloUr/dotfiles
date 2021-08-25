@@ -2,14 +2,13 @@ let link = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 
 if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo ' . data_dir . '/autoload/plug.vim --create-dirs ' . link
+    silent execute '!curl -fLo ' . data_dir . '/autoload/plug.vim --create-dirs ' . link
 endif
 
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
-Plug 'junegunn/fzf'
 Plug 'chrisbra/colorizer'
 Plug 'scrooloose/nerdtree'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'mfussenegger/nvim-jdtls'
 call plug#end()
 
 filetype indent plugin on
@@ -18,8 +17,8 @@ set hlsearch
 set ignorecase
 set smartcase
 set number relativenumber
-set tabstop=2
-set shiftwidth=2
+set tabstop=4
+set shiftwidth=4
 set expandtab
 set undofile
 set undodir=/tmp
@@ -31,6 +30,7 @@ set statusline+=%y\ %c
 set statusline+=\ (%l
 set statusline+=/
 set statusline+=%L)
+colorscheme desert
 
 " remove trailing whitespaces
 au BufWritePre * %s/\s\+$//e
@@ -46,20 +46,25 @@ au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 au FileType go set expandtab&
 
 augroup ft_tex
-  " Make amsmath environments traditional tex math enviroments
-  autocmd Syntax tex call TexNewMathZone("E", "align", 1)
-  autocmd Syntax tex call TexNewMathZone("F", "multline", 1)
-  autocmd Syntax tex call TexNewMathZone("H", "equation", 1)
-  autocmd Syntax tex call TexNewMathZone("I", "gather", 1)
+    " Make amsmath environments traditional tex math enviroments
+    autocmd Syntax tex call TexNewMathZone("E", "align", 1)
+    autocmd Syntax tex call TexNewMathZone("F", "multline", 1)
+    autocmd Syntax tex call TexNewMathZone("H", "equation", 1)
+    autocmd Syntax tex call TexNewMathZone("I", "gather", 1)
 
-  " spellcheck the toplevel syntactical entity (outside begin document)
-  autocmd Syntax tex syntax spell toplevel
+    " spellcheck the toplevel syntactical entity (outside begin document)
+    autocmd Syntax tex syntax spell toplevel
 
-  " parsing always starts at least this many lines backwards
-  autocmd Syntax tex syntax sync minlines=50
+    " parsing always starts at least this many lines backwards
+    autocmd Syntax tex syntax sync minlines=50
 
-  " parsing always stops after this many lines backwards from minlines
-  autocmd Syntax tex syntax sync maxlines=500
+    " parsing always stops after this many lines backwards from minlines
+    autocmd Syntax tex syntax sync maxlines=500
+augroup end
+
+augroup ft_java
+    au FileType java lua require('jdtls').start_or_attach({cmd = {'jdtls.sh'}})
+    au FileType java lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 augroup end
 
 " bindings
@@ -74,28 +79,52 @@ function ToggleColorColumn()
     endif
 endfunction
 
+function FzfOpen()
+    let dir=substitute(system('mktemp -d -t fifo-XXXXXXXX'), '\n\+$', '', '')
+    let out=dir . '/out'
+
+    call system('mkdir ' . dir)
+    call system('touch ' . out)
+    call system("st -e sh -c \'fzf > " . out . "\'")
+
+    let file=system("cat " . out)
+    call system('rm -rf ' . dir)
+    call execute('e ' . file)
+endfunction
+
 nnoremap <leader>r :call ToggleColorColumn()<CR>
 
 nnoremap <leader>9 :w \| bp<CR>
 nnoremap <leader>0 :w \| bn<CR>
 nnoremap <leader><leader> :noh<CR>
-nnoremap <leader><localleader> :FZF<CR>
+nnoremap <leader><localleader> :call FzfOpen()<CR>
 
 nnoremap <leader>s :set nospell<CR>
 nnoremap <leader>e :set spell spelllang=es<CR>
 nnoremap <leader>i :set spell spelllang=en<CR>
 
 function PreviewPdf()
-  ! xdg-open %:r.pdf >/dev/null 2>&1 & disown
+    ! xdg-open %:r.pdf >/dev/null 2>&1 & disown
 endfunction
 
 function Latexmk()
-  ! st -e latexmk -pdf -pvc -view=none -interaction=nonstopmode "%" & disown
+    ! st -e latexmk -pdf -pvc -view=none -interaction=nonstopmode "%" & disown
 endfunction
 
 nnoremap <leader>p :call PreviewPdf()<CR>
 nnoremap <leader>l :call Latexmk()<CR>
 nnoremap <leader>c :call Latexmk()<CR> :call PreviewPdf()<CR>
 
-nnoremap <leader>n :NERDTreeToggle<CR>
-nnoremap <leader>f :NERDTreeFind<CR>
+nnoremap <C-n> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+
+command LspDeclaration    :lua vim.lsp.buf.declaration()<CR>
+command LspDefinition     :lua vim.lsp.buf.definition()<CR>
+command LspHover          :lua vim.lsp.buf.hover()<CR>
+command LspImplementation :lua vim.lsp.buf.implementation()<CR>
+command LspSignatureHelp  :lua vim.lsp.buf.signature_help()<CR>
+command LspRename         :lua vim.lsp.buf.rename()<CR>
+command LspShowLineDiagnostics :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+command LspFormat         :lua vim.lsp.buf.formatting()<CR>
+command JdtCodeAction     :lua require('jdtls').code_action()<CR>
+command JdtJshell         :lua require('jdtls').jshell()<CR>

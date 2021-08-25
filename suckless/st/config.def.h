@@ -2,7 +2,6 @@
 
 /*
  * Required patches:
- * https://st.suckless.org/patches/alpha/st-alpha-0.8.2.diff
  * https://st.suckless.org/patches/scrollback/st-scrollback-0.8.4.diff
  *
  * Other patches:
@@ -14,7 +13,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "DejavuSansMono:pixelsize=14:antialias=true:autohint=true";
+static char *font = "Terminus:pixelsize=14:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
@@ -102,43 +101,41 @@ char *termname = "st-256color";
  */
 unsigned int tabspaces = 8;
 
-/* bg opacity */
-float alpha = 0.95;
-
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-	/*
-	 * VSCode default terminal colors
-     * ('Developer: Generate Color Theme From Current Settings' from command palette)
+	/* 'GNOME Light' theme from GNOME Terminal.
+	 *
+	 * Specifically, extracted from this file in the GNOME Terminal source:
+	 * https://gitlab.gnome.org/GNOME/gnome-terminal/-/blob/25c96f18ac270c3d1cf5b2b5e320ce29ebc8282a/src/profile-editor.c.
 	 */
 
 	/* 8 normal colors */
-	"#000000", /* black   */
-	"#cd3131", /* red     */
-	"#0dbc79", /* green   */
-	"#e5e510", /* yellow  */
-	"#2472c8", /* blue    */
-	"#bc3fbc", /* magenta */
-	"#11a8cd", /* cyan    */
-	"#e5e5e5", /* white   */
+	"#171421", /* black   */
+	"#c01c28", /* red     */
+	"#26a269", /* green   */
+	"#a2734c", /* yellow  */
+	"#12488b", /* blue    */
+	"#a347ba", /* magenta */
+	"#2aa1b3", /* cyan    */
+	"#d0cfcc", /* white   */
 
 	/* 8 bright colors */
-	"#666666", /* black   */
-	"#f14c4c", /* red     */
-	"#23d18b", /* green   */
-	"#f5f543", /* yellow  */
-	"#3b8eea", /* blue    */
-	"#d670d6", /* magenta */
-	"#29b8db", /* cyan    */
-	"#e5e5e5", /* white   */
+	"#5e5c64", /* black   */
+	"#f66151", /* red     */
+	"#33d17a", /* green   */
+	"#e9ad0c", /* yellow  */
+	"#2a7bde", /* blue    */
+	"#c061cb", /* magenta */
+	"#33c7de", /* cyan    */
+	"#ffffff", /* white   */
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#cccccc", /* foreground      */
-	"#1e1e1e", /* background      */
-	"#d4d4d4", /* cursor          */
-	"#404040", /* selected cursor */
+	"#171421", /* foreground     */
+	"#ffffd8", /* background     */
+	"#171421", /* cursor         */
+	"#ffffff", /* reverse cursor */
 };
 
 /*

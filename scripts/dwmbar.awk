@@ -1,14 +1,14 @@
 #!/bin/awk -f
 
 function update_bar() {
-    system("xsetroot -name " "' [" bar["temp"] "] [" bar["brg"] " " bar["vol"] "] [" bar["bat"] "] [" bar["clk"] "] '")
+    system("xsetroot -name " "' " bar["temp"] " " bar["brg"] " " bar["vol"] " " bar["bat"] " " bar["clk"] " '")
 }
 
 function get_brg() {
     "xbacklight" | getline out
     close("xbacklight")
     split(out, a, ".")
-    return a[1] "%"
+    return "brg " a[1] "%"
 }
 
 function get_vol() {
@@ -19,6 +19,7 @@ function get_vol() {
     volume_cmd = "pactl list sinks | sed -n '/" default_sink "/,/^Sink/p' | grep '^[[:space:]]*Volume:' | sed -n 's/^.* \\([[:digit:]][[:digit:]]*%\\).*$/\\1/p' | head -n1"
     volume_cmd | getline volume
     close(volume_cmd)
+    volume="vol " volume
 
     return volume
 }
@@ -38,7 +39,7 @@ function get_bat() {
 }
 
 function get_temp() {
-    temp_cmd = "for x in /sys/class/thermal/thermal_zone*; do paste -d' ' \"$x\"/type \"$x\"/temp; done | sed 's/acpitz/batt/g ; s/x86_pkg_temp/cpu/g ; s/000$/°C/' | tr '\\n' ' ' | sed 's/ $//'"
+    temp_cmd = "for x in /sys/class/thermal/thermal_zone*; do paste -d' ' \"$x\"/type \"$x\"/temp; done | sed 's/acpitz/bat/g ; s/x86_pkg_temp/cpu/g ; s/000$/°C/' | tr '\\n' ' ' | sed 's/ $//'"
     temp_cmd | getline ret
     close(temp_cmd)
     return ret

@@ -23,9 +23,12 @@ pacman -S --noconfirm --needed xorg
 pacman -S --noconfirm --needed xorg-drivers
 pacman -S --noconfirm --needed xorg-xinit
 pacman -S --noconfirm --needed xclip
+pacman -S --noconfirm --needed xsel
+pacman -S --noconfirm --needed xdotool
 pacman -S --noconfirm --needed dunst
 pacman -S --noconfirm --needed libnotify
 pacman -S --noconfirm --needed xcompmgr
+pacman -S --noconfirm --needed wmname
 
 # multimedia
 pacman -S --noconfirm --needed pulseaudio-alsa
@@ -37,7 +40,6 @@ pacman -S --noconfirm --needed acpid
 # utilities
 pacman -S --noconfirm --needed fzf
 pacman -S --noconfirm --needed entr
-pacman -S --noconfirm --needed simple-mtpfs
 pacman -S --noconfirm --needed acpi
 pacman -S --noconfirm --needed tree
 pacman -S --noconfirm --needed xdg-utils
@@ -67,3 +69,4 @@ pacman -S --noconfirm --needed ttf-dejavu
 pacman -S --noconfirm --needed noto-fonts-emoji
 pacman -S --noconfirm --needed noto-fonts
 pacman -S --noconfirm --needed otf-ipafont
+pacman -S --noconfirm --needed terminus-font

@@ -1,3 +1,4 @@
 #!/bin/sh
 
 yay -S --noconfirm --needed lf-bin
+yay -S --noconfirm --needed simple-mtpfs

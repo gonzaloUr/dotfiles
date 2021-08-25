@@ -2,19 +2,23 @@
 
 /*
  * Required patches:
- * https://dwm.suckless.org/patches/deck/dwm-deck-double-6.2.diff
+ * https://dwm.suckless.org/patches/vanitygaps/dwm-vanitygaps-6.2.diff
  * https://dwm.suckless.org/patches/push/dwm-push-20201112-61bb8b2.diff
  *
  * Other patches:
  * https://dwm.suckless.org/patches/alpha/dwm-fixborders-6.2.diff
  * https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.2.diff
  * https://dwm.suckless.org/patches/statusallmons/dwm-statusallmons-6.2.diff
- * https://dwm.suckless.org/patches/save_floats/dwm-savefloats-20181212-b69c870.diff
  */
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int snap      = 16;       /* snap pixel */
+static const unsigned int snap      = 5;        /* snap pixel */
+static const unsigned int gappih    = 10;       /* horiz inner gap between windows */
+static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
+static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
+static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "monospace:size=10" };
@@ -50,12 +54,26 @@ static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] 
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 
+#define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
+#include "vanitygaps.c"
+
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
-	{ "DD",       doubledeck },
+	{ "[@]",      spiral },
+	{ "[\\]",     dwindle },
+	{ "H[]",      deck },
+	{ "TTT",      bstack },
+	{ "===",      bstackhoriz },
+	{ "HHH",      grid },
+	{ "###",      nrowgrid },
+	{ "---",      horizgrid },
+	{ ":::",      gaplessgrid },
+	{ "|M|",      centeredmaster },
+	{ ">M>",      centeredfloatingmaster },
+	{ NULL,       NULL },
 };
 
 /* key definitions */
@@ -82,10 +100,6 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]   = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]    = { "st", NULL };
-static const char *htopcmd[]    = { "st", "-e", "htop", NULL };
-static const char *mixercmd[]   = { "pavucontrol", NULL };
-static const char *firefoxcmd[] = { "firefox", NULL };
-static const char *zathuracmd[] = { "zathura", NULL };
 
 static const char *brigdown[] = { "xbacklight", "-dec", "10", NULL };
 static const char *brigup[]   = { "xbacklight", "-inc", "10", NULL };
@@ -100,10 +114,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ 0,                            XK_Print,  spawn,          {.v = prtscr } },
-	{ MODKEY|ShiftMask,             XK_t,      spawn,          {.v = htopcmd } },
-	{ MODKEY|ShiftMask,             XK_m,      spawn,          {.v = mixercmd } },
-	{ MODKEY|ShiftMask,             XK_f,      spawn,          {.v = firefoxcmd } },
-	{ MODKEY|ShiftMask,             XK_z,      spawn,          {.v = zathuracmd } },
 
 	{ 0,                            XF86MonBrightnessDown, spawn, {.v = brigdown } },
 	{ 0,                            XF86MonBrightnessUp,   spawn, {.v = brigup } },
@@ -120,14 +130,45 @@ static Key keys[] = {
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
+
+	{ MODKEY,                       XK_Up,     incrgaps,       {.i = +1 } },
+	{ MODKEY,                       XK_Down,   incrgaps,       {.i = -1 } },
+	{ MODKEY,                       XK_Right,  incrigaps,      {.i = +1 } },
+	{ MODKEY,                       XK_Left,   incrigaps,      {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_Up,     incrogaps,      {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_Down,   incrogaps,      {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_Right,  incrihgaps,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_Left,   incrihgaps,     {.i = -1 } },
+	{ MODKEY|ControlMask,           XK_Up,     incrivgaps,     {.i = +1 } },
+	{ MODKEY|ControlMask,           XK_Down,   incrivgaps,     {.i = -1 } },
+	{ MODKEY|ControlMask,           XK_Right,  incrohgaps,     {.i = +1 } },
+	{ MODKEY|ControlMask,           XK_Left,   incrohgaps,     {.i = -1 } },
+	{ MODKEY|ControlMask|ShiftMask, XK_Up,     incrovgaps,     {.i = +1 } },
+	{ MODKEY|ControlMask|ShiftMask, XK_Down,   incrovgaps,     {.i = -1 } },
+	{ MODKEY,                       XK_minus,  togglegaps,     {0} },
+	{ MODKEY,                       XK_equal,  defaultgaps,    {0} },
+
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_r,      setlayout,      {.v = &layouts[3]} },
+
+	{ MODKEY,                       XK_F1,     setlayout,      {.v = &layouts[3]} },
+	{ MODKEY,                       XK_F2,     setlayout,      {.v = &layouts[4]} },
+	{ MODKEY,                       XK_F3,     setlayout,      {.v = &layouts[5]} },
+	{ MODKEY,                       XK_F4,     setlayout,      {.v = &layouts[6]} },
+	{ MODKEY,                       XK_F5,     setlayout,      {.v = &layouts[7]} },
+	{ MODKEY,                       XK_F6,     setlayout,      {.v = &layouts[8]} },
+	{ MODKEY,                       XK_F7,     setlayout,      {.v = &layouts[9]} },
+	{ MODKEY,                       XK_F8,     setlayout,      {.v = &layouts[10]} },
+	{ MODKEY,                       XK_F9,     setlayout,      {.v = &layouts[11]} },
+	{ MODKEY,                       XK_F10,    setlayout,      {.v = &layouts[12]} },
+	{ MODKEY,                       XK_F11,    setlayout,      {.v = &layouts[13]} },
+
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
