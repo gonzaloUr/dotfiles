@@ -1,7 +1,7 @@
 #!/bin/awk -f
 
 function update_bar() {
-    system("xsetroot -name " "' " bar["temp"] " " bar["brg"] " " bar["vol"] " " bar["bat"] " " bar["clk"] " '")
+    system("xsetroot -name " "' " bar["brg"] " " bar["vol"] " " bar["bat"] " " bar["clk"] " '")
 }
 
 function get_brg() {
@@ -38,20 +38,12 @@ function get_bat() {
     return ret "%"
 }
 
-function get_temp() {
-    temp_cmd = "for x in /sys/class/thermal/thermal_zone*; do paste -d' ' \"$x\"/type \"$x\"/temp; done | sed 's/acpitz/bat/g ; s/x86_pkg_temp/cpu/g ; s/000$/°C/' | tr '\\n' ' ' | sed 's/ $//'"
-    temp_cmd | getline ret
-    close(temp_cmd)
-    return ret
-}
-
 BEGIN {
     bar["vol"] = "-%"
     bar["brg"] = get_brg()
     bar["vol"] = get_vol()
     bar["bat"] = get_bat()
     bar["clk"] = get_clock()
-    bar["temp"] = get_temp()
 
     update_bar()
 }
@@ -73,10 +65,6 @@ BEGIN {
 
     if ($3 % 30 == 0) {
         bar["bat"] = get_bat()
-    }
-
-    if ($3 % 5 == 0) {
-        bar["temp"] = get_temp()
     }
 
     update_bar()

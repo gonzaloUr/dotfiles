@@ -8,7 +8,6 @@ endif
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 Plug 'chrisbra/colorizer'
 Plug 'scrooloose/nerdtree'
-Plug 'mfussenegger/nvim-jdtls'
 call plug#end()
 
 filetype indent plugin on
@@ -62,11 +61,6 @@ augroup ft_tex
     autocmd Syntax tex syntax sync maxlines=500
 augroup end
 
-augroup ft_java
-    au FileType java lua require('jdtls').start_or_attach({cmd = {'jdtls.sh'}})
-    au FileType java lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-augroup end
-
 " bindings
 let mapleader="-"
 let maplocalleader="\\"
@@ -117,14 +111,3 @@ nnoremap <leader>c :call Latexmk()<CR> :call PreviewPdf()<CR>
 
 nnoremap <C-n> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
-
-command LspDeclaration    :lua vim.lsp.buf.declaration()<CR>
-command LspDefinition     :lua vim.lsp.buf.definition()<CR>
-command LspHover          :lua vim.lsp.buf.hover()<CR>
-command LspImplementation :lua vim.lsp.buf.implementation()<CR>
-command LspSignatureHelp  :lua vim.lsp.buf.signature_help()<CR>
-command LspRename         :lua vim.lsp.buf.rename()<CR>
-command LspShowLineDiagnostics :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
-command LspFormat         :lua vim.lsp.buf.formatting()<CR>
-command JdtCodeAction     :lua require('jdtls').code_action()<CR>
-command JdtJshell         :lua require('jdtls').jshell()<CR>
