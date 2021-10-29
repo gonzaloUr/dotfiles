@@ -8,6 +8,9 @@ endif
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 Plug 'chrisbra/colorizer'
 Plug 'scrooloose/nerdtree'
+Plug 'junegunn/fzf.vim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'mfussenegger/nvim-jdtls'
 call plug#end()
 
 filetype indent plugin on
@@ -29,21 +32,21 @@ set statusline+=%y\ %c
 set statusline+=\ (%l
 set statusline+=/
 set statusline+=%L)
-colorscheme desert
+
+" visual mode with x11 selection
+set mouse+=a
 
 " remove trailing whitespaces
 au BufWritePre * %s/\s\+$//e
-
-" ascii vertical split separator
-set fillchars=vert:\|
 
 " better preview window
 set splitbelow
 au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" golang
+" use tabs for golang
 au FileType go set expandtab&
 
+" vim tex syntax file settings
 augroup ft_tex
     " Make amsmath environments traditional tex math enviroments
     autocmd Syntax tex call TexNewMathZone("E", "align", 1)
@@ -61,10 +64,7 @@ augroup ft_tex
     autocmd Syntax tex syntax sync maxlines=500
 augroup end
 
-" bindings
-let mapleader="-"
-let maplocalleader="\\"
-
+" functions
 function ToggleColorColumn()
     if &colorcolumn == ""
         set colorcolumn=80
@@ -72,30 +72,6 @@ function ToggleColorColumn()
         set colorcolumn&
     endif
 endfunction
-
-function FzfOpen()
-    let dir=substitute(system('mktemp -d -t fifo-XXXXXXXX'), '\n\+$', '', '')
-    let out=dir . '/out'
-
-    call system('mkdir ' . dir)
-    call system('touch ' . out)
-    call system("st -e sh -c \'fzf > " . out . "\'")
-
-    let file=system("cat " . out)
-    call system('rm -rf ' . dir)
-    call execute('e ' . file)
-endfunction
-
-nnoremap <leader>r :call ToggleColorColumn()<CR>
-
-nnoremap <leader>9 :w \| bp<CR>
-nnoremap <leader>0 :w \| bn<CR>
-nnoremap <leader><leader> :noh<CR>
-nnoremap <leader><localleader> :call FzfOpen()<CR>
-
-nnoremap <leader>s :set nospell<CR>
-nnoremap <leader>e :set spell spelllang=es<CR>
-nnoremap <leader>i :set spell spelllang=en<CR>
 
 function PreviewPdf()
     ! xdg-open %:r.pdf >/dev/null 2>&1 & disown
@@ -105,9 +81,84 @@ function Latexmk()
     ! st -e latexmk -pdf -pvc -view=none -interaction=nonstopmode "%" & disown
 endfunction
 
-nnoremap <leader>p :call PreviewPdf()<CR>
-nnoremap <leader>l :call Latexmk()<CR>
-nnoremap <leader>c :call Latexmk()<CR> :call PreviewPdf()<CR>
+" lsp neovim
+lua<<EOF
+    require'lspconfig'.pylsp.setup{}
+    require'lspconfig'.gopls.setup{}
+    vim.g.jdtlsConfig = {
+        cmd = {'jdtls.sh'},
+        settings = {
+            java = {
+                codeGeneration = {
+                    hashCodeEquals = {
+                        useJava7Objects = true
+                    }
+                }
+            }
+        }
+    }
+EOF
+
+augroup ft_java
+    au FileType java lua require('jdtls').start_or_attach(vim.g.jdtlsConfig)
+    au FileType java lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+augroup end
+
+augroup ft_python
+    au FileType python lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+augroup end
+
+augroup ft_go
+    au FileType go lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+augroup end
+
+" bindings
+let mapleader="-"
+let maplocalleader="\\"
+
+nnoremap <leader>r :call ToggleColorColumn()<CR>
+nnoremap <leader>9 :w \| bp<CR>
+nnoremap <leader>0 :w \| bn<CR>
+nnoremap <leader><leader> :noh<CR>
+
+nnoremap <leader>s :set nospell<CR>
+nnoremap <leader>e :set spell spelllang=es<CR>
+nnoremap <leader>i :set spell spelllang=en<CR>
+
+augroup ft_tex
+    au Filetype tex nnoremap <leader>p :call PreviewPdf()<CR>
+    au Filetype tex nnoremap <leader>l :call Latexmk()<CR>
+    au Filetype tex nnoremap <leader>c :call Latexmk()<CR> :call PreviewPdf()<CR>
+augroup end
 
 nnoremap <C-n> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
+
+nnoremap <leader><localleader> :Files<CR>
+nnoremap <leader>g :GFiles<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>t :Filetypes<CR>
+nnoremap <leader>m :Maps<CR>
+nnoremap <leader>M :Marks<CR>
+nnoremap <leader>C :Colors<CR>
+nnoremap <leader>L :Lines<CR>
+nnoremap <leader>l :BLines<CR>
+
+nnoremap ,gD :lua vim.lsp.buf.declaration()<CR>
+nnoremap ,gd :lua vim.lsp.buf.definition()<CR>
+nnoremap ,a  :lua vim.lsp.buf.code_action()<CR>
+nnoremap ,A  :lua require('jdtls').code_action()<CR>
+nnoremap ,h  :lua vim.lsp.buf.hover()<CR>
+nnoremap ,gi :lua vim.lsp.buf.implementation()<CR>
+nnoremap ,sh :lua vim.lsp.buf.signature_help()<CR>
+nnoremap ,wa :lua vim.lsp.buf.add_workspace_folder()<CR>
+nnoremap ,wr :lua vim.lsp.buf.remove_workspace_folder()<CR>
+nnoremap ,wl :lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>
+nnoremap ,td :lua vim.lsp.buf.type_definition()<CR>
+nnoremap ,r  :lua vim.lsp.buf.rename()<CR>
+nnoremap ,rf :lua vim.lsp.buf.references()<CR>
+nnoremap ,f  :lua vim.lsp.buf.formatting()<CR>
+nnoremap ,sd :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+nnoremap ,n  :lua vim.lsp.diagnostic.goto_next()<CR>
+nnoremap ,p  :lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap ,j  :lua require('jdtls').jshell()<CR>

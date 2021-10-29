@@ -35,7 +35,7 @@ function get_bat() {
     bat_cmd = "cat /sys/class/power_supply/BAT0/capacity"
     bat_cmd | getline ret
     close(bat_cmd)
-    return ret "%"
+    return "bat " ret "%"
 }
 
 BEGIN {

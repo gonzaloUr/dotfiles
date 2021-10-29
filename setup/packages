@@ -15,6 +15,10 @@ pacman -S --noconfirm --needed zsh-syntax-highlighting
 pacman -S --noconfirm --needed bluez
 pacman -S --noconfirm --needed NetworkManager
 
+# network
+pacman -S --noconfirm --needed inetutils
+pacman -S --noconfirm --needed net-tools
+
 # ntp
 pacman -S --noconfirm --needed openntpd
 
@@ -28,7 +32,6 @@ pacman -S --noconfirm --needed xdotool
 pacman -S --noconfirm --needed dunst
 pacman -S --noconfirm --needed libnotify
 pacman -S --noconfirm --needed xcompmgr
-pacman -S --noconfirm --needed wmname
 
 # multimedia
 pacman -S --noconfirm --needed pulseaudio-alsa
@@ -42,8 +45,10 @@ pacman -S --noconfirm --needed fzf
 pacman -S --noconfirm --needed entr
 pacman -S --noconfirm --needed acpi
 pacman -S --noconfirm --needed tree
-pacman -S --noconfirm --needed xdg-utils
 pacman -S --noconfirm --needed clipnotify
+
+# xdg
+pacman -S --noconfirm --needed xdg-utils
 
 # programs
 pacman -S --noconfirm --needed slock

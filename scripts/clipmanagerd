@@ -1,0 +1,39 @@
+#!/bin/sh
+
+MAX=5
+CLIPS=/tmp/clipmanager-cache/clips
+
+mkdir -p /tmp/clipmanager-cache/
+touch /tmp/clipmanager-cache/clips
+
+primary="$(xsel --primary -o)"
+
+while clipnotify
+do
+    out="$(xsel --primary -o)"
+
+    if [ "$out" != "$primary" ] && [ -n "$out" ]
+    then
+        file="$(mktemp -p /tmp/clipmanager-cache -t clip-XXXXXXXX)"
+        echo "$out" > "$file"
+
+        echo "$file" >> /tmp/clipmanager-cache/clips
+        echo "$out" |\
+            awk '/./ { print; exit }' |\
+            head -n1 >> /tmp/clipmanager-cache/clips
+
+        primary="$out"
+
+        lines="$(wc -l $CLIPS | cut -f1 -d ' ')"
+
+        if [ $lines -gt $(( MAX * 2 )) ]
+        then
+            to_remove="$(head -n1 $CLIPS)"
+            rm "$to_remove"
+            tmp="$(mktemp)"
+            tail -n +3 "$CLIPS" > "$tmp"
+            cat "$tmp" > "$CLIPS"
+            rm "$tmp"
+        fi
+    fi
+done

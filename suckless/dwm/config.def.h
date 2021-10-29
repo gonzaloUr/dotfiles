@@ -107,13 +107,15 @@ static const char *volmute[]  = { "pactl", "set-sink-mute", "@DEFAULT_SINK@", "t
 static const char *volup[]    = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+10%", NULL };
 static const char *voldown[]  = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-10%", NULL };
 static const char *micmute[]  = { "pactl", "set-source-mute", "@DEFAULT_SOURCE@", "toggle", NULL };
-static const char *prtscr[]   = { "sh", "-c", "maim -s | xclip -selection clipboard -t image/png", NULL };
+static const char *prtscr[]   = { "ptrscr", NULL };
+static const char *clipmgr[]  = { "clipmanager", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ 0,                            XK_Print,  spawn,          {.v = prtscr } },
+	{ MODKEY,                       XK_a,      spawn,          {.v = clipmgr } },
 
 	{ 0,                            XF86MonBrightnessDown, spawn, {.v = brigdown } },
 	{ 0,                            XF86MonBrightnessUp,   spawn, {.v = brigup } },

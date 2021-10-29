@@ -1,0 +1,14 @@
+cmd dragon %dragon-drag-and-drop -a -x $fx
+cmd dragon-stay %dragon-drag-and-drop -a $fx
+cmd dragon-move-here ${{
+    out="$(dragon-drag-and-drop -t -x)"
+    case "$out" in
+        file://*) cp "$out" "$PWD" ;;
+        https://* | http://*) wget "$out" ;;
+    esac
+}}
+
+cmd copy-image ${{
+    xclip -selection clipboard -t image/png -i $f
+}}
+cmd paste-image %xclip -selection clipboard -t image/png -o > out.png

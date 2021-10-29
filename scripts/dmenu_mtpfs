@@ -8,5 +8,5 @@ match="$(echo "$devices" | grep "$out")"
 id="$(echo "$match" | awk '{ print $1 }' | tr -d ':')"
 name="$(echo "$match" | awk '{ print $2 }')"
 
-sudo mkdir -p "/mnt/$name"
-sudo simple-mtpfs --device "$id" -o allow_other "/mnt/$name"
+sudo mkdir -p "/media/$name"
+sudo simple-mtpfs --device "$id" -o allow_other "/media/$name"

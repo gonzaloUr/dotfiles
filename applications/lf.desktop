@@ -4,5 +4,6 @@
 # install under ~/.local/share/applications
 
 Type=Application
-Name=File Manager
+Name=lf file manager
+MimeType=inode/directory;
 Exec=/usr/local/bin/st -e lf %u

@@ -1,8 +1,8 @@
 nitrogen --restore &
 dunst &
 xcompmgr &
-statusbar &
-wmname LG3D
+awkscripts &
+clipmanagerd &
 
 eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
 export SSH_AUTH_SOCK

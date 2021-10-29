@@ -1,0 +1,12 @@
+#!/bin/sh
+
+out="$(tac /tmp/clipmanager-cache/clips)"
+i="$(printf '%s' "$out" |\
+    awk 'BEGIN { i = 1 } (NR - 1) % 2 == 0 { print i ": " $0; i++ }' |\
+    dmenu -l 10 |\
+    sed 's/\(^[0-9][0-9]*\):.*$/\1/g')"
+
+[ -z "$i" ] && exit
+
+(( i=2 * i ))
+printf '%s' "$out" | sed "$i q ; d" | xargs cat | xclip -selection clipboard
