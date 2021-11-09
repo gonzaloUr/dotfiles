@@ -9,6 +9,7 @@
  * https://dwm.suckless.org/patches/alpha/dwm-fixborders-6.2.diff
  * https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.2.diff
  * https://dwm.suckless.org/patches/statusallmons/dwm-statusallmons-6.2.diff
+ * https://dwm.suckless.org/patches/pertag/dwm-pertag-20200914-61bb8b2.diff
  */
 
 /* appearance */

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MAX=5
+MAX=20
 CLIPS=/tmp/clipmanager-cache/clips
 
 mkdir -p /tmp/clipmanager-cache/

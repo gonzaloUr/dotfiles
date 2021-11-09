@@ -85,6 +85,7 @@ endfunction
 lua<<EOF
     require'lspconfig'.pylsp.setup{}
     require'lspconfig'.gopls.setup{}
+    require'lspconfig'.texlab.setup{}
     vim.g.jdtlsConfig = {
         cmd = {'jdtls.sh'},
         settings = {
@@ -110,6 +111,10 @@ augroup end
 
 augroup ft_go
     au FileType go lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+augroup end
+
+augroup ft_tex
+    au FileType tex lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 augroup end
 
 " bindings
