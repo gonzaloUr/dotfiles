@@ -8,7 +8,7 @@ function get_brg() {
     "xbacklight" | getline out
     close("xbacklight")
     split(out, a, ".")
-    return "brg " a[1] "%"
+    return "🔆 " a[1] "%"
 }
 
 function get_vol() {
@@ -19,7 +19,7 @@ function get_vol() {
     volume_cmd = "pactl list sinks | sed -n '/" default_sink "/,/^Sink/p' | grep '^[[:space:]]*Volume:' | sed -n 's/^.* \\([[:digit:]][[:digit:]]*%\\).*$/\\1/p' | head -n1"
     volume_cmd | getline volume
     close(volume_cmd)
-    volume="vol " volume
+    volume="🔊 " volume
 
     return volume
 }
@@ -28,14 +28,14 @@ function get_clock() {
     clock_cmd = "date '+%b %d %a %H:%M:%S'"
     clock_cmd | getline ret
     close(clock_cmd)
-    return ret
+    return "📅 " ret
 }
 
 function get_bat() {
     bat_cmd = "cat /sys/class/power_supply/BAT0/capacity"
     bat_cmd | getline ret
     close(bat_cmd)
-    return "bat " ret "%"
+    return "🔋 " ret "%"
 }
 
 BEGIN {

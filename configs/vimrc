@@ -78,7 +78,7 @@ function PreviewPdf()
 endfunction
 
 function Latexmk()
-    ! st -e latexmk -pdf -pvc -view=none -interaction=nonstopmode "%" & disown
+    ! $TERMINAL -e latexmk -pdf -pvc -view=none -interaction=nonstopmode "%" & disown
 endfunction
 
 " lsp neovim

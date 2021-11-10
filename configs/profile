@@ -3,7 +3,7 @@ export BROWSER=firefox
 export READER=zathura
 export VIEWER=sxiv
 export PLAYER=mpv
-export TERMINAL=st
+export TERMINAL=alacritty
 
 # xdg
 export XDG_CONFIG_HOME="$HOME/.config"
