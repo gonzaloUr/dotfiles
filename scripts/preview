@@ -1,0 +1,8 @@
+#!/bin/sh
+
+case "$1" in
+    *.zip) unzip -l "$1" ;;
+    *.tar|*.tar.gz) tar tf "$1" ;;
+    *.pdf) pdftotext -layout -f 1 -l 1 "$1" - ;;
+    *) highlight -O ansi "$1" ;;
+esac

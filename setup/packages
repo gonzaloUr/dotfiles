@@ -46,6 +46,8 @@ pacman -S --noconfirm --needed entr
 pacman -S --noconfirm --needed acpi
 pacman -S --noconfirm --needed tree
 pacman -S --noconfirm --needed clipnotify
+pacman -S --noconfirm --needed poppler
+pacman -S --noconfirm --needed highlight
 
 # xdg
 pacman -S --noconfirm --needed xdg-utils

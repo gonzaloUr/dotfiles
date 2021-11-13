@@ -4,6 +4,6 @@
 # install under ~/.local/share/applications
 
 Type=Application
-Name=Neovim on st
-MimeType=text/plain;
-Exec=/usr/local/bin/st -e nvim %u
+Name=Neovim
+MimeType=text/plain;text/x-go;
+Exec=alacritty -e nvim %u

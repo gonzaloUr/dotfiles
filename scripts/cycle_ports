@@ -1,0 +1,51 @@
+#!/bin/sh
+
+if [ "$1" = 'sink' ]
+then
+    default_sink="$(pactl get-default-sink)"
+    sink_info="$(pactl list sinks | sed -n "/$default_sink/,/^Sink/p")"
+    active_port="$(echo "$sink_info" |\
+        grep 'Active Port:' |\
+        sed 's/^[[:space:]]*Active Port: //g')"
+    ports="$(echo "$sink_info" |\
+        sed -n '/Ports/,/Active Port/p' |\
+        sed '1d; $d; s/^[[:space:]]*//g' |\
+        cut -d: -f1)"
+
+    rest="$(echo "$ports" |\
+        sed -n "/$active_port/,$ p" |\
+        sed '1d')"
+
+    new_active="$(echo "$rest" | head -n1)"
+
+    if [ -z "$new_active" ]
+    then
+        new_active="$(echo "$ports" | head -n1)"
+    fi
+
+    pactl set-sink-port @DEFAULT_SINK@ "$new_active"
+elif [ "$1" = 'source' ]
+then
+    default_source="$(pactl get-default-source)"
+    source_info="$(pactl list sources | sed -n "/$default_source/,/^Source/p")"
+    active_port="$(echo "$source_info" |\
+        grep 'Active Port:' |\
+        sed 's/^[[:space:]]*Active Port: //g')"
+    ports="$(echo "$source_info" |\
+        sed -n '/Ports/,/Active Port/p' |\
+        sed '1d; $d; s/^[[:space:]]*//g' |\
+        cut -d: -f1)"
+
+    rest="$(echo "$ports" |\
+        sed -n "/$active_port/,$ p" |\
+        sed '1d')"
+
+    new_active="$(echo "$rest" | head -n1)"
+
+    if [ -z "$new_active" ]
+    then
+        new_active="$(echo "$ports" | head -n1)"
+    fi
+
+    pactl set-source-port @DEFAULT_SOURCE@ "$new_active"
+fi

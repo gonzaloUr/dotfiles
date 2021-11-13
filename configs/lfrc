@@ -12,3 +12,5 @@ cmd copy-image ${{
     xclip -selection clipboard -t image/png -i "$f"
 }}
 cmd paste-image %xclip -selection clipboard -t image/png -o > out.png
+
+set previewer ~/.config/lf/preview

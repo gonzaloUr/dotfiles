@@ -78,13 +78,7 @@ lfcd() {
     fi
 }
 
-newst() {
-    st -e 'zsh' &
-    disown
-}
-
 bindkey -s '^o' 'lfcd\n'
-bindkey -s '^n' 'newst\n'
 
 # zsh-users plugins
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null

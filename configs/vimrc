@@ -33,6 +33,9 @@ set statusline+=\ (%l
 set statusline+=/
 set statusline+=%L)
 
+" https://github.com/neovim/neovim/issues/11330
+autocmd VimEnter * silent exec "!kill -s SIGWINCH" getpid()
+
 " visual mode with x11 selection
 set mouse+=a
 
@@ -151,19 +154,19 @@ nnoremap <leader>l :BLines<CR>
 
 nnoremap ,gD :lua vim.lsp.buf.declaration()<CR>
 nnoremap ,gd :lua vim.lsp.buf.definition()<CR>
+nnoremap ,gi :lua vim.lsp.buf.implementation()<CR>
 nnoremap ,a  :lua vim.lsp.buf.code_action()<CR>
 nnoremap ,A  :lua require('jdtls').code_action()<CR>
 nnoremap ,h  :lua vim.lsp.buf.hover()<CR>
-nnoremap ,gi :lua vim.lsp.buf.implementation()<CR>
 nnoremap ,sh :lua vim.lsp.buf.signature_help()<CR>
+nnoremap ,sd :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
 nnoremap ,wa :lua vim.lsp.buf.add_workspace_folder()<CR>
 nnoremap ,wr :lua vim.lsp.buf.remove_workspace_folder()<CR>
 nnoremap ,wl :lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>
 nnoremap ,td :lua vim.lsp.buf.type_definition()<CR>
-nnoremap ,r  :lua vim.lsp.buf.rename()<CR>
+nnoremap ,re  :lua vim.lsp.buf.rename()<CR>
 nnoremap ,rf :lua vim.lsp.buf.references()<CR>
 nnoremap ,f  :lua vim.lsp.buf.formatting()<CR>
-nnoremap ,sd :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
 nnoremap ,n  :lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap ,p  :lua vim.lsp.diagnostic.goto_prev()<CR>
 nnoremap ,j  :lua require('jdtls').jshell()<CR>
