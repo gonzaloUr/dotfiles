@@ -1,16 +1,6 @@
-autoload -Uz vcs_info
-precmd_vcs_info() {
-    vcs_info
-}
-precmd_functions+=( precmd_vcs_info )
-zstyle ':vcs_info:git:*' formats '%b'
-
 autoload -U colors && colors
 
-setopt prompt_subst
-
 PROMPT="%B%{$fg[default]%}%d%b"$'\n'"%# "
-RPROMPT="%B%{$fg[default]%}\$vcs_info_msg_0_%b"
 
 autoload -Uz compinit
 zstyle ':completion:*' menu select
@@ -82,7 +72,11 @@ bindkey -s '^o' 'lfcd\n'
 
 # zsh-users plugins
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 2>/dev/null &&
-  bindkey '^H' history-substring-search-up &&
-  bindkey '^L' history-substring-search-down
+bindkey '^P' autosuggest-accept
+bindkey '^X' autosuggest-execute
+
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 2>/dev/null
+bindkey '^H' history-substring-search-up
+bindkey '^L' history-substring-search-down

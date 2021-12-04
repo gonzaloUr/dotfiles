@@ -4,7 +4,6 @@
  * Required patches:
  * https://dwm.suckless.org/patches/vanitygaps/dwm-vanitygaps-6.2.diff
  * https://dwm.suckless.org/patches/push/dwm-push-20201112-61bb8b2.diff
- * Modified https://dwm.suckless.org/patches/statuscmd/dwm-statuscmd-nosignal-20210402-67d76bd.diff
  *
  * Other patches:
  * https://dwm.suckless.org/patches/alpha/dwm-fixborders-6.2.diff
@@ -23,8 +22,8 @@ static const unsigned int gappov    = 10;       /* vert outer gap between window
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "DejaVuSansMono:size=8", "JoyPixels:pixelsize=12:antialias=true:autohint=true" };
-static const char dmenufont[]       = "DejaVuSansMono:size=8";
+static const char *fonts[]          = { "DejaVuSansMono:size=10", "JoyPixels:pixelsize=12:antialias=true:autohint=true" };
+static const char dmenufont[]       = "DejaVuSansMono:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -49,6 +48,8 @@ static const Rule rules[] = {
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 	{ "firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "brave-browser",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Brave-browser",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
 /* layout(s) */
@@ -101,7 +102,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]   = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]    = { "alacritty", NULL };
+static const char *termcmd[]    = { "st", NULL };
 
 static const char *brigdown[]  = { "xbacklight", "-dec", "10", NULL };
 static const char *brigup[]    = { "xbacklight", "-inc", "10", NULL };
@@ -111,16 +112,8 @@ static const char *voldown[]   = { "pactl", "set-sink-volume", "@DEFAULT_SINK@",
 static const char *micup[]     = { "pactl", "set-source-volume", "@DEFAULT_SOURCE@", "+10%", NULL };
 static const char *micdown[]   = { "pactl", "set-source-volume", "@DEFAULT_SOURCE@", "-10%", NULL };
 static const char *micmute[]   = { "pactl", "set-source-mute", "@DEFAULT_SOURCE@", "toggle", NULL };
-static const char *cyclesink[] = { "cycle_ports", "sink", NULL };
-static const char *cyclesrc[]  = { "cycle_ports", "source", NULL };
 static const char *prtscr[]    = { "ptrscr", NULL };
 static const char *clipmgr[]   = { "clipmanager", NULL };
-
-/* commands spawned when clicking statusbar, the mouse button pressed is exported as BUTTON */
-static const StatusCmd statuscmds[] = {
-	{ "notify-send Mouse$BUTTON", 1 },
-};
-static const char *statuscmd[] = { "/bin/sh", "-c", "notify-send test$STATUSCMD_N", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -137,8 +130,6 @@ static Key keys[] = {
 	{ ShiftMask,                    XF86AudioRaiseVolume,  spawn, {.v = micup } },
 	{ ShiftMask,                    XF86AudioLowerVolume,  spawn, {.v = micdown } },
 	{ 0,                            XF86AudioMicMute,      spawn, {.v = micmute } },
-	{ MODKEY,                       XK_period,             spawn, {.v = cyclesink } },
-	{ MODKEY,                       XK_comma,              spawn, {.v = cyclesrc } },
 
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -214,7 +205,7 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	// { ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
@@ -222,9 +213,4 @@ static Button buttons[] = {
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
-
-	{ ClkStatusText,        0,              Button1,        spawn,          {.v = statuscmd } },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = statuscmd } },
-	{ ClkStatusText,        0,              Button3,        spawn,          {.v = statuscmd } },
 };
-

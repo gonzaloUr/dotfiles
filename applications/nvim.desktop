@@ -6,4 +6,4 @@
 Type=Application
 Name=Neovim
 MimeType=text/plain;text/x-go;
-Exec=alacritty -e nvim %u
+Exec=st -e nvim %u

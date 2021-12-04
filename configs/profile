@@ -3,7 +3,7 @@ export BROWSER=firefox
 export READER=zathura
 export VIEWER=sxiv
 export PLAYER=mpv
-export TERMINAL=alacritty
+export TERMINAL=st
 
 # xdg
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -23,5 +23,4 @@ export AWT_TOOLKIT=MToolkit
 # path
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
-export PATH=$PATH:~/.local/bin/scripts
 export PATH=$PATH:$GOPATH/bin

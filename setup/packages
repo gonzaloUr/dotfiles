@@ -10,6 +10,7 @@ pacman -S --noconfirm --needed tlp
 pacman -S --noconfirm --needed zsh-completions
 pacman -S --noconfirm --needed zsh-history-substring-search
 pacman -S --noconfirm --needed zsh-syntax-highlighting
+pacman -S --noconfirm --needed zsh-autosuggestions
 
 # wireless
 pacman -S --noconfirm --needed bluez
@@ -32,6 +33,7 @@ pacman -S --noconfirm --needed xdotool
 pacman -S --noconfirm --needed dunst
 pacman -S --noconfirm --needed libnotify
 pacman -S --noconfirm --needed xcompmgr
+pacman -S --noconfirm --needed xwallpaper
 
 # multimedia
 pacman -S --noconfirm --needed pulseaudio-alsa
@@ -48,6 +50,7 @@ pacman -S --noconfirm --needed tree
 pacman -S --noconfirm --needed clipnotify
 pacman -S --noconfirm --needed poppler
 pacman -S --noconfirm --needed highlight
+pacman -S --noconfirm --needed pdfgrep
 
 # xdg
 pacman -S --noconfirm --needed xdg-utils
@@ -61,6 +64,7 @@ pacman -S --noconfirm --needed mpv
 pacman -S --noconfirm --needed sxiv
 pacman -S --noconfirm --needed zathura
 pacman -S --noconfirm --needed zathura-pdf-mupdf
+pacman -S --noconfirm --needed zathura-ps
 pacman -S --noconfirm --needed git
 pacman -S --noconfirm --needed htop
 pacman -S --noconfirm --needed maim

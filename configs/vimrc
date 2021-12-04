@@ -9,6 +9,7 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 Plug 'chrisbra/colorizer'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf.vim'
+
 Plug 'neovim/nvim-lspconfig'
 Plug 'mfussenegger/nvim-jdtls'
 call plug#end()
