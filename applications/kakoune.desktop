@@ -4,6 +4,6 @@
 # install under ~/.local/share/applications
 
 Type=Application
-Name=neovim
+Name=kakoune
 MimeType=text/plain;text/x-go;
-Exec=alacritty -e nvim %u
+Exec=alacritty -e kak %u

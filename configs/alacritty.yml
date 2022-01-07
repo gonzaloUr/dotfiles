@@ -185,8 +185,10 @@ font:
 colors:
   # Default colors
   primary:
-    background: '#1e1e1e'
-    foreground: '#cccccc'
+    # hard contrast: background = '#f9f5d7'
+    background: '#fbf1c7'
+    # soft contrast: background = '#f2e5bc'
+    foreground: '#3c3836'
 
     # Bright and dim foreground colors
     #
@@ -269,30 +271,30 @@ colors:
   # Allowed values are CellForeground/CellBackground, which reference the
   # affected cell, or hexadecimal colors like #ff00ff.
   selection:
-    text: '#d4d4d4'
-    background: '#404040'
+    text: '#282828'
+    background: '#ebdbb2'
 
   # Normal colors
   normal:
-    black:   '#000000'
-    red:     '#cd3131'
-    green:   '#0dbc79'
-    yellow:  '#e5e510'
-    blue:    '#2472c8'
-    magenta: '#bc3fbc'
-    cyan:    '#11a8cd'
-    white:   '#e5e5e5'
+    black:   '#fbf1c7'
+    red:     '#cc241d'
+    green:   '#98971a'
+    yellow:  '#d79921'
+    blue:    '#458588'
+    magenta: '#b16286'
+    cyan:    '#689d6a'
+    white:   '#7c6f64'
 
   # Bright colors
   bright:
-    black:   '#666666'
-    red:     '#f14c4c'
-    green:   '#23d18b'
-    yellow:  '#f5f543'
-    blue:    '#3b8eea'
-    magenta: '#d670d6'
-    cyan:    '#29b8db'
-    white:   '#e5e5e5'
+    black:   '#928374'
+    red:     '#9d0006'
+    green:   '#79740e'
+    yellow:  '#b57614'
+    blue:    '#076678'
+    magenta: '#8f3f71'
+    cyan:    '#427b58'
+    white:   '#3c3836'
 
   # Dim colors
   #
@@ -738,13 +740,14 @@ colors:
 # If the same trigger is assigned to multiple actions, all of them are executed
 # in the order they were defined in.
 key_bindings:
-  - { key: K, mods: Alt,       action: ScrollLineUp     }
-  - { key: J, mods: Alt,       action: ScrollLineDown   }
-  - { key: U, mods: Alt,       action: ScrollPageUp     }
-  - { key: D, mods: Alt,       action: ScrollPageDown   }
-  - { key: L, mods: Shift|Alt, action: ResetFontSize    }
-  - { key: K, mods: Shift|Alt, action: IncreaseFontSize }
-  - { key: J, mods: Shift|Alt, action: DecreaseFontSize }
+  - { key: K,      mods: Alt,           action: ScrollLineUp     }
+  - { key: J,      mods: Alt,           action: ScrollLineDown   }
+  - { key: U,      mods: Alt,           action: ScrollPageUp     }
+  - { key: D,      mods: Alt,           action: ScrollPageDown   }
+  - { key: L,      mods: Shift|Alt,     action: ResetFontSize    }
+  - { key: K,      mods: Shift|Alt,     action: IncreaseFontSize }
+  - { key: J,      mods: Shift|Alt,     action: DecreaseFontSize }
+  - { key: Return, mods: Shift|Control, action: SpawnNewInstance }
 
   #- { key: Paste,                                       action: Paste          }
   #- { key: Copy,                                        action: Copy           }

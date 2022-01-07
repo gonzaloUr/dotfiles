@@ -5,6 +5,7 @@
  * https://st.suckless.org/patches/scrollback/st-scrollback-0.8.4.diff
  * https://st.suckless.org/patches/alpha/st-alpha-0.8.2.diff
  * https://st.suckless.org/patches/font2/st-font2-20190416-ba72400.diff
+ * https://st.suckless.org/patches/newterm/st-newterm-orphan-20210712-4536f46.diff
  *
  * Other patches:
  * https://st.suckless.org/patches/anysize/st-anysize-0.8.4.diff
@@ -105,7 +106,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 /* bg opacity */
-float alpha = 0.8;
+float alpha = 1.0;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -223,6 +224,7 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+	{ TERMMOD,              XK_Return,      newterm,        {.i =  0} },
 	{ MODKEY,               XK_k,           kscrollup,      {.i =  1} },
 	{ MODKEY,               XK_j,           kscrolldown,    {.i =  1} },
 	{ MODKEY,               XK_u,           kscrollup,      {.i = 10} },

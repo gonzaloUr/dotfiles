@@ -1,0 +1,272 @@
+VSCode default terminal colors
+
+/* 8 normal colors */
+"#000000", /* black   */
+"#cd3131", /* red     */
+"#0dbc79", /* green   */
+"#e5e510", /* yellow  */
+"#2472c8", /* blue    */
+"#bc3fbc", /* magenta */
+"#11a8cd", /* cyan    */
+"#e5e5e5", /* white   */
+
+/* 8 bright colors */
+"#666666", /* black   */
+"#f14c4c", /* red     */
+"#23d18b", /* green   */
+"#f5f543", /* yellow  */
+"#3b8eea", /* blue    */
+"#d670d6", /* magenta */
+"#29b8db", /* cyan    */
+"#e5e5e5", /* white   */
+
+[255] = 0,
+
+/* more colors can be added after 255 to use with DefaultXX */
+"#cccccc", /* foreground      */
+"#1e1e1e", /* background      */
+"#d4d4d4", /* cursor          */
+"#404040", /* selected cursor */
+
+================================================================
+
+'GNOME Light' theme from GNOME Terminal.
+
+/* 8 normal colors */
+"#171421", /* black   */
+"#c01c28", /* red     */
+"#26a269", /* green   */
+"#a2734c", /* yellow  */
+"#12488b", /* blue    */
+"#a347ba", /* magenta */
+"#2aa1b3", /* cyan    */
+"#d0cfcc", /* white   */
+
+/* 8 bright colors */
+"#5e5c64", /* black   */
+"#f66151", /* red     */
+"#33d17a", /* green   */
+"#e9ad0c", /* yellow  */
+"#2a7bde", /* blue    */
+"#c061cb", /* magenta */
+"#33c7de", /* cyan    */
+"#ffffff", /* white   */
+
+[255] = 0,
+
+/* more colors can be added after 255 to use with DefaultXX */
+"#171421", /* foreground     */
+"#ffffff", /* background     */
+"#171421", /* cursor         */
+"#ffffff", /* reverse cursor */
+
+================================================================
+
+Terminal.sexy dark default theme
+
+colors:
+  # Default colors
+  primary:
+    background: '0x1d1f21'
+    foreground: '0xc5c8c6'
+
+  selection:
+    text: '0x1d1f21'
+    background: '0xc5c8c6'
+
+  # Normal colors
+  normal:
+    black:   '0x282a2e'
+    red:     '0xa54242'
+    green:   '0x8c9440'
+    yellow:  '0xde935f'
+    blue:    '0x5f819d'
+    magenta: '0x85678f'
+    cyan:    '0x5e8d87'
+    white:   '0x707880'
+
+  # Bright colors
+  bright:
+    black:   '0x373b41'
+    red:     '0xcc6666'
+    green:   '0xb5bd68'
+    yellow:  '0xf0c674'
+    blue:    '0x81a2be'
+    magenta: '0xb294bb'
+    cyan:    '0x8abeb7'
+    white:   '0xc5c8c6'
+
+================================================================
+
+Euphrasia light (xcolors.net found in terminal.sexy)
+
+colors:
+  # Default colors
+  primary:
+    background: '0xcfcfd9'
+    foreground: '0x1c2027'
+
+  # Normal colors
+  normal:
+    black:   '0x192033'
+    red:     '0xa62a3e'
+    green:   '0x38912b'
+    yellow:  '0xb27d12'
+    blue:    '0x355c9a'
+    magenta: '0x7c4f9f'
+    cyan:    '0x258f8f'
+    white:   '0x77858c'
+
+  # Bright colors
+  bright:
+    black:   '0x666666'
+    red:     '0xf04758'
+    green:   '0x93c724'
+    yellow:  '0xddb62b'
+    blue:    '0x45a3e6'
+    magenta: '0xc953ef'
+    cyan:    '0x60c6c8'
+    white:   '0xc0c0c0'
+
+================================================================
+
+Light color scheme found on github (https://github.com/icyphox/dotfiles/blob/master/home/.colors/light)
+
+*foreground:   #676767
+*background:   #f4f4f4
+*cursor:       #676767
+
+*color0:       #f4f4f4
+*color1:       #db7070
+*color2:       #7c9f4b
+*color3:       #d69822
+*color4:       #6587bf
+*color5:       #b870ce
+*color6:       #509c93
+*color7:       #676767
+
+*color8:       #aaaaaa
+*color9:       #c66666
+*color10:      #6d8b42
+*color11:      #cdcdcd
+*color12:      #8a8a8a
+*color13:      #a262b5
+*color14:      #43827b
+*color15:      #525252
+
+primary:
+  foreground: "#676767"
+  background: "#f4f4f4"
+
+normal:
+  black:      "#f4f4f4"
+  red:        "#db7070"
+  green:      "#7c9f4b"
+  yellow:     "#d69822"
+  blue:       "#6587bf"
+  magenta:    "#b870ce"
+  cyan:       "#509c93"
+  white:      "#676767"
+
+bright:
+  black:      "#aaaaaa"
+  red:        "#c66666"
+  green:      "#6d8b42"
+  yellow:     "#cdcdcd"
+  blue:       "#8a8a8a"
+  magenta:    "#a262b5"
+  cyan:       "#43827b"
+  white:      "#525252"
+
+================================================================
+
+Gruvbox light
+
+colors:
+  # Default colors
+  primary:
+    # hard contrast: background = '#f9f5d7'
+    background: '#fbf1c7'
+    # soft contrast: background = '#f2e5bc'
+    foreground: '#3c3836'
+
+  # Normal colors
+  normal:
+    black:   '#fbf1c7'
+    red:     '#cc241d'
+    green:   '#98971a'
+    yellow:  '#d79921'
+    blue:    '#458588'
+    magenta: '#b16286'
+    cyan:    '#689d6a'
+    white:   '#7c6f64'
+
+  # Bright colors
+  bright:
+    black:   '#928374'
+    red:     '#9d0006'
+    green:   '#79740e'
+    yellow:  '#b57614'
+    blue:    '#076678'
+    magenta: '#8f3f71'
+    cyan:    '#427b58'
+    white:   '#3c3836'
+
+================================================================
+
+Terminal.app light
+
+# Colors (Terminal.app Basic)
+colors:
+  primary:
+    background: "#FFFFFF"
+    foreground: "#000000"
+  normal:
+    black:      "#000000"
+    red:        "#990000"
+    green:      "#00A600"
+    yellow:     "#999900"
+    blue:       "#0000B2"
+    magenta:    "#B200B2"
+    cyan:       "#00A6B2"
+    white:      "#BFBFBF"
+  bright:
+    black:      "#666666"
+    red:        "#E50000"
+    green:      "#00D900"
+    yellow:     "#E5E500"
+    blue:       "#0000FF"
+    magenta:    "#E500E5"
+    cyan:       "#00E5E5"
+    white:      "#E5E5E5"
+
+
+================================================================
+
+Pencil Light
+
+colors:
+ # Default Colors
+ primary:
+   background: '#f1f1f1'
+   foreground: '#424242'
+ # Normal colors
+ normal:
+   black:   '#212121'
+   red:     '#c30771'
+   green:   '#10a778'
+   yellow:  '#a89c14'
+   blue:    '#008ec4'
+   magenta: '#523c79'
+   cyan:    '#20a5ba'
+   white:   '#e0e0e0'
+ # Bright colors
+ bright:
+   black:   '#212121'
+   red:     '#fb007a'
+   green:   '#5fd7af'
+   yellow:  '#f3e430'
+   blue:    '#20bbfc'
+   magenta: '#6855de'
+   cyan:    '#4fb8cc'
+   white:   '#f1f1f1'

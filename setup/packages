@@ -72,6 +72,7 @@ pacman -S --noconfirm --needed pavucontrol
 pacman -S --noconfirm --needed tig
 pacman -S --noconfirm --needed nitrogen
 pacman -S --noconfirm --needed pacman-contrib
+pacman -S --noconfirm --needed alacritty
 
 # src dependencies
 pacman -S --noconfirm --needed base-devel
