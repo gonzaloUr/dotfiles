@@ -6,13 +6,16 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
 endif
 
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
+Plug 'https://github.com/jiangmiao/auto-pairs'
+
 Plug 'chrisbra/colorizer'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf.vim'
+Plug 'sebdah/vim-delve'
+
 Plug 'neovim/nvim-lspconfig'
 Plug 'mfussenegger/nvim-jdtls'
 Plug 'simrat39/symbols-outline.nvim'
-Plug 'https://github.com/jiangmiao/auto-pairs'
 call plug#end()
 
 filetype indent plugin on

@@ -185,19 +185,17 @@ font:
 colors:
   # Default colors
   primary:
-    # hard contrast: background = '#f9f5d7'
-    background: '#fbf1c7'
-    # soft contrast: background = '#f2e5bc'
-    foreground: '#3c3836'
+    background: '0xf5f5f5'
+    foreground: '0x303030'
 
-    # Bright and dim foreground colors
-    #
-    # The dimmed foreground color is calculated automatically if it is not
-    # present. If the bright foreground color is not set, or
-    # `draw_bold_text_with_bright_colors` is `false`, the normal foreground
-    # color will be used.
-    #dim_foreground: '#828482'
-    #bright_foreground: '#eaeaea'
+  # Bright and dim foreground colors
+  #
+  # The dimmed foreground color is calculated automatically if it is not
+  # present. If the bright foreground color is not set, or
+  # `draw_bold_text_with_bright_colors` is `false`, the normal foreground
+  # color will be used.
+  #dim_foreground: '#828482'
+  #bright_foreground: '#eaeaea'
 
   # Cursor colors
   #
@@ -270,31 +268,28 @@ colors:
   #
   # Allowed values are CellForeground/CellBackground, which reference the
   # affected cell, or hexadecimal colors like #ff00ff.
-  selection:
-    text: '#282828'
-    background: '#ebdbb2'
 
   # Normal colors
   normal:
-    black:   '#fbf1c7'
-    red:     '#cc241d'
-    green:   '#98971a'
-    yellow:  '#d79921'
-    blue:    '#458588'
-    magenta: '#b16286'
-    cyan:    '#689d6a'
-    white:   '#7c6f64'
+    black:   '0x151515'
+    red:     '0xac4142'
+    green:   '0x90a959'
+    yellow:  '0xf4bf75'
+    blue:    '0x6a9fb5'
+    magenta: '0xaa759f'
+    cyan:    '0x75b5aa'
+    white:   '0xd0d0d0'
 
   # Bright colors
   bright:
-    black:   '#928374'
-    red:     '#9d0006'
-    green:   '#79740e'
-    yellow:  '#b57614'
-    blue:    '#076678'
-    magenta: '#8f3f71'
-    cyan:    '#427b58'
-    white:   '#3c3836'
+    black:   '0x505050'
+    red:     '0xac4142'
+    green:   '0x90a959'
+    yellow:  '0xf4bf75'
+    blue:    '0x6a9fb5'
+    magenta: '0xaa759f'
+    cyan:    '0x75b5aa'
+    white:   '0xf5f5f5'
 
   # Dim colors
   #
