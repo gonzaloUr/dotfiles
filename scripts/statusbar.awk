@@ -9,7 +9,8 @@ function get_brg() {
     close("xbacklight")
     split(out, a, ".")
 
-    return "🔆 " a[1] "%"
+    # return "🔆 " a[1] "%"
+    return "brg " a[1] "%"
 }
 
 function get_vol() {
@@ -17,7 +18,8 @@ function get_vol() {
     vol_cmd | getline vol
     close(vol_cmd)
 
-    return "🔊 " vol
+    # return "🔊 " vol
+    return "vol " vol
 }
 
 function get_mic() {
@@ -25,7 +27,8 @@ function get_mic() {
     mic_vol_cmd | getline mic_vol
     close(mic_vol_cmd)
 
-    return "🎤 " mic_vol
+    # return "🎤 " mic_vol
+    return "mic " mic_vol
 }
 
 function get_clock() {
@@ -33,14 +36,16 @@ function get_clock() {
     clock_cmd | getline ret
     close(clock_cmd)
 
-    return "📅 " ret
+    # return "📅 " ret
+    return ret
 }
 
 function get_bat() {
     bat_cmd = "bat.sh"
     bat_cmd | getline ret
     close(bat_cmd)
-    return "🔋 " ret
+    # return "🔋 " ret
+    return "bat " ret
 }
 
 BEGIN {

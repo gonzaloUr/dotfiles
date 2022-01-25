@@ -1,7 +1,6 @@
 #!/bin/sh
 
-mkdir -p ~/Downloads/
-cd ~/Downloads
+cd $HOME
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si

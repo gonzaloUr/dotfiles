@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# archlinux mirrors for artix
+pacman -S --noconfirm --needed artix-archlinux-support
+pacman-key --populate archlinux
+
+tee -a /etc/pacman.conf <<EOF
+
+# archlinux repos for artix
+
+#[testing]
+#Include = /etc/pacman.d/mirrorlist-arch
+
+
+[extra]
+Include = /etc/pacman.d/mirrorlist-arch
+
+
+#[community-testing]
+#Include = /etc/pacman.d/mirrorlist-arch
+
+
+[community]
+Include = /etc/pacman.d/mirrorlist-arch
+
+
+#[multilib-testing]
+#Include = /etc/pacman.d/mirrorlist-arch
+
+
+#[multilib]
+#Include = /etc/pacman.d/mirrorlist-arch
+EOF
+
+pacman -Sy

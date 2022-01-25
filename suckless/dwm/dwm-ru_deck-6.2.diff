@@ -1,0 +1,71 @@
+diff -up a/config.def.h b/config.def.h
+--- a/config.def.h	2019-07-24 08:59:14.429282151 +0200
++++ b/config.def.h	2019-07-24 10:18:12.954351748 +0200
+@@ -42,6 +42,7 @@ static const Layout layouts[] = {
+ 	{ "[]=",      tile },    /* first entry is default */
+ 	{ "><>",      NULL },    /* no layout function means floating behavior */
+ 	{ "[M]",      monocle },
++	{ "[D]",      deck },
+ };
+ 
+ /* key definitions */
+@@ -77,6 +78,7 @@ static Key keys[] = {
+ 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+ 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+ 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
++	{ MODKEY,                       XK_c,      setlayout,      {.v = &layouts[3]} },
+ 	{ MODKEY,                       XK_space,  setlayout,      {0} },
+ 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+ 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+Only in b: config.def.h.orig
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c	2019-07-24 08:59:14.432615503 +0200
++++ b/dwm.c	2019-07-24 10:20:33.852636486 +0200
+@@ -158,6 +158,7 @@ static void configure(Client *c);
+ static void configurenotify(XEvent *e);
+ static void configurerequest(XEvent *e);
+ static Monitor *createmon(void);
++static void deck(Monitor *m);
+ static void destroynotify(XEvent *e);
+ static void detach(Client *c);
+ static void detachstack(Client *c);
+@@ -658,6 +659,39 @@ destroynotify(XEvent *e)
+ }
+ 
+ void
++deck(Monitor *m) {
++	unsigned int i, n, h, mw, my, ns;
++	Client *c;
++
++	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
++	if(n == 0)
++		return;
++	if(n == 1){
++		c = nexttiled(m->clients);
++		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
++		return;
++	}
++
++	if(n > m->nmaster) {
++		mw = m->nmaster ? m->ww * m->mfact : 0;
++		ns = m->nmaster > 0 ? 2 : 1;
++		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n - m->nmaster);
++	} else {
++		mw = m->ww;
++		ns = 1;
++	}
++	for(i = 0, my = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
++		if(i < m->nmaster) {
++			h = (m->wh - my) / (MIN(n, m->nmaster) - i) - m->gappx;
++			resize(c, m->wx + m->gappx, m->wy + my, mw - (2*c->bw) - m->gappx*(5-ns)/2, h - (2*c->bw), False);
++			if (my + HEIGHT(c) + m->gappx < m->wh)
++				my += HEIGHT(c) + m->gappx;
++		}
++		else
++			resize(c, m->wx + mw + m->gappx/ns, m->wy + m->gappx, m->ww - mw - (2*c->bw) - m->gappx*(5-ns)/2, m->wh - (2*c->bw) - 2*m->gappx, False);
++}
++
++void
+ detach(Client *c)
+ {
+ 	Client **tc;

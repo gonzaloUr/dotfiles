@@ -5,6 +5,8 @@ yay -S --noconfirm --needed simple-mtpfs
 yay -S --noconfirm --needed dragon-drag-and-drop
 yay -S --noconfirm --needed posix-manpages
 yay -S --noconfirm --needed selectdefaultapplication-git
+yay -S --noconfirm --needed megacmd
+yay -S --noconfirm --needed terminus-font-ttf
 
 # requiere confirmacion del usuario!
-yay -S libxft-bgra-git
+yay -S --needed libxft-bgra-git

@@ -6,7 +6,10 @@ pacman -S --noconfirm --needed wget
 pacman -S --noconfirm --needed unzip
 pacman -S --noconfirm --needed zip
 pacman -S --noconfirm --needed cronie
+pacman -S --noconfirm --needed inetutils
+pacman -S --noconfirm --needed net-tools
 pacman -S --noconfirm --needed tlp
+pacman -S --noconfirm --needed zsh
 pacman -S --noconfirm --needed zsh-completions
 pacman -S --noconfirm --needed zsh-history-substring-search
 pacman -S --noconfirm --needed zsh-syntax-highlighting
@@ -14,77 +17,33 @@ pacman -S --noconfirm --needed zsh-autosuggestions
 
 # wireless
 pacman -S --noconfirm --needed bluez
+pacman -S --noconfirm --needed bluez-utils
 pacman -S --noconfirm --needed NetworkManager
-
-# network
-pacman -S --noconfirm --needed inetutils
-pacman -S --noconfirm --needed net-tools
 
 # ntp
 pacman -S --noconfirm --needed openntpd
 
 # xorg
 pacman -S --noconfirm --needed xorg
-pacman -S --noconfirm --needed xorg-drivers
-pacman -S --noconfirm --needed xorg-xinit
+pacman -S --noconfirm --needed xf86-video-intel
 pacman -S --noconfirm --needed xclip
 pacman -S --noconfirm --needed xsel
 pacman -S --noconfirm --needed xdotool
-pacman -S --noconfirm --needed dunst
-pacman -S --noconfirm --needed libnotify
+pacman -S --noconfirm --needed dunst libnotify
 pacman -S --noconfirm --needed xcompmgr
 pacman -S --noconfirm --needed xwallpaper
 
 # multimedia
 pacman -S --noconfirm --needed pulseaudio-alsa
+pacman -S --noconfirm --needed pulseaudio-bluetooth
 pacman -S --noconfirm --needed pulseaudio
 
 # acpi server
 pacman -S --noconfirm --needed acpid
 
-# utilities
-pacman -S --noconfirm --needed fzf
-pacman -S --noconfirm --needed entr
-pacman -S --noconfirm --needed acpi
-pacman -S --noconfirm --needed tree
-pacman -S --noconfirm --needed clipnotify
-pacman -S --noconfirm --needed poppler
-pacman -S --noconfirm --needed highlight
-pacman -S --noconfirm --needed pdfgrep
-
 # xdg
 pacman -S --noconfirm --needed xdg-utils
 pacman -S --noconfirm --needed perl-file-mimeinfo
 
-# programs
-pacman -S --noconfirm --needed slock
-pacman -S --noconfirm --needed neovim
-pacman -S --noconfirm --needed firefox
-pacman -S --noconfirm --needed mpv
-pacman -S --noconfirm --needed sxiv
-pacman -S --noconfirm --needed zathura
-pacman -S --noconfirm --needed zathura-pdf-mupdf
-pacman -S --noconfirm --needed zathura-ps
-pacman -S --noconfirm --needed git
-pacman -S --noconfirm --needed htop
-pacman -S --noconfirm --needed maim
-pacman -S --noconfirm --needed pavucontrol
-pacman -S --noconfirm --needed tig
-pacman -S --noconfirm --needed nitrogen
-pacman -S --noconfirm --needed pacman-contrib
-pacman -S --noconfirm --needed alacritty
-
 # src dependencies
 pacman -S --noconfirm --needed base-devel
-
-# fonts
-pacman -S --noconfirm --needed ttf-hack
-pacman -S --noconfirm --needed terminus-font
-pacman -S --noconfirm --needed ttf-dejavu
-pacman -S --noconfirm --needed ttf-linux-libertine
-pacman -S --noconfirm --needed ttf-liberation
-pacman -S --noconfirm --needed noto-fonts
-pacman -S --noconfirm --needed noto-fonts-emoji
-pacman -S --noconfirm --needed noto-fonts-extra
-pacman -S --noconfirm --needed ttf-joypixels
-pacman -S --noconfirm --needed otf-ipafont

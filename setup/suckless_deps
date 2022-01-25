@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# libraries used by suckless software
+pacman -S --noconfirm --needed libxft
