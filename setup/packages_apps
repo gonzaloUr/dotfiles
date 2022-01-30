@@ -26,6 +26,9 @@ pacman -S --noconfirm --needed pavucontrol
 pacman -S --noconfirm --needed tig
 pacman -S --noconfirm --needed pacman-contrib
 pacman -S --noconfirm --needed alacritty
+pacman -S --noconfirm --needed newsboat
+pacman -S --noconfirm --needed gnome-keyring
+pacman -S --noconfirm --needed seahorse
 
 # fonts
 pacman -S --noconfirm --needed ttf-hack

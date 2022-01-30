@@ -36,6 +36,7 @@ pacman -S --noconfirm --needed xwallpaper
 # multimedia
 pacman -S --noconfirm --needed pulseaudio-alsa
 pacman -S --noconfirm --needed pulseaudio-bluetooth
+pacman -S --noconfirm --needed pulseaudio-jack
 pacman -S --noconfirm --needed pulseaudio
 
 # acpi server

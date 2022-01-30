@@ -3,7 +3,7 @@
 # see /usr/share/doc/alacritty/example/alacritty.yml
 
 window:
-  opacity: 0.8
+  opacity: 1
 
   padding:
     x: 5
@@ -28,7 +28,7 @@ font:
     family: "Terminus (TTF)"
     style: Bold Italic
 
-  size: 8.5
+  size: 9.5
 
 colors:
   primary:
@@ -60,11 +60,7 @@ colors:
     white:   "#e5e5e5"
 
 key_bindings:
-  - { key: K,      mods: Alt,           action: ScrollLineUp     }
-  - { key: J,      mods: Alt,           action: ScrollLineDown   }
-  - { key: U,      mods: Alt,           action: ScrollPageUp     }
-  - { key: D,      mods: Alt,           action: ScrollPageDown   }
-  - { key: L,      mods: Shift|Alt,     action: ResetFontSize    }
-  - { key: K,      mods: Shift|Alt,     action: IncreaseFontSize }
-  - { key: J,      mods: Shift|Alt,     action: DecreaseFontSize }
-  - { key: Return, mods: Shift|Control, action: SpawnNewInstance }
+  - { key: Return, mods: Shift|Alt, action: SpawnNewInstance }
+  - { key: L,      mods: Shift|Alt, action: ResetFontSize    }
+  - { key: K,      mods: Shift|Alt, action: IncreaseFontSize }
+  - { key: J,      mods: Shift|Alt, action: DecreaseFontSize }

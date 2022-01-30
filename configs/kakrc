@@ -1,0 +1,21 @@
+eval %sh{kak-lsp --kakoune -s $kak_session}
+lsp-enable
+map global user l %{: enter-user-mode lsp<ret>} -docstring "LSP mode"
+add-highlighter global/ number-lines -relative -separator ''
+add-highlighter global/ wrap
+set-option -add global ui_options terminal_assistant=none
+
+hook global InsertCompletionShow .* %{
+	map window insert <tab> <c-n>
+	map window insert <s-tab> <c-p>
+}
+
+hook global InsertCompletionHide .* %{
+	unmap window insert <tab> <c-n>
+	unmap window insert <s-tab> <c-p>
+}
+
+set-option global indentwidth 0
+set-option global tabstop 4
+
+add-highlighter global/ show-whitespaces -tab '│' -spc ' ' -lf ' '
