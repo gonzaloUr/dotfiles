@@ -13,7 +13,7 @@
         close(cmd)
 
         if (status != "Charging" && capacity <= 5) {
-            system("zzz")
+            system("loginctl suspend")
         }
     }
 }

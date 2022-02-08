@@ -60,7 +60,7 @@ colors:
     white:   "#e5e5e5"
 
 key_bindings:
-  - { key: Return, mods: Shift|Alt, action: SpawnNewInstance }
-  - { key: L,      mods: Shift|Alt, action: ResetFontSize    }
-  - { key: K,      mods: Shift|Alt, action: IncreaseFontSize }
-  - { key: J,      mods: Shift|Alt, action: DecreaseFontSize }
+  - { key: Return, mods: Control|Alt, action: SpawnNewInstance }
+  - { key: L,      mods: Control|Alt, action: ResetFontSize    }
+  - { key: K,      mods: Control|Alt, action: IncreaseFontSize }
+  - { key: J,      mods: Control|Alt, action: DecreaseFontSize }

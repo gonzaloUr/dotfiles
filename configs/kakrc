@@ -1,21 +1,140 @@
 eval %sh{kak-lsp --kakoune -s $kak_session}
 lsp-enable
+
+hook global KakBegin .* %{
+    delete-buffer *scratch*
+}
+
+map global normal <c-q> ':db<ret>'
+
 map global user l %{: enter-user-mode lsp<ret>} -docstring "LSP mode"
 add-highlighter global/ number-lines -relative -separator ''
 add-highlighter global/ wrap
 set-option -add global ui_options terminal_assistant=none
 
 hook global InsertCompletionShow .* %{
-	map window insert <tab> <c-n>
-	map window insert <s-tab> <c-p>
+    map window insert <tab> <c-n>
+    map window insert <s-tab> <c-p>
 }
 
 hook global InsertCompletionHide .* %{
-	unmap window insert <tab> <c-n>
-	unmap window insert <s-tab> <c-p>
+    unmap window insert <tab> <c-n>
+    unmap window insert <s-tab> <c-p>
 }
 
-set-option global indentwidth 0
+hook global WinSetOption filetype=go %{
+    set-option global indentwidth 0
+}
+
+# width in spaces used for indentation (commands < >)
+set-option global indentwidth 4
+
+# display width of a tab
 set-option global tabstop 4
 
+# remap <tab> to insert indentwidth
+map global insert <tab> '<a-;><a-gt>'
+
 add-highlighter global/ show-whitespaces -tab '│' -spc ' ' -lf ' '
+
+hook global WinSetOption filetype=markdown %{
+    remove-highlighter shared/markdown/inline/text/regex_(?<!\*)(\*([^\s*]|([^\s*](\n?[^\n*])*[^\s*]))\*)(?!\*)_1:+i
+    remove-highlighter shared/markdown/inline/text/regex_(?<!_)(_([^\s_]|([^\s_](\n?[^\n_])*[^\s_]))_)(?!_)_1:+i
+}
+
+hook global ModuleLoaded x11 %{
+    set-option global termcmd "alacritty -e sh -c"
+}
+
+map global normal <a-tab> ':buffer-next<ret>'
+
+define-command -hidden fzf_file %{
+    evaluate-commands -draft %{
+        set-register r %sh{mktemp -d}
+        nop %sh{mkfifo $kak_reg_r/out}
+        terminal sh -c "fzf > %reg{r}/out"
+        set-register s %sh{cat $kak_reg_r/out}
+        nop %sh{rm -rf $kak_reg_r}
+        nop %sh{
+            if [ -n "$kak_reg_s" ]
+            then
+                echo 'new e %reg{s}' > $kak_command_fifo
+            fi
+        }
+    }
+}
+
+define-command -hidden fzf_file_edit %{
+    evaluate-commands -draft %{
+        set-register r %sh{mktemp -d}
+        nop %sh{mkfifo $kak_reg_r/out}
+        terminal sh -c "fzf > %reg{r}/out"
+        set-register s %sh{cat $kak_reg_r/out}
+        nop %sh{rm -rf $kak_reg_r}
+        nop %sh{
+            if [ -n "$kak_reg_s" ]
+            then
+                echo 'e %reg{s}' > $kak_command_fifo
+            fi
+        }
+    }
+}
+
+map global normal <a-\> ':fzf_file<ret>'
+map global normal <a-minus> ':fzf_file_edit<ret>'
+map global normal <a-ret> ':terminal sh -c "kak -c %val{session}; zsh"<ret>'
+
+# For Code
+face global value rgb:fade3e,default+b
+face global type rgb:ff9eb8,default
+face global variable rgb:b88853,default+b
+face global module rgb:c79158,default
+face global function rgb:ffa724,default
+face global string rgb:86b4d8,default+b
+face global keyword rgb:ff2c4b,default
+face global operator rgb:b88853,default
+face global attribute rgb:aeee00,default
+face global comment rgb:857f78,default
+face global meta rgb:5656e6,default
+face global builtin default+b
+face global Whitespace rgb:35322d,default
+
+# For markup
+face global title rgb:86b4d8,default
+face global header rgb:ff2c4b,default
+face global bold default,default+b
+face global italic default,default+i
+face global mono rgb:c79156,default
+face global block rgb:857b78,default+b
+face global link rgb:7a80ee,default
+face global bullet rgb:aeee00,default
+face global list rgb:ff9eb8,default
+
+# builtin faces
+face global Default rgb:f8f6f2,default
+face global PrimarySelection rgb:ffffff,rgb:45413b
+face global SecondarySelection rgb:ffffff,rgb:373940
+face global PrimaryCursor rgb:000000,rgb:0a9dff
+face global SecondaryCursor rgb:000000,rgb:ccd0da
+face global PrimaryCursorEol rgb:000000,rgb:595d68
+face global SecondaryCursorEol rgb:000000,rgb:595d68
+face global LineNumbers rgb:666462,default
+face global LineNumbersWrapped rgb:2e3036,default
+face global LineNumberCursor rgb:0a9dff,default
+face global MenuForeground rgb:000000,rgb:8cffba
+face global MenuBackground rgb:aaadb4,rgb:1c1d21+b
+face global MenuInfo rgb:ffa724,default
+face global Information rgb:000000,rgb:ff9eb8
+face global Error rgb:ff0000,default+b
+face global StatusLine rgb:f4cf86,rgb:000000
+face global StatusLineMode rgb:df4102,rgb:000000
+face global StatusLineInfo rgb:c0c7df,default
+face global StatusLineValue green,default
+face global StatusCursor rgb:000000,rgb:ccd0da
+face global Prompt rgb:fffb79,default
+face global MatchingChar rgb:aeee00,default+b
+face global BufferPadding rgb:111111+F
+
+# kak-lsp
+face global DiagnosticError default,rgb:373940
+face global DiagnosticWarning default,default+i
