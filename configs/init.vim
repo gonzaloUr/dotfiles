@@ -7,12 +7,8 @@ if empty(glob(plug_path))
 endif
 
 call plug#begin(data_dir)
-Plug 'tanvirtin/monokai.nvim'
 Plug 'chrisbra/colorizer'
-Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf.vim'
-
-Plug 'sebdah/vim-delve'
 Plug 'neovim/nvim-lspconfig'
 call plug#end()
 
@@ -20,18 +16,6 @@ lua <<EOF
     require('lspconfig')['gopls'].setup {}
     require('lspconfig')['texlab'].setup {}
 EOF
-
-augroup ft_md
-    au BufNewFile,BufFilePre,BufRead *.md syn clear markdownItalic
-augroup end
-
-augroup ft_go
-    au FileType go lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-augroup end
-
-augroup ft_tex
-    au FileType tex lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-augroup end
 
 filetype indent plugin on
 syntax on
@@ -49,6 +33,14 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+set laststatus=2
+set statusline=%f\ %m
+set statusline+=%=
+set statusline+=%y\ %c
+set statusline+=\ (%l
+set statusline+=/
+set statusline+=%L)
+
 augroup ft_go
     autocmd FileType go set expandtab&
 augroup end
@@ -57,13 +49,17 @@ augroup ft_yaml
     autocmd FileType yaml set shiftwidth=2
 augroup end
 
-set laststatus=2
-set statusline=%f\ %m
-set statusline+=%=
-set statusline+=%y\ %c
-set statusline+=\ (%l
-set statusline+=/
-set statusline+=%L)
+augroup ft_md
+    au BufNewFile,BufFilePre,BufRead *.md syn clear markdownItalic
+augroup end
+
+augroup ft_go
+    au FileType go lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+augroup end
+
+augroup ft_tex
+    au FileType tex lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+augroup end
 
 " remove trailing whitespaces
 au BufWritePre * %s/\s\+$//e
@@ -124,9 +120,6 @@ augroup ft_tex
     au Filetype tex nnoremap <leader>p :call PreviewPdf()<CR>
     au Filetype tex nnoremap <leader>l :call Latexmk()<CR>
 augroup end
-
-nnoremap <C-n> :NERDTreeToggle<CR>
-nnoremap <C-g> :NERDTreeFind<CR>
 
 nnoremap <leader><localleader> :Files<CR>
 nnoremap <leader>g :GFiles<CR>

@@ -1,35 +1,21 @@
 /* See LICENSE file for copyright and license details. */
 
-/*
- * Required patches:
- * https://dwm.suckless.org/patches/push/dwm-push-20201112-61bb8b2.diff
- * https://dwm.suckless.org/patches/ru_gaps/dwm-ru_gaps-6.2.diff
- * https://dwm.suckless.org/patches/ru_gaps/dwm-ru_deck-6.2.diff
- *
- * Other patches:
- * https://dwm.suckless.org/patches/alpha/dwm-fixborders-6.2.diff
- * https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.2.diff
- * dwm-libxftfix-6.2.diff
- * https://dwm.suckless.org/patches/pertag/dwm-pertag-20200914-61bb8b2.diff
- */
-
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
-static const int gappx              = 5;        /* gaps between windows */
 static const unsigned int snap      = 8;        /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "Terminus (TTF):size=12", "JoyPixels:pixelsize=12:antialias=true:autohint=true" };
 static const char dmenufont[]       = "Terminus (TTF):size=12";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
+static const char col_gray1[]       = "#282a36";
+static const char col_gray2[]       = "#44475a";
+static const char col_gray3[]       = "#f8f8f2";
+static const char col_gray4[]       = "#f8f8f2";
+static const char col_cyan[]        = "#bd93f9";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray1 },
-	[SchemeSel]  = { col_gray4, col_gray2, "#FF0000" },
+	[SchemeSel]  = { col_gray4, col_gray2, col_cyan  },
 };
 
 /* tagging */
@@ -144,12 +130,10 @@ static Key keys[] = {
 	{ ShiftMask,                    XF86AudioRaiseVolume,  spawn, {.v = micup } },
 	{ ShiftMask,                    XF86AudioLowerVolume,  spawn, {.v = micdown } },
 	{ 0,                            XF86AudioMicMute,      spawn, {.v = micmute } },
+
 	{ MODKEY,                       XK_c,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
 	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
-	{ MODKEY,                       XK_minus,  setgaps,        {.i = -5 } },
-	{ MODKEY,                       XK_equal,  setgaps,        {.i = +5 } },
-	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
 };
 
 /* button definitions */

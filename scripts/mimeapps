@@ -1,0 +1,50 @@
+#!/bin/sh
+
+usage() {
+cat <<EOF
+
+Configures \$XDG_CONFIG_HOME/mimeapps.list file, taking a list of mimetype
+files from stdin (/usr/share/mime/*/*.xml).
+
+Eg: Set text/*=nvim.desktop
+
+    ls /usr/share/mime/text/ | sed 's/^/text\//' | mimeapps nvim.desktop
+
+EOF
+}
+
+if [ $# -ne 1 ]
+then
+    usage
+    exit
+fi
+
+if ! grep -q '[Default Applications]' $XDG_CONFIG_HOME/mimeapps.list
+then
+    echo "[Default Applications]" >> $XDG_CONFIG_HOME/mimeapps.list
+fi
+
+remove_script=$(mktemp)
+append_script=$(mktemp)
+
+echo "/Default/ {" >> "$append_script"
+
+while true
+do
+    read line
+    [ -z "$line" ] && break
+    for file in $line
+    do
+        pattern=${file%.xml}
+        pattern="$(echo "$pattern" | sed 's;\/;\\\/;g')"
+        echo "/$pattern/d" >> "$remove_script"
+        echo "    a $pattern=$1" >> "$append_script"
+    done
+done
+
+echo "}" >> "$append_script"
+
+sed -i -f "$remove_script" -f "$append_script" $XDG_CONFIG_HOME/mimeapps.list
+
+rm "$remove_script"
+rm "$append_script"

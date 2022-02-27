@@ -25,7 +25,8 @@ pacman -S --noconfirm --needed openntpd
 
 # xorg
 pacman -S --noconfirm --needed xorg
-pacman -S --noconfirm --needed xf86-video-intel
+pacman -S --noconfirm --needed xorg-xinit
+pacman -S --noconfirm --needed xorg-drivers
 pacman -S --noconfirm --needed xclip
 pacman -S --noconfirm --needed xsel
 pacman -S --noconfirm --needed xdotool

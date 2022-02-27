@@ -1,21 +1,22 @@
 #!/bin/sh
 
 better_output='
-1d
 s/="/=/g
 s/" */:/g
 s/:$//g
 '
 
-filter_no_mountpoint='
+semicolon='
 BEGIN {
     OFS = ":"
 }
 
-$8 == "MOUNTPOINT=" {
-    print $1, $2, $3, $4, $5, $6, $7
+{
+    print
 }
 '
+
+already_mounted="$(mount -l | awk 'BEGIN { ORS="|" } { print $1 }' | sed 's/|$//')"
 
 combine_part_and_disk='
 BEGIN {
@@ -42,7 +43,8 @@ s/[[:alnum:]][[:alnum:]]*=//g
 
 out="$(lsblk -p -P -o 'LABEL,VENDOR,MODEL,SIZE,NAME,FSTYPE,TYPE,MOUNTPOINT' |\
     sed "$better_output" |\
-    awk -F: "$filter_no_mountpoint" |\
+    awk -F: "$semicolon" |\
+#    grep -vE "$already_mounted" |\
     awk -F: "$combine_part_and_disk" |\
     sed "$pretty_print" |\
     dmenu -l 10 -p 'Mount drive')"
