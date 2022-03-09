@@ -14,5 +14,10 @@ then
     exit 1
 fi
 
+if pgrep xwallpaper
+then
+    pkill xwallpaper
+fi
+
 path="$(cat "$XDG_CACHE_HOME/wallpaper_script/wallpaper")"
-xwallpaper --zoom "$path"
+xwallpaper --daemon --zoom "$path"

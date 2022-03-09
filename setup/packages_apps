@@ -11,10 +11,7 @@ pacman -S --noconfirm --needed highlight
 pacman -S --noconfirm --needed pdfgrep
 
 # programs
-pacman -S --noconfirm --needed slock
 pacman -S --noconfirm --needed neovim
-pacman -S --noconfirm --needed kakoune
-pacman -S --noconfirm --needed kak-lsp
 pacman -S --noconfirm --needed aspell
 pacman -S --noconfirm --needed aspell-en
 pacman -S --noconfirm --needed aspell-es

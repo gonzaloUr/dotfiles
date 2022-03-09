@@ -11,7 +11,6 @@ call plug#begin(data_dir)
 Plug 'neovim/nvim-lspconfig'
 
 " general extensions
-Plug 'dracula/vim'
 Plug 'windwp/nvim-autopairs'
 Plug 'folke/which-key.nvim'
 
@@ -106,7 +105,6 @@ set mouse=a
 set clipboard+=unnamedplus
 
 let g:dracula_italic = 0
-colorscheme dracula
 hi Normal guibg=NONE ctermbg=NONE
 
 set tabstop=4

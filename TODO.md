@@ -1,0 +1,9 @@
+- clean home directory XDG
+- add blocker to /etc/hosts
+- light theme
+- bootstrap script from bash\_history
+- setup script for auto ln config.def.h files after git clone (suckless)
+- fix fullscreen for certain apps (supertuxkart for example)
+- no antialias terminus
+- fix xwallpaper when adding other monitor
+- better prompt with git info (including current username and email)
