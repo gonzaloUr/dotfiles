@@ -1,8 +1,6 @@
-cmd dragon %dragon-drag-and-drop -a -x "$fx"
+cmd drag-file %dragon-drag-and-drop -a "$fx"
 
-cmd dragon-stay %dragon-drag-and-drop -a "$fx"
-
-cmd dragon-move-here ${{
+cmd drag-file-here ${{
     out="$(dragon-drag-and-drop -t -x)"
     case "$out" in
         file://*) cp "$out" "$PWD" ;;
@@ -10,12 +8,18 @@ cmd dragon-move-here ${{
     esac
 }}
 
-cmd copy-image ${{
+cmd copy-image-clipboard ${{
     xclip -selection clipboard -t image/png -i "$f"
 }}
 
-cmd paste-image %xclip -selection clipboard -t image/png -o > out.png
+cmd paste-image-clipboard %xclip -selection clipboard -t image/png -o > out.png
 
-# kakoune keybindings
-map gk push gg
-map gj push G
+map y
+map yy push :copy<enter>
+map yi push :copy-image-clipboard<enter>
+map yd push :drag-file<enter>
+
+map p
+map pp push :paste<enter>
+map pi push :paste-image-clipboard<enter>
+map pd push :drag-file-here<enter>

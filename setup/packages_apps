@@ -35,6 +35,9 @@ pacman -S --noconfirm --needed newsboat
 pacman -S --noconfirm --needed gnome-keyring
 pacman -S --noconfirm --needed seahorse
 
+# lsps
+pacman -S --noconfirm --needed texlab
+
 # fonts
 pacman -S --noconfirm --needed ttf-hack
 pacman -S --noconfirm --needed terminus-font
