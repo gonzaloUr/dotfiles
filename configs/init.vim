@@ -13,6 +13,7 @@ Plug 'neovim/nvim-lspconfig'
 " general extensions
 Plug 'windwp/nvim-autopairs'
 Plug 'folke/which-key.nvim'
+Plug 'alexanderjeurissen/lumiere.vim'
 
 " snippets support
 Plug 'L3MON4D3/LuaSnip'
@@ -27,10 +28,11 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'saadparwaiz1/cmp_luasnip'
 call plug#end()
 
+colorscheme lumiere
+
 set completeopt=menu,menuone,noselect
 
 lua <<EOF
-
   require'luasnip.loaders.from_vscode'.load()
 
   local cmp = require'cmp'
@@ -104,7 +106,6 @@ set undodir=/tmp
 set mouse=a
 set clipboard+=unnamedplus
 
-let g:dracula_italic = 0
 hi Normal guibg=NONE ctermbg=NONE
 
 set tabstop=4
@@ -184,18 +185,10 @@ nnoremap ,f  :lua vim.lsp.buf.formatting()<CR>
 nnoremap ,n  :lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap ,p  :lua vim.lsp.diagnostic.goto_prev()<CR>
 
-set timeoutlen=200
+set timeoutlen=500
 
 lua <<EOF
   local wk = require('which-key')
-  wk.register({
-    ["<leader>"] = {
-      e = {"<cmd>set spell spelllang=es", "Spellcheck español"},
-      i = {"<cmd>set spell spelllang=en", "Spellcheck english"},
-      s = {"<cmd>set nospell",            "Disable spellcheck"},
-    }
-  })
-
   wk.setup()
 EOF
 
@@ -242,11 +235,11 @@ endfunction
 set tabline=%!MyTabLine()
 
 lua <<EOF
-vim.diagnostic.config({
-  virtual_text = false
-})
+  vim.diagnostic.config({
+    virtual_text = false
+  })
 
--- Show line diagnostics automatically in hover window
-vim.o.updatetime = 250
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+  -- Show line diagnostics automatically in hover window
+  vim.o.updatetime = 250
+  vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 EOF

@@ -1,9 +1,0 @@
-[Desktop Entry]
-
-# xdg desktop entry for opening text files
-# install under ~/.local/share/applications
-
-Type=Application
-Name=kakoune
-MimeType=text/plain;text/x-go;
-Exec=alacritty -e kak %u
