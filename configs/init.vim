@@ -13,7 +13,8 @@ Plug 'neovim/nvim-lspconfig'
 " general extensions
 Plug 'windwp/nvim-autopairs'
 Plug 'folke/which-key.nvim'
-Plug 'alexanderjeurissen/lumiere.vim'
+Plug 'norcalli/nvim-colorizer.lua'
+Plug 'morhetz/gruvbox'
 
 " snippets support
 Plug 'L3MON4D3/LuaSnip'
@@ -28,9 +29,11 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'saadparwaiz1/cmp_luasnip'
 call plug#end()
 
-colorscheme lumiere
+let g:gruvbox_transparent_bg = 1
+colorscheme gruvbox
 
 set completeopt=menu,menuone,noselect
+set termguicolors
 
 lua <<EOF
   require'luasnip.loaders.from_vscode'.load()
@@ -79,6 +82,7 @@ lua <<EOF
   require('lspconfig')['gopls'].setup { capabilities = capabilities }
   require('lspconfig')['texlab'].setup { capabilities = capabilities }
   require('lspconfig')['tsserver'].setup { capabilities = capabilities }
+  require('lspconfig')['dartls'].setup { capabilities = capabilities }
 
   require('nvim-autopairs').setup{}
   local cmp_autopairs = require'nvim-autopairs.completion.cmp'
@@ -92,6 +96,11 @@ lua <<EOF
   cmp_autopairs.lisp[#cmp_autopairs.lisp+1] = "clojurescript"
   cmp_autopairs.lisp[#cmp_autopairs.lisp+1] = "fennel"
   cmp_autopairs.lisp[#cmp_autopairs.lisp+1] = "janet"
+
+  local wk = require('which-key')
+  wk.setup()
+
+  require'colorizer'.setup()
 EOF
 
 filetype indent plugin on
@@ -127,6 +136,7 @@ augroup end
 augroup two_spaces
     autocmd FileType yaml set shiftwidth=2
     autocmd FileType lua set shiftwidth=2
+    autocmd FileType dart set shiftwidth=2
 augroup end
 
 augroup ft_md
@@ -157,6 +167,9 @@ au BufWritePre * %s/\s\+$//e
 set splitbelow
 au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
+" which key requirement
+set timeoutlen=500
+
 let mapleader="-"
 let maplocalleader="\\"
 
@@ -184,13 +197,6 @@ nnoremap ,rf :lua vim.lsp.buf.references()<CR>
 nnoremap ,f  :lua vim.lsp.buf.formatting()<CR>
 nnoremap ,n  :lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap ,p  :lua vim.lsp.diagnostic.goto_prev()<CR>
-
-set timeoutlen=500
-
-lua <<EOF
-  local wk = require('which-key')
-  wk.setup()
-EOF
 
 function MyTabLine()
     let s = ''
@@ -233,13 +239,3 @@ function MyTabLabel(n)
 endfunction
 
 set tabline=%!MyTabLine()
-
-lua <<EOF
-  vim.diagnostic.config({
-    virtual_text = false
-  })
-
-  -- Show line diagnostics automatically in hover window
-  vim.o.updatetime = 250
-  vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
-EOF

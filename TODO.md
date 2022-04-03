@@ -1,9 +1,8 @@
 - clean home directory XDG
 - add blocker to /etc/hosts
-- light theme
+- add pacman config (colors)
 - bootstrap script from bash\_history
 - setup script for auto ln config.def.h files after git clone (suckless)
 - fix fullscreen for certain apps (supertuxkart for example)
 - fix xwallpaper when adding other monitor
 - better prompt with git info (including current username and email)
-- better colorizer plugin for nvim

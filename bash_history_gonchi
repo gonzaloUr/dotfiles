@@ -1,0 +1,282 @@
+ls
+ll
+clear
+sudo mount /dev/sdb1 /mnt
+exit
+exit
+groups
+sudo mount /dev/sdb1 /mnt/
+sudo mount /dev/sdb1 /mnt/
+groups
+ls /etc/group
+cat /etc/group
+sudo visudo
+exit
+exit
+sudo mount /dev/sdb1 /mnt/
+ls
+cp -avr /mnt/artix_backup2/dotfiles/ .
+ls
+cd dotfiles/
+ls
+ls
+cd setup/
+ls
+nvim packages
+sudo ./packages
+ls
+nvim packages_apps 
+ls
+sudo ./packages_apps 
+sudo ./archlinux_repos_artix 
+sudo ./packages_apps 
+jobs
+pkill sudo
+jobs
+jobs -k 1
+jobs -s 1
+jobs
+sudo ./packages_apps 
+reboot
+sudo reboot
+lsblk
+ls
+cd dotfiles/
+ls
+cd setup/
+ls
+sudo ./archlinux_repos_artix 
+nvim /etc/pacman.d/mirrorlist 
+ls
+nvim archlinux_repos_artix 
+sudo pacman -S artix-archlinux-support
+nvim archlinux_repos_artix 
+sudo nvim /etc/pacman.conf 
+sudo pacman -S artix-archlinux-support
+sudo nvim /etc/pacman.conf 
+ls
+sudo pacman -S artix-archlinux-support
+exit
+sudo pacman -S artix-archlinux-support
+pkill pacman
+pkill pacman
+pkill pacman
+pkill pacman
+sudo pacman -S artix-archlinux-support
+ls
+sudo rm /var/lib/pacman/db.lck 
+sudo pacman -S artix-archlinux-support
+pacman-key --populate archlinux
+sudo pacman-key --populate archlinux
+sudo nvim dotfiles/setup/archlinux_repos_artix 
+pacman -Sy
+sudo pacman -Sy
+ls
+cd dotfiles/
+ls
+cd setup/
+ls
+nvim packages_apps 
+sudo ./packages_apps 
+ls
+cd
+./dotfiles/setup/yay_install 
+ls
+cd dotfiles/
+ls
+cd setup/
+ls
+./packages_yay 
+ls
+./services_artix 
+sudo ./services_artix 
+ls
+nvim services_artix 
+ls
+sudo ./suckless_deps
+nvim suckless_deps 
+ls
+./suckless
+sudo ./suckless
+./gnome_keyring_pam.sh 
+sudo ./gnome_keyring_pam.sh 
+cd ..
+ls
+cd scripts/
+ls
+mkdir ~/.local/bin
+ln $PWD/* ~/.local/bin/
+rm ~/.local/bin/*
+ln -s $PWD/* ~/.local/bin/
+ls ~/.local/bin/
+ls -la ~/.local/bin/
+ls
+cd ..
+ls
+cd /usr/share/locale/
+ls
+cd ..
+ls
+cd ..
+cd local/l
+cd local/
+ls
+cd sr
+cd src/
+ls
+cd dwm/
+sudo rm config.def.h 
+sudo ln -s $HOME/dotfiles/suckless/dwm/config.def.h .
+sudo patch -p1 < $HOME/dotfiles/suckless/dwm/dwm-libxftfix-6.2.diff 
+sudo patch -p1 < $HOME/dotfiles/suckless/dwm/dwm-hide_vacant_tags-6.2.diff 
+sudo patch -p1 < $HOME/dotfiles/suckless/dwm/dwm-fixborders-6.2.diff 
+sudo patch -p1 < $HOME/dotfiles/suckless/dwm/dwm-pertag-20200914-61bb8b2.diff 
+sudo patch -p1 < $HOME/dotfiles/suckless/dwm/dwm-push-20201112-61bb8b2.diff 
+sudo patch -p1 < $HOME/dotfiles/suckless/dwm/dwm-deck-6.2.diff 
+ls *.rej
+cat config.def.h
+ls -la
+sudo rm *.rej
+sudo rm *.orig
+sudo make install
+cd ..
+ls
+cd dmenu/
+ls
+sudo rm config.def.h 
+sudo ln -s $HOME/dotfiles/suckless/dmenu/config.def.h .
+sudo patch -p1 < $HOME/dotfiles/suckless/dmenu/dmenu-libxftfix-5.0.diff 
+sudo make install
+ls
+cd ..
+ls
+cd st/
+ls
+cd ..
+ls
+cd
+ls
+cd dotfiles/
+ls
+cd configs/
+ls
+cat alacritty.yml 
+head alacritty.yml 
+mkdir -p ~/.config/alacritty
+ln -s $PWD/alacritty.yml ~/.config/alacritty/
+ln -s $PWD/bashrc ~/.bashrc
+cat ~/.bashrc 
+rm ~/.bashrc 
+ln -s $PWD/bashrc ~/.bashrc
+mkdir ~/.config/dunst
+ln -s $PWD/dunstrc ~/.config/dunst/
+mkdir ~/.config/kak-lsp
+mkdir ~/.config/kak
+mkdir ~/.config/lf
+mkdir ~/.config/zathura
+head newsboat 
+mkdir ~/.config/newsboat
+ln -s $PWD/dunstrc ~./config/dunst
+ls ~/.config/
+ln -s $PWD/dunstrc ~./config/dunst/
+ln -s $PWD/dunstrc ~/.config/dunst/
+ls ~/.config/
+ls ~/.config/dunst
+ls
+ln -s $PWD/kak-lsp.toml ~/.config/kak-lsp/
+ln -s $PWD/kakrc ~/.config/kak/
+ln -s $PWD/newsboat ~/.config/newsboat/config
+ln -s $PWD/zathurarc ~/.config/zathura/
+ln -s $PWD/profile ~/.bash_profile 
+rm ~/.bash_profile 
+ln -s $PWD/profile ~/.bash_profile 
+ln -s $PWD/xinitrc ~/.xinitrc
+head xorg.conf 
+sudo ln -s $PWD/xorg.conf /etc/X11
+ln -s $PWD/lfrc ~/.config/lf
+ls
+head fonts.conf 
+mkdir ~/.config/fontconfig
+ln -s $PWD/fonts.conf ~/.config/fontconfig/
+ls
+s
+ls
+cd ..
+ls
+cd applications/
+ls
+head kakoune.desktop 
+mkdir -p ~/.local/share/applications
+ln -s $PWD/* ~/.local/share/applications/
+ls
+cd ..
+mimeapps
+ls
+cd scripts/
+ls
+./mimeapps 
+ls /usr/share/mime/text | sed 's/^/text\//' | mimeapps kakoune.desktop
+ls /usr/share/mime/text | sed 's/^/text\//' | ./mimeapps kakoune.desktop
+ls
+nvim mimeapps 
+touchh ~/.config/mimeapps.list
+touch ~/.config/mimeapps.list
+ls /usr/share/mime/text | sed 's/^/text\//' | ./mimeapps kakoune.desktop
+nvim mimeapps 
+ls
+clear
+exit
+ls
+ls /usr/share/mime/text | sed 's/^/text\//' | mimeapps kakoune.desktop
+ls
+ls
+clear
+clear
+kak .xinitrc 
+ls
+lf
+kak
+lf
+lf
+lf
+lf
+lf
+ls
+cd dotfiles/
+ls
+cd setup/
+ls
+nvim packages_apps 
+sudo ./packages_apps 
+kak packages_apps 
+sudo pacman -S kak
+sudo pacman -S kakoune
+sudo ./packages_apps
+lfc
+lfcd
+ls
+clear
+cd
+ls
+ls
+lf
+kak .bashrc 
+ls
+ls
+exit
+ls
+ls
+d /mnt/
+ls
+cp -avr Images/ ~
+ls
+wal.sh set
+wal.sh set
+wal.sh set
+wal.sh set
+wal.sh set
+ls /usr/share/mime/application/
+ls /usr/share/applications/
+kak ~/.config/mimeapps.list 
+sudo kak /root/.bash_history
+kak ~/.bash_history 

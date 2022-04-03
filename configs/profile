@@ -22,6 +22,9 @@ alias yarn="yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config"
 export _JAVA_AWT_WM_NONREPARENTING=1
 export AWT_TOOLKIT=MToolkit
 
+# pacdiff editor
+export DIFFPROGRAM=$EDITOR
+
 # path
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
