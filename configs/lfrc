@@ -1,7 +1,9 @@
-cmd drag-file %dragon-drag-and-drop -a "$fx"
+set icons
+
+cmd drag-file %dragon-drop -a "$fx"
 
 cmd drag-file-here ${{
-    out="$(dragon-drag-and-drop -t -x)"
+    out="$(dragon-drop -t -x)"
     case "$out" in
         file://*) cp "$out" "$PWD" ;;
         https://* | http://*) wget "$out" ;;

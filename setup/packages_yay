@@ -2,7 +2,7 @@
 
 yay -S --noconfirm --needed lf-bin
 yay -S --noconfirm --needed simple-mtpfs
-yay -S --noconfirm --needed dragon-drag-and-drop
+yay -S --noconfirm --needed dragon-drop
 yay -S --noconfirm --needed posix-manpages
 yay -S --noconfirm --needed megacmd
 yay -S --noconfirm --needed terminus-font-ttf

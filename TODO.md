@@ -6,3 +6,4 @@
 - fix fullscreen for certain apps (supertuxkart for example)
 - fix xwallpaper when adding other monitor
 - better prompt with git info (including current username and email)
+- update st config.def.h to newer version (with patches).

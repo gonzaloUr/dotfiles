@@ -6,4 +6,4 @@
 Type=Application
 Name=lf file manager
 MimeType=inode/directory;
-Exec=alacritty -e lf %u
+Exec=st -e lf %u
