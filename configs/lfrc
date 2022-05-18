@@ -1,4 +1,5 @@
 set icons
+set sortby ext
 
 cmd drag-file %dragon-drop -a "$fx"
 

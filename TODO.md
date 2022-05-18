@@ -1,9 +1,8 @@
-- clean home directory XDG
+- clean home directory (XDG)
 - add blocker to /etc/hosts
 - add pacman config (colors)
 - bootstrap script from bash\_history
 - setup script for auto ln config.def.h files after git clone (suckless)
 - fix fullscreen for certain apps (supertuxkart for example)
-- fix xwallpaper when adding other monitor
+- fix xwallpaper when adding another monitor
 - better prompt with git info (including current username and email)
-- update st config.def.h to newer version (with patches).

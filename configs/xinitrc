@@ -4,7 +4,8 @@ awkscripts &
 clipmanagerd &
 wal.sh
 
-export $(gnome-keyring-daemon --start)
-export $(dbus-launch)
+source /etc/X11/xinit/xinitrc.d/80-dbus.sh
+eval $(gnome-keyring-daemon --start)
+export SSH_AUTH_SOCK
 
 exec dwm

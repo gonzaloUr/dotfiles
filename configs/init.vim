@@ -3,105 +3,16 @@ let data_dir = stdpath('data') . '/site'
 let plug_path = data_dir . '/autoload/plug.vim'
 
 if empty(glob(plug_path))
-    execute '!curl -fLo ' . plug_path . ' --create-dirs ' . link
+  execute '!curl -fLo ' . plug_path . ' --create-dirs ' . link
 endif
 
 call plug#begin(data_dir)
-" neovim official extensions
 Plug 'neovim/nvim-lspconfig'
-
-" general extensions
-Plug 'windwp/nvim-autopairs'
-Plug 'folke/which-key.nvim'
-Plug 'norcalli/nvim-colorizer.lua'
-Plug 'morhetz/gruvbox'
-
-" snippets support
-Plug 'L3MON4D3/LuaSnip'
-Plug 'rafamadriz/friendly-snippets'
-
-" alternative to omnicomplete
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'vim-scripts/bnf.vim'
 call plug#end()
 
-let g:gruvbox_transparent_bg = 1
-colorscheme gruvbox
-
-set completeopt=menu,menuone,noselect
-set termguicolors
-
-lua <<EOF
-  require'luasnip.loaders.from_vscode'.load()
-
-  local cmp = require'cmp'
-
-  cmp.setup({
-    snippet = {
-      expand = function(args)
-        require('luasnip').lsp_expand(args.body)
-      end,
-    },
-    mapping = {
-      ['<tab>'] = cmp.mapping.select_next_item(),
-      ['<S-tab>'] = cmp.mapping.select_prev_item(),
-      ['<CR>']  = cmp.mapping.confirm({ select = true }),
-    },
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-      { name = 'luasnip' },
-    }, {
-      { name = 'buffer' },
-    })
-  })
-
-  -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline('/', {
-    sources = {
-      { name = 'buffer' }
-    }
-  })
-
-  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-  cmp.setup.cmdline(':', {
-    sources = cmp.config.sources({
-      { name = 'path' }
-    }, {
-      { name = 'cmdline' }
-    })
-  })
-
-  -- Setup lspconfig.
-  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-
-  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-  require('lspconfig')['gopls'].setup { capabilities = capabilities }
-  require('lspconfig')['texlab'].setup { capabilities = capabilities }
-  require('lspconfig')['tsserver'].setup { capabilities = capabilities }
-  require('lspconfig')['dartls'].setup { capabilities = capabilities }
-
-  require('nvim-autopairs').setup{}
-  local cmp_autopairs = require'nvim-autopairs.completion.cmp'
-
-  cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done({
-    map_char = { tex = '' }
-  }))
-
-  cmp_autopairs.lisp[#cmp_autopairs.lisp+1] = "racket"
-  cmp_autopairs.lisp[#cmp_autopairs.lisp+1] = "clojure"
-  cmp_autopairs.lisp[#cmp_autopairs.lisp+1] = "clojurescript"
-  cmp_autopairs.lisp[#cmp_autopairs.lisp+1] = "fennel"
-  cmp_autopairs.lisp[#cmp_autopairs.lisp+1] = "janet"
-
-  local wk = require('which-key')
-  wk.setup()
-
-  require'colorizer'.setup()
-EOF
+colorscheme mycolors
 
 filetype indent plugin on
 syntax on
@@ -114,12 +25,10 @@ set undofile
 set undodir=/tmp
 set mouse=a
 set clipboard+=unnamedplus
-
-hi Normal guibg=NONE ctermbg=NONE
-
 set tabstop=4
 set shiftwidth=4
 set expandtab
+set splitbelow
 
 set laststatus=2
 set statusline=%f\ %m
@@ -130,112 +39,140 @@ set statusline+=/
 set statusline+=%L)
 
 augroup indent_tabs
-    autocmd FileType go set expandtab&
+  autocmd FileType go set expandtab&
 augroup end
 
 augroup two_spaces
-    autocmd FileType yaml set shiftwidth=2
-    autocmd FileType lua set shiftwidth=2
-    autocmd FileType dart set shiftwidth=2
+  autocmd FileType yaml set shiftwidth=2
+  autocmd FileType lua set shiftwidth=2
+  autocmd FileType dart set shiftwidth=2
+  autocmd FileType vim set shiftwidth=2
 augroup end
 
 augroup ft_md
-    au BufNewFile,BufFilePre,BufRead *.md syn clear markdownItalic
+  au BufNewFile,BufFilePre,BufRead *.md syn clear markdownItalic
 augroup end
 
 augroup ft_tex
-    " Make amsmath environments traditional tex math enviroments
-    autocmd Syntax tex call TexNewMathZone("E", "align", 1)
-    autocmd Syntax tex call TexNewMathZone("F", "multline", 1)
-    autocmd Syntax tex call TexNewMathZone("H", "equation", 1)
-    autocmd Syntax tex call TexNewMathZone("I", "gather", 1)
+  " Make amsmath environments traditional tex math enviroments
+  autocmd Syntax tex call TexNewMathZone("E", "align", 1)
+  autocmd Syntax tex call TexNewMathZone("F", "multline", 1)
+  autocmd Syntax tex call TexNewMathZone("H", "equation", 1)
+  autocmd Syntax tex call TexNewMathZone("I", "gather", 1)
 
-    " spellcheck the toplevel syntactical entity (outside begin document)
-    autocmd Syntax tex syntax spell toplevel
+  " spellcheck the toplevel syntactical entity (outside begin document)
+  autocmd Syntax tex syntax spell toplevel
 
-    " parsing always starts at least this many lines backwards
-    autocmd Syntax tex syntax sync minlines=50
+  " parsing always starts at least this many lines backwards
+  autocmd Syntax tex syntax sync minlines=50
 
-    " parsing always stops after this many lines backwards from minlines
-    autocmd Syntax tex syntax sync maxlines=500
-
-    au FileType tex lua vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  " parsing always stops after this many lines forward from minlines
+  autocmd Syntax tex syntax sync maxlines=500
 augroup end
 
-au BufWritePre * %s/\s\+$//e
+let mapleader=","
+let maplocalleader="-"
 
-set splitbelow
-au InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-
-" which key requirement
-set timeoutlen=500
-
-let mapleader="-"
-let maplocalleader="\\"
-
-nnoremap <leader>9 :w \| bp<CR>
-nnoremap <leader>0 :w \| bn<CR>
+nnoremap <localleader>9 :w \| bp<CR>
+nnoremap <localleader>0 :w \| bn<CR>
 nnoremap <leader><leader> :noh<CR>
+nnoremap <leader>ls :set nospell<CR>
+nnoremap <leader>le :set spell spelllang=es<CR>
+nnoremap <leader>li :set spell spelllang=en<CR>
 
-nnoremap <leader>s :set nospell<CR>
-nnoremap <leader>e :set spell spelllang=es<CR>
-nnoremap <leader>i :set spell spelllang=en<CR>
+nnoremap <leader>gD :lua vim.lsp.buf.declaration()<CR>
+nnoremap <leader>gd :lua vim.lsp.buf.definition()<CR>
+nnoremap <leader>gi :lua vim.lsp.buf.implementation()<CR>
+nnoremap <leader>a  :lua vim.lsp.buf.code_action()<CR>
+nnoremap <leader>h  :lua vim.lsp.buf.hover()<CR>
+nnoremap <leader>s  :lua vim.lsp.buf.signature_help()<CR>
+nnoremap <leader>wa :lua vim.lsp.buf.add_workspace_folder()<CR>
+nnoremap <leader>wr :lua vim.lsp.buf.remove_workspace_folder()<CR>
+nnoremap <leader>wl :lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>
+nnoremap <leader>re :lua vim.lsp.buf.rename()<CR>
+nnoremap <leader>rf :lua vim.lsp.buf.references()<CR>
+nnoremap <leader>f  :lua vim.lsp.buf.formatting()<CR>
+nnoremap <leader>n  :lua vim.lsp.diagnostic.goto_next()<CR>
+nnoremap <leader>p  :lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <leader>e  :lua vim.diagnostic.open_float()<CR>
 
-nnoremap ,gD :lua vim.lsp.buf.declaration()<CR>
-nnoremap ,gd :lua vim.lsp.buf.definition()<CR>
-nnoremap ,gi :lua vim.lsp.buf.implementation()<CR>
-nnoremap ,a  :lua vim.lsp.buf.code_action()<CR>
-nnoremap ,h  :lua vim.lsp.buf.hover()<CR>
-nnoremap ,sh :lua vim.lsp.buf.signature_help()<CR>
-nnoremap ,sd :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
-nnoremap ,wa :lua vim.lsp.buf.add_workspace_folder()<CR>
-nnoremap ,wr :lua vim.lsp.buf.remove_workspace_folder()<CR>
-nnoremap ,wl :lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>
-nnoremap ,td :lua vim.lsp.buf.type_definition()<CR>
-nnoremap ,re  :lua vim.lsp.buf.rename()<CR>
-nnoremap ,rf :lua vim.lsp.buf.references()<CR>
-nnoremap ,f  :lua vim.lsp.buf.formatting()<CR>
-nnoremap ,n  :lua vim.lsp.diagnostic.goto_next()<CR>
-nnoremap ,p  :lua vim.lsp.diagnostic.goto_prev()<CR>
+function! MyTabLine()
+  let s = ''
+  for i in range(tabpagenr('$'))
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
 
-function MyTabLine()
-    let s = ''
-    for i in range(tabpagenr('$'))
-        " select the highlighting
-        if i + 1 == tabpagenr()
-            let s .= '%#TabLineSel#'
-        else
-            let s .= '%#TabLine#'
-        endif
+    " set the tab page number (for mouse clicks)
+    let s .= '%' . (i + 1) . 'T'
 
-        " set the tab page number (for mouse clicks)
-        let s .= '%' . (i + 1) . 'T'
+    " the label is made by MyTabLabel()
+    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+  endfor
 
-        " the label is made by MyTabLabel()
-        let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
-    endfor
+  " after the last tab fill with TabLineFill and reset tab page nr
+  let s .= '%#TabLineFill#%T'
 
-    " after the last tab fill with TabLineFill and reset tab page nr
-    let s .= '%#TabLineFill#%T'
-
-    return s
+  return s
 endfunction
 
-function MyTabLabel(n)
-    " windows to buffers
-    let buflist = tabpagebuflist(a:n)
+function! MyTabLabel(n)
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  let buffname = bufname(buflist[winnr - 1])
 
-    " current window number
-    let winnr = tabpagewinnr(a:n)
-
-    " buffer name of the current window
-    let buffname = bufname(buflist[winnr - 1])
-
-    " if buffname is empty return [No Name]
-    if buffname == ""
-        return '[No Name]'
-    else
-        return buffname
+  if buffname == ""
+    return '[No Name]'
+  else
+    return buffname
+  endif
 endfunction
 
 set tabline=%!MyTabLine()
+
+au BufWritePre * %s/\s\+$//e
+au CompleteDone * if pumvisible() == 0 | pclose | endif
+
+au Filetype go set omnifunc=v:lua.vim.lsp.omnifunc
+au Filetype tex set omnifunc=v:lua.vim.lsp.omnifunc
+au Filetype typescript set omnifunc=v:lua.vim.lsp.omnifunc
+
+hi GitAdd    guifg=#009900 ctermfg=2
+hi GitChange guifg=#bbbb00 ctermfg=3
+hi GitDelete guifg=#ff2222 ctermfg=1
+sign define gitadd text=+ texthl=GitAdd
+
+function! GitGutter()
+  let path = expand("%:p")
+  let data = systemlist("git --no-pager diff --no-color " .. path .. " | simplify_gitdiff.awk")
+  for linenr in data
+    exe "sign place " .. linenr .. " line=" .. linenr .. " name=gitadd file=" .. path
+  endfor
+endfunction
+
+lua<<EOF
+  local lspconfig = require('lspconfig')
+
+  lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
+    handlers = {
+      ['textDocument/publishDiagnostics'] = vim.lsp.with(
+        vim.lsp.diagnostic.on_publish_diagnostics,
+        {
+          virtual_text = false,
+          signs = true,
+          update_in_insert = false,
+          underline = true,
+          float = {
+            source = 'always',
+          },
+        }
+      )
+    }
+  })
+
+  lspconfig['gopls'].setup {}
+  lspconfig['texlab'].setup {}
+  lspconfig['tsserver'].setup {}
+EOF

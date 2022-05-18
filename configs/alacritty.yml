@@ -3,11 +3,11 @@
 # see /usr/share/doc/alacritty/example/alacritty.yml
 
 window:
-  opacity: 0.8
+  opacity: 0.9
 
   padding:
-    x: 5
-    y: 5
+    x: 1
+    y: 1
 
   dynamic_padding: true
 
