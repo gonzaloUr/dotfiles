@@ -7,7 +7,9 @@ if empty(glob(plug_path))
 endif
 
 call plug#begin(data_dir)
+Plug 'tpope/vim-fugitive'
 Plug 'neovim/nvim-lspconfig'
+
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'vim-scripts/bnf.vim'
 call plug#end()
@@ -138,19 +140,6 @@ au CompleteDone * if pumvisible() == 0 | pclose | endif
 au Filetype go set omnifunc=v:lua.vim.lsp.omnifunc
 au Filetype tex set omnifunc=v:lua.vim.lsp.omnifunc
 au Filetype typescript set omnifunc=v:lua.vim.lsp.omnifunc
-
-hi GitAdd    guifg=#009900 ctermfg=2
-hi GitChange guifg=#bbbb00 ctermfg=3
-hi GitDelete guifg=#ff2222 ctermfg=1
-sign define gitadd text=+ texthl=GitAdd
-
-function! GitGutter()
-  let path = expand("%:p")
-  let data = systemlist("git --no-pager diff --no-color " .. path .. " | simplify_gitdiff.awk")
-  for linenr in data
-    exe "sign place " .. linenr .. " line=" .. linenr .. " name=gitadd file=" .. path
-  endfor
-endfunction
 
 lua<<EOF
   local lspconfig = require('lspconfig')
