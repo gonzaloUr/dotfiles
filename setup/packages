@@ -1,51 +1,60 @@
 #!/bin/sh
 
 # essentials
-pacman -S --noconfirm --needed curl
-pacman -S --noconfirm --needed wget
-pacman -S --noconfirm --needed unzip
-pacman -S --noconfirm --needed zip
-pacman -S --noconfirm --needed cronie
-pacman -S --noconfirm --needed inetutils
-pacman -S --noconfirm --needed net-tools
-pacman -S --noconfirm --needed tlp
-pacman -S --noconfirm --needed zsh
-pacman -S --noconfirm --needed zsh-completions
-pacman -S --noconfirm --needed zsh-history-substring-search
-pacman -S --noconfirm --needed zsh-syntax-highlighting
-pacman -S --noconfirm --needed zsh-autosuggestions
+pacman -S --needed curl
+pacman -S --needed wget
+pacman -S --needed unzip
+pacman -S --needed zip
+pacman -S --needed cronie
+pacman -S --needed cronie-runit
+pacman -S --needed inetutils
+pacman -S --needed net-tools
+pacman -S --needed tlp
+pacman -S --needed tlp-runit
+pacman -S --needed zsh
+pacman -S --needed zsh-completions
+pacman -S --needed zsh-history-substring-search
+pacman -S --needed zsh-syntax-highlighting
+pacman -S --needed zsh-autosuggestions
 
-# wireless
-pacman -S --noconfirm --needed bluez
-pacman -S --noconfirm --needed bluez-utils
-pacman -S --noconfirm --needed NetworkManager
+# networking
+pacman -S --needed dhcpd 
+pacman -S --needed dhcpd-runit
+pacman -S --needed wpa_supplicant
+pacman -S --needed wpa_supplicant-runit
+pacman -S --needed bluez
+pacman -S --needed bluez-runit
+pacman -S --needed connman
+pacman -S --needed connman-runit
 
 # ntp
-pacman -S --noconfirm --needed openntpd
+pacman -S --needed openntpd-runit
+pacman -S --needed openntpd
 
 # xorg
-pacman -S --noconfirm --needed xorg
-pacman -S --noconfirm --needed xorg-xinit
-pacman -S --noconfirm --needed xorg-drivers
-pacman -S --noconfirm --needed xclip
-pacman -S --noconfirm --needed xsel
-pacman -S --noconfirm --needed xdotool
-pacman -S --noconfirm --needed dunst libnotify
-pacman -S --noconfirm --needed xcompmgr
-pacman -S --noconfirm --needed xwallpaper
+pacman -S --needed xorg
+pacman -S --needed xorg-xinit
+pacman -S --needed xorg-drivers
+pacman -S --needed xclip
+pacman -S --needed xsel
+pacman -S --needed xdotool
+pacman -S --needed dunst libnotify
+pacman -S --needed xcompmgr
+pacman -S --needed xwallpaper
 
 # multimedia
-pacman -S --noconfirm --needed pulseaudio-alsa
-pacman -S --noconfirm --needed pulseaudio-bluetooth
-pacman -S --noconfirm --needed pulseaudio-jack
-pacman -S --noconfirm --needed pulseaudio
+pacman -S --needed pulseaudio-alsa
+pacman -S --needed pulseaudio-bluetooth
+pacman -S --needed pulseaudio-jack
+pacman -S --needed pulseaudio
 
 # acpi server
-pacman -S --noconfirm --needed acpid
+pacman -S --needed acpid
+pacman -S --needed acpid-runit
 
 # xdg
-pacman -S --noconfirm --needed xdg-utils
-pacman -S --noconfirm --needed perl-file-mimeinfo
+pacman -S --needed xdg-utils
+pacman -S --needed perl-file-mimeinfo
 
 # src dependencies
-pacman -S --noconfirm --needed base-devel
+pacman -S --needed base-devel

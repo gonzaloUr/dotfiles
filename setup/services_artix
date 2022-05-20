@@ -8,13 +8,9 @@ ln -s /etc/runit/sv/acpid /run/runit/service
 pacman --noconfirm --needed -S cronie-runit
 ln -s /etc/runit/sv/cronie /run/runit/service
 
-# setup bluez service
-pacman --noconfirm --needed -S bluez-runit
-ln -s /etc/runit/sv/bluetoothd /run/runit/service
-
-# setup NetworkManager service
-pacman --noconfirm --needed -S networkmanager-runit
-ln -s /etc/runit/sv/NetworkManager /run/runit/service
+# setup connman service
+pacman --noconfirm --needed -S connman-runit
+ln -s /etc/runit/sv/connmand /run/runit/service
 
 # setup openntp services
 pacman --noconfirm --needed -S openntpd-runit
