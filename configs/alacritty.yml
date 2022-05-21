@@ -13,22 +13,22 @@ window:
 
 font:
   normal:
-    family: "Terminus (TTF)"
+    family: "DejaVuSansMono"
     style: Regular
 
   bold:
-    family: "Terminus (TTF)"
+    family: "DejaVuSansMono"
     style: Bold
 
   italic:
-    family: "Terminus (TTF)"
+    family: "DejaVuSansMono"
     style: Italic
 
   bold_italic:
-    family: "Terminus (TTF)"
+    family: "DejaVuSansMono"
     style: Bold Italic
 
-  size: 8.5
+  size: 7
 
 # Colors (Gruvbox dark)
 colors:
@@ -62,7 +62,11 @@ colors:
     white:   '#ebdbb2'
 
 key_bindings:
-  - { key: Return, mods: Control|Alt, action: SpawnNewInstance }
-  - { key: L,      mods: Control|Alt, action: ResetFontSize    }
-  - { key: K,      mods: Control|Alt, action: IncreaseFontSize }
-  - { key: J,      mods: Control|Alt, action: DecreaseFontSize }
+  - { key: Return, mods: Control|Shift, action: SpawnNewInstance   }
+  - { key: Plus,   mods: Control|Shift, action: IncreaseFontSize   }
+  - { key: Minus,  mods: Control,       action: DecreaseFontSize   }
+  - { key: Equals, mods: Control,       action: ResetFontSize      }
+  - { key: K,      mods: Control|Shift, action: ScrollLineUp       }
+  - { key: J,      mods: Control|Shift, action: ScrollLineDown     }
+  - { key: U,      mods: Control|Shift, action: ScrollHalfPageUp   }
+  - { key: D,      mods: Control|Shift, action: ScrollHalfPageDown }
