@@ -14,8 +14,6 @@ Plug 'maxmellon/vim-jsx-pretty'
 Plug 'vim-scripts/bnf.vim'
 call plug#end()
 
-colorscheme mycolors
-
 filetype indent plugin on
 syntax on
 set hlsearch
