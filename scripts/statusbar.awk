@@ -1,8 +1,9 @@
 #!/bin/awk -f
 
-function update_bar() {
-    system("xsetroot -name ' " bar["brg"] " " bar["vol"] " " bar["mic"] " " bar["bat"] " " bar["clk"] " '")
-}
+ function update_bar() {
+     system("xsetroot -name ' " bar["brg"] " " bar["vol"] " " bar["mic"] " " bar["bat"] " " bar["clk"] " '")
+     # print bar["brg"] " " bar["vol"] " " bar["mic"] " " bar["bat"] " " bar["clk"]
+ }
 
 function get_brg() {
     "xbacklight" | getline out

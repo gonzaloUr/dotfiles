@@ -9,9 +9,7 @@ endif
 call plug#begin(data_dir)
 Plug 'tpope/vim-fugitive'
 Plug 'neovim/nvim-lspconfig'
-
-Plug 'maxmellon/vim-jsx-pretty'
-Plug 'vim-scripts/bnf.vim'
+Plug 'killphi/vim-ebnf'
 call plug#end()
 
 filetype indent plugin on
@@ -162,4 +160,5 @@ lua<<EOF
   lspconfig['gopls'].setup {}
   lspconfig['texlab'].setup {}
   lspconfig['tsserver'].setup {}
+  lspconfig['hls'].setup {}
 EOF

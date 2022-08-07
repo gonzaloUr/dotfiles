@@ -1,8 +1,8 @@
 - clean home directory (XDG)
 - add blocker to /etc/hosts
 - add pacman config (colors)
-- bootstrap script from bash\_history
-- setup script for auto ln config.def.h files after git clone (suckless)
+- better setup scripts
 - fix fullscreen for certain apps (supertuxkart for example)
 - fix xwallpaper when adding another monitor
 - better prompt with git info (including current username and email)
+- fix clipmanagerd adding a newline at the end of every saved selection

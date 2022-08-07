@@ -1,0 +1,69 @@
+let link = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+let plug = '~/.vim/autoload/plug.vim'
+
+if empty(glob(plug))
+  silent execute '!curl -fLo ' . plug . ' --create-dirs ' . link
+endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'killphi/vim-ebnf'
+Plug 'prabirshrestha/vim-lsp'
+call plug#end()
+
+filetype indent plugin on
+syntax on
+set hlsearch
+set title
+set ignorecase
+set smartcase
+set number relativenumber
+set undofile
+set undodir=/tmp
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set splitbelow
+
+au BufWritePre * %s/\s\+$//e
+au CompleteDone * if pumvisible() == 0 | pclose | endif
+
+augroup indent_tabs
+  autocmd FileType go set expandtab&
+augroup end
+
+augroup two_spaces
+  autocmd FileType yaml set shiftwidth=2
+  autocmd FileType lua set shiftwidth=2
+  autocmd FileType dart set shiftwidth=2
+  autocmd FileType vim set shiftwidth=2
+augroup end
+
+augroup ft_md
+  au BufNewFile,BufFilePre,BufRead *.md syn clear markdownItalic
+augroup end
+
+augroup ft_tex
+  " Make amsmath environments traditional tex math enviroments
+  autocmd Syntax tex call TexNewMathZone("E", "align", 1)
+  autocmd Syntax tex call TexNewMathZone("F", "multline", 1)
+  autocmd Syntax tex call TexNewMathZone("H", "equation", 1)
+  autocmd Syntax tex call TexNewMathZone("I", "gather", 1)
+
+  " spellcheck the toplevel syntactical entity (outside begin document)
+  autocmd Syntax tex syntax spell toplevel
+
+  " parsing always starts at least this many lines backwards
+  autocmd Syntax tex syntax sync minlines=50
+
+  " parsing always stops after this many lines forward from minlines
+  autocmd Syntax tex syntax sync maxlines=500
+augroup end
+
+let mapleader=","
+let maplocalleader="-"
+nnoremap <localleader>9 :w \| bp<CR>
+nnoremap <localleader>0 :w \| bn<CR>
+nnoremap <leader><leader> :noh<CR>
+nnoremap <leader>ls :set nospell<CR>
+nnoremap <leader>le :set spell spelllang=es<CR>
+nnoremap <leader>li :set spell spelllang=en<CR>

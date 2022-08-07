@@ -12,13 +12,9 @@ pacman -S --needed net-tools
 pacman -S --needed tlp
 pacman -S --needed tlp-runit
 pacman -S --needed zsh
-pacman -S --needed zsh-completions
-pacman -S --needed zsh-history-substring-search
-pacman -S --needed zsh-syntax-highlighting
-pacman -S --needed zsh-autosuggestions
 
 # networking
-pacman -S --needed dhcpd 
+pacman -S --needed dhcpd
 pacman -S --needed dhcpd-runit
 pacman -S --needed wpa_supplicant
 pacman -S --needed wpa_supplicant-runit
