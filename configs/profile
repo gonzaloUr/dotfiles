@@ -29,6 +29,7 @@ export DIFFPROGRAM=$EDITOR
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
 
 export ANDROID_HOME=$HOME/Downloads/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator

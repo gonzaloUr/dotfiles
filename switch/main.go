@@ -207,21 +207,32 @@ func (m *MergeReader) Read(p []byte) (int, error) {
 
 func Switch(model *Model) {
 	var inputsCmd []*exec.Cmd
-	var inputsReader []io.Reader
-	var outputsCmd []*exec.Cmd
+	var inputsReaders []io.Reader
 	for _, str := range model.Inputs {
 		cmd, r := InputCommand(str)
 		inputsCmd = append(inputsCmd, cmd)
-		inputsReader = append(inputsReader, r)
+		inputsReaders = append(inputsReaders, r)
 	}
-	for i, str := range model.Outputs {
-		var inputs []io.Reader
-		for j, entry := range model.Matrix[i] {
-			if entry {
-				inputs = append(inputs, inputsReader[j])
+	outputReaders := make([][]io.Reader, len(model.Inputs))
+	for i := range model.Inputs {
+		var n int
+		for j := range model.Outputs {
+			if model.Matrix[j][i] {
+				n++
 			}
 		}
-		stdin := MergeReaders(inputs...)
+		readers := NewCloneReader(inputsReaders[i], n)
+		var i int
+		for j := range model.Outputs {
+			if model.Matrix[j][i] {
+				outputReaders[j] = append(outputReaders[j], readers[i])
+				i++
+			}
+		}
+	}
+	var outputsCmd []*exec.Cmd
+	for i, str := range model.Outputs {
+		stdin := MergeReaders(outputReaders[i]...)
 		outputsCmd = append(outputsCmd, OutputCommand(stdin, str))
 	}
 	for _, cmd := range inputsCmd {

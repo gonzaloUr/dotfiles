@@ -36,15 +36,21 @@ set statusline+=\ (%l
 set statusline+=/
 set statusline+=%L)
 
+colorscheme peachpuff
+
 augroup indent_tabs
   autocmd FileType go set expandtab&
 augroup end
 
 augroup two_spaces
   autocmd FileType yaml set shiftwidth=2
+  autocmd FileType json set shiftwidth=2
   autocmd FileType lua set shiftwidth=2
   autocmd FileType dart set shiftwidth=2
   autocmd FileType vim set shiftwidth=2
+  autocmd FileType typescript set shiftwidth=2
+  autocmd FileType typescriptreact set shiftwidth=2
+  autocmd FileType javascript set shiftwidth=2
 augroup end
 
 augroup ft_md
