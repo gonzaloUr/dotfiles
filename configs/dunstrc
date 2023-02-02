@@ -6,9 +6,15 @@
 [global]
     monitor = 0
     follow = keyboard
-    width = 370
-    height = 350
-    offset = 0x19
+
+    # las siguientes estan disponible en versiones nuevas de dunst, en vez usar geometry
+    #
+    # width = 370
+    # height = 350
+    # offset = 0x19
+    geometry = "370x350-0+19"
+
+    frame_width = 3
     padding = 2
     horizontal_padding = 2
     font = Monospace 12

@@ -11,7 +11,7 @@ for x in $power_supplies
 do
     out="$(cat "$x/type")"
 
-    if [ "$out" = 'Battery' ]
+    if [ "$out" = 'Battery' ] && [ -e "$x/capacity" ]
     then
         if [ $batts_length -eq 0 ]
         then
@@ -39,6 +39,11 @@ then
     do
         name=${x##?*/}
         cap="$(cat $x/capacity)"
+
+        if ! echo "$cap" | grep -q '^[0-9][0-9]*$'
+        then
+            continue
+        fi
 
         if [ $i -ne $batts_length ]
         then

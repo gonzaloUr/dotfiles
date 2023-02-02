@@ -78,3 +78,17 @@ lfcd() {
 }
 
 bindkey -s '^o' 'lfcd\n'
+
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+bindkey '^P' autosuggest-accept
+bindkey '^X' autosuggest-execute
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+[ -f "/home/guran/.ghcup/env" ] && source "/home/guran/.ghcup/env" # ghcup-env

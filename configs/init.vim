@@ -1,17 +1,3 @@
-let link = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-let data_dir = stdpath('data') . '/site'
-let plug_path = data_dir . '/autoload/plug.vim'
-
-if empty(glob(plug_path))
-  execute '!curl -fLo ' . plug_path . ' --create-dirs ' . link
-endif
-
-call plug#begin(data_dir)
-Plug 'tpope/vim-fugitive'
-Plug 'neovim/nvim-lspconfig'
-Plug 'killphi/vim-ebnf'
-call plug#end()
-
 filetype indent plugin on
 syntax on
 set hlsearch
@@ -28,16 +14,6 @@ set shiftwidth=4
 set expandtab
 set splitbelow
 
-set laststatus=2
-set statusline=%f\ %m
-set statusline+=%=
-set statusline+=%y\ %c
-set statusline+=\ (%l
-set statusline+=/
-set statusline+=%L)
-
-colorscheme peachpuff
-
 augroup indent_tabs
   autocmd FileType go set expandtab&
 augroup end
@@ -48,6 +24,10 @@ augroup two_spaces
   autocmd FileType lua set shiftwidth=2
   autocmd FileType dart set shiftwidth=2
   autocmd FileType vim set shiftwidth=2
+  autocmd FileType html set shiftwidth=2
+  autocmd FileType scss set shiftwidth=2
+  autocmd FileType css set shiftwidth=2
+  autocmd FileType typescript set shiftwidth=2
   autocmd FileType typescript set shiftwidth=2
   autocmd FileType typescriptreact set shiftwidth=2
   autocmd FileType javascript set shiftwidth=2
@@ -77,8 +57,6 @@ augroup end
 let mapleader=","
 let maplocalleader="-"
 
-nnoremap <localleader>9 :w \| bp<CR>
-nnoremap <localleader>0 :w \| bn<CR>
 nnoremap <leader><leader> :noh<CR>
 nnoremap <leader>ls :set nospell<CR>
 nnoremap <leader>le :set spell spelllang=es<CR>
@@ -99,42 +77,6 @@ nnoremap <leader>f  :lua vim.lsp.buf.formatting()<CR>
 nnoremap <leader>n  :lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap <leader>p  :lua vim.lsp.diagnostic.goto_prev()<CR>
 nnoremap <leader>e  :lua vim.diagnostic.open_float()<CR>
-
-function! MyTabLine()
-  let s = ''
-  for i in range(tabpagenr('$'))
-    if i + 1 == tabpagenr()
-      let s .= '%#TabLineSel#'
-    else
-      let s .= '%#TabLine#'
-    endif
-
-    " set the tab page number (for mouse clicks)
-    let s .= '%' . (i + 1) . 'T'
-
-    " the label is made by MyTabLabel()
-    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
-  endfor
-
-  " after the last tab fill with TabLineFill and reset tab page nr
-  let s .= '%#TabLineFill#%T'
-
-  return s
-endfunction
-
-function! MyTabLabel(n)
-  let buflist = tabpagebuflist(a:n)
-  let winnr = tabpagewinnr(a:n)
-  let buffname = bufname(buflist[winnr - 1])
-
-  if buffname == ""
-    return '[No Name]'
-  else
-    return buffname
-  endif
-endfunction
-
-set tabline=%!MyTabLine()
 
 au BufWritePre * %s/\s\+$//e
 au CompleteDone * if pumvisible() == 0 | pclose | endif
@@ -166,5 +108,6 @@ lua<<EOF
   lspconfig['gopls'].setup {}
   lspconfig['texlab'].setup {}
   lspconfig['tsserver'].setup {}
-  lspconfig['hls'].setup {}
+  lspconfig['angularls'].setup {}
+  lspconfig['jdtls'].setup {}
 EOF
