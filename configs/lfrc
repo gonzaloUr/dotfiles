@@ -1,5 +1,6 @@
 set icons
 set sortby ext
+set info size:time
 
 cmd drag-file %dragon-drop -a "$fx"
 
@@ -15,6 +16,13 @@ cmd copy-image-clipboard ${{
     xclip -selection clipboard -t image/png -i "$f"
 }}
 
+cmd open-file-nvim ${{
+    for x in /run/user/1001/nvim.*
+    do
+        nvr --servername "$x" "$f"
+    done
+}}
+
 cmd paste-image-clipboard %xclip -selection clipboard -t image/png -o > out.png
 
 map y
@@ -26,3 +34,5 @@ map p
 map pp push :paste<enter>
 map pi push :paste-image-clipboard<enter>
 map pd push :drag-file-here<enter>
+
+map o push :open-file-nvim<enter>
