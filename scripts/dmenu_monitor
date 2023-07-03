@@ -53,11 +53,11 @@ then
     fi
 
     # Elegir una posición relativa al monitor relativo.
-    position="$(printf 'right\nleft' |\
+    position="$(printf 'right\nleft\nabove\nbelow' |\
         dmenu -p "Relative position to $relative_to" -l 10)"
 
     # Checkear que la posición relativa es correcta.
-    if !( printf 'right\nleft' | grep -xq "$position" )
+    if !( printf 'right\nleft\nabove\nbelow' | grep -xq "$position" )
     then
         notify-send 'Invalid relative position!' 'dmenu_monitor'
         exit 1
@@ -66,6 +66,8 @@ then
     case $position in
      'left') xrandr --output "$monitor" --auto --left-of "$relative_to" ;;
      'right') xrandr --output "$monitor" --auto --right-of "$relative_to" ;;
+     'above') xrandr --output "$monitor" --auto --above "$relative_to" ;;
+     'below') xrandr --output "$monitor" --auto --below "$relative_to" ;;
     esac
 else
     # Obtener monitores activos.

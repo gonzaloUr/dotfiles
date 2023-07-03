@@ -84,3 +84,9 @@ bindkey '^R' history-incremental-search-backward
 # source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 # bindkey '^P' autosuggest-accept
 # bindkey '^X' autosuggest-execute
+
+### Gestor de npm para ubuntu.
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"

@@ -1,9 +1,6 @@
 require ('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
-  use 'rafi/awesome-vim-colorschemes'
 end)
-
-vim.cmd [[ colorscheme purify ]]
 
 -- options
 
@@ -151,7 +148,7 @@ function next_color()
   end
 
   vim.api.nvim_command('colorscheme ' .. colors[current])
-  print(colors[current])
+  print(colors[current] .. ' ' .. current .. '/' .. #colors)
 end
 
 function prev_color()
@@ -165,7 +162,7 @@ function prev_color()
   end
 
   vim.api.nvim_command('colorscheme ' .. colors[current])
-  print(colors[current])
+  print(colors[current] .. ' ' .. current .. '/' .. #colors)
 end
 
 vim.keymap.set('n', '>', next_color)
