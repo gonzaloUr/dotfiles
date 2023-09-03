@@ -109,3 +109,12 @@ pacman -S --noconfirm --needed noto-fonts-emoji
 pacman -S --noconfirm --needed noto-fonts-extra
 pacman -S --noconfirm --needed ttf-joypixels
 pacman -S --noconfirm --needed otf-ipafont
+
+# yay
+yay -S --noconfirm --needed lf-bin
+yay -S --noconfirm --needed simple-mtpfs
+yay -S --noconfirm --needed dragon-drop
+yay -S --noconfirm --needed posix-manpages
+yay -S --noconfirm --needed terminus-font-ttf
+yay -S --noconfirm --needed scc-bin
+yay -S --noconfirm --needed nvim-packer-git
