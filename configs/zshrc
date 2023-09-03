@@ -11,7 +11,7 @@ zstyle ':vcs_info:*' stagedstr '+'
 zstyle ':vcs_info:git:*' formats '%b %u %c'
 zstyle ':vcs_info:git:*' actionformats '%b | %a %u %c'
 
-PROMPT="%B%{$fg[cyan]%}%d%b"' ${vcs_info_msg_0_}'$'\n'"%# "
+PROMPT="%B%{$fg[green]%}%d%b"' ${vcs_info_msg_0_}'$'\n'"%# "
 
 autoload -Uz compinit
 zstyle ':completion:*' menu select
@@ -79,16 +79,9 @@ lfcd() {
 
 bindkey -s '^o' 'lfcd\n'
 
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
-source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 2>/dev/null
 bindkey '^P' autosuggest-accept
-bindkey '^X' autosuggest-execute
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-
-[ -f "/home/guran/.ghcup/env" ] && source "/home/guran/.ghcup/env" # ghcup-env
+bindkey '^H' history-substring-search-up
+bindkey '^L' history-substring-search-down

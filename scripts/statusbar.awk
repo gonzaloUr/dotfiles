@@ -1,9 +1,9 @@
 #!/bin/awk -f
 
- function update_bar() {
-     system("xsetroot -name ' " bar["vol"] " " bar["mic"] " " bar["bat"] " " bar["clk"] " '")
-     # print bar["brg"] " " bar["vol"] " " bar["mic"] " " bar["bat"] " " bar["clk"]
- }
+function update_bar() {
+    system("xsetroot -name ' " bar["vol"] " " bar["mic"] " " bar["bat"] " " bar["clk"] " '")
+    # print bar["brg"] " " bar["vol"] " " bar["mic"] " " bar["bat"] " " bar["clk"]
+}
 
 function get_brg() {
     "light -G" | getline out
@@ -64,12 +64,12 @@ BEGIN {
     update_bar()
 }
 
-/Evento 'cambiar' en destino #/ {
+/Event 'change' on sink #/ {
     bar["vol"] = get_vol()
     update_bar()
 }
 
-/Evento 'cambiar' en origen #/ {
+/Event 'change' on source #/ {
     bar["mic"] = get_mic()
     update_bar()
 }

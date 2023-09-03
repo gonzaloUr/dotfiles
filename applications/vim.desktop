@@ -6,4 +6,4 @@
 Type=Application
 Name=vim
 MimeType=text/plain;text/x-go;
-Exec=alacritty -e vim %u
+Exec=st -e vim %u

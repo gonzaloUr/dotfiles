@@ -5,7 +5,7 @@ export BROWSER=firefox
 export READER=zathura
 export VIEWER=sxiv
 export PLAYER=mpv
-export TERMINAL=alacritty
+export TERMINAL=st
 
 # xdg
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -115,11 +115,3 @@ ex=🎯:\
 *.jar=♨:\
 *.java=♨:\
 "
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-export PATH="$HOME/.elan/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"

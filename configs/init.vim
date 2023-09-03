@@ -14,6 +14,8 @@ set shiftwidth=4
 set expandtab
 set splitbelow
 
+colorscheme abstract
+
 augroup indent_tabs
   autocmd FileType go set expandtab&
 augroup end
@@ -62,17 +64,23 @@ nnoremap <leader>ls :set nospell<CR>
 nnoremap <leader>le :set spell spelllang=es<CR>
 nnoremap <leader>li :set spell spelllang=en<CR>
 
-nnoremap <leader>gD :lua vim.lsp.buf.declaration()<CR>
-nnoremap <leader>gd :lua vim.lsp.buf.definition()<CR>
-nnoremap <leader>gi :lua vim.lsp.buf.implementation()<CR>
-nnoremap <leader>a  :lua vim.lsp.buf.code_action()<CR>
+command LspDeclaration lua vim.lsp.buf.declaration()<CR>
+command LspDefinition lua vim.lsp.buf.definition()<CR>
+command LspImplementation lua vim.lsp.buf.implementation()<CR>
+command LspCodeAction lua vim.lsp.buf.code_action()<CR>
+command LspReferences lua vim.lsp.buf.references()<CR>
+
+nnoremap <leader>gD :LspDeclaration<CR>
+nnoremap <leader>gd :LspDefinition<CR>
+nnoremap <leader>gi :LspImplementation<CR>
+nnoremap <leader>a  :LspCodeAction<CR>
 nnoremap <leader>h  :lua vim.lsp.buf.hover()<CR>
 nnoremap <leader>s  :lua vim.lsp.buf.signature_help()<CR>
 nnoremap <leader>wa :lua vim.lsp.buf.add_workspace_folder()<CR>
 nnoremap <leader>wr :lua vim.lsp.buf.remove_workspace_folder()<CR>
 nnoremap <leader>wl :lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>
 nnoremap <leader>re :lua vim.lsp.buf.rename()<CR>
-nnoremap <leader>rf :lua vim.lsp.buf.references()<CR>
+nnoremap <leader>rf :LspReferences<CR>
 nnoremap <leader>f  :lua vim.lsp.buf.formatting()<CR>
 nnoremap <leader>n  :lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap <leader>p  :lua vim.lsp.diagnostic.goto_prev()<CR>
@@ -86,7 +94,7 @@ au Filetype tex set omnifunc=v:lua.vim.lsp.omnifunc
 au Filetype typescript set omnifunc=v:lua.vim.lsp.omnifunc
 
 lua<<EOF
-  local lspconfig = require('lspconfig')
+  local lspconfig = require 'lspconfig'
 
   lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
     handlers = {
