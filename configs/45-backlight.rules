@@ -1,0 +1,5 @@
+# udev rule para dejar que un usuario en el grupo video cambie el brightness.
+#
+# Install under /lib/udev/rules.d/
+
+ACTION=="add", SUBSYSTEM=="backlight", RUN+="/bin/chgrp video $sys$devpath/brightness", RUN+="/bin/chmod g+w $sys$devpath/brightness"
