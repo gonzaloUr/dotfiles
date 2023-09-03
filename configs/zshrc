@@ -11,7 +11,7 @@ zstyle ':vcs_info:*' stagedstr '+'
 zstyle ':vcs_info:git:*' formats '%b %u %c'
 zstyle ':vcs_info:git:*' actionformats '%b | %a %u %c'
 
-PROMPT="%B%{$fg[green]%}%d%b"' ${vcs_info_msg_0_}'$'\n'"%# "
+PROMPT="%B%d%b"' ${vcs_info_msg_0_}'$'\n'"%# "
 
 autoload -Uz compinit
 zstyle ':completion:*' menu select
@@ -78,10 +78,9 @@ lfcd() {
 }
 
 bindkey -s '^o' 'lfcd\n'
+bindkey '^R' history-incremental-search-backward
 
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 2>/dev/null
-bindkey '^P' autosuggest-accept
-bindkey '^H' history-substring-search-up
-bindkey '^L' history-substring-search-down
+# source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+# source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+# bindkey '^P' autosuggest-accept
+# bindkey '^X' autosuggest-execute

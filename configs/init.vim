@@ -63,6 +63,10 @@ nnoremap <leader><leader> :noh<CR>
 nnoremap <leader>ls :set nospell<CR>
 nnoremap <leader>le :set spell spelllang=es<CR>
 nnoremap <leader>li :set spell spelllang=en<CR>
+nnoremap <leader>. :Files<CR>
+nnoremap <leader>/ :Buffers<CR>
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <C-f> :NvimTreeFocus<CR>
 
 command LspDeclaration lua vim.lsp.buf.declaration()<CR>
 command LspDefinition lua vim.lsp.buf.definition()<CR>
@@ -94,7 +98,34 @@ au Filetype tex set omnifunc=v:lua.vim.lsp.omnifunc
 au Filetype typescript set omnifunc=v:lua.vim.lsp.omnifunc
 
 lua<<EOF
-  local lspconfig = require 'lspconfig'
+
+  require('packer').startup(function(use)
+    use 'wbthomason/packer.nvim'
+    use 'junegunn/fzf'
+    use 'junegunn/fzf.vim'
+    use {
+      'nvim-tree/nvim-tree.lua',
+      config = function()
+        require("nvim-tree").setup {
+          renderer = {
+            group_empty = true,
+            icons = {
+              show = {
+                file = false,
+                folder = false,
+                folder_arrow = false,
+                git = false,
+                modified = false
+              }
+            }
+          }
+        }
+      end
+    }
+  end)
+
+
+  local lspconfig = require('lspconfig')
 
   lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
     handlers = {
