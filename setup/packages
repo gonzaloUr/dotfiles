@@ -118,3 +118,5 @@ yay -S --noconfirm --needed posix-manpages
 yay -S --noconfirm --needed terminus-font-ttf
 yay -S --noconfirm --needed scc-bin
 yay -S --noconfirm --needed nvim-packer-git
+yay -S --noconfirm --needed dropbox
+yay -S --noconfirm --needed dropbox-cli
