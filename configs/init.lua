@@ -1,5 +1,7 @@
 require ('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
+  use 'nvim-lua/plenary.nvim'
+  use 'Julian/lean.nvim'
 end)
 
 -- options
@@ -11,6 +13,7 @@ vim.opt.shiftwidth = 4
 vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
+vim.api.nvim_command('colorscheme abstract')
 
 -- lsp.
 
@@ -167,3 +170,9 @@ end
 
 vim.keymap.set('n', '>', next_color)
 vim.keymap.set('n', '<', prev_color)
+
+-- lean
+require('lean').setup{
+  lsp = { on_attach = on_attach },
+  mappings = true,
+}

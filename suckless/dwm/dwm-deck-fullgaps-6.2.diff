@@ -18,7 +18,7 @@ index a2ac963..d865e18 100644
  	{ "[M]",      monocle },
 +	{ "[D]",      deck },
  };
- 
+
  /* key definitions */
 @@ -77,6 +78,7 @@ static Key keys[] = {
  	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
@@ -43,7 +43,7 @@ index 5e4d494..c67ff91 100644
 @@ -655,6 +656,31 @@ destroynotify(XEvent *e)
  		unmanage(c, 1);
  }
- 
+
 +void
 +deck(Monitor *m) {
 +	unsigned int i, n, h, mw, my;
@@ -58,20 +58,20 @@ index 5e4d494..c67ff91 100644
 +		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n - m->nmaster);
 +	}
 +	else
-+		mw = m->ww;
-+	for(i = my = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
++		mw = m->ww - m->gappx;
++	for(i = my = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 +		if(i < m->nmaster) {
-+			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
-+			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), False);
-+			my += HEIGHT(c);
++			h = (m->wh - my) / (MIN(n, m->nmaster) - i) - m->gappx;
++			resize(c, m->wx + m->gappx, m->wy + my, mw - (2*c->bw) - m->gappx, h - (2*c->bw), False);
++			my += HEIGHT(c) + m->gappx;
 +		}
 +		else
-+			resize(c, m->wx + mw, m->wy, m->ww - mw - (2*c->bw), m->wh - (2*c->bw), False);
++			resize(c, m->wx + mw + m->gappx, m->wy + m->gappx, m->ww - mw - (2*c->bw) - 2*m->gappx, m->wh - (2*c->bw) - 2*m->gappx, False);
 +}
 +
  void
  detach(Client *c)
  {
--- 
+--
 2.32.0
 

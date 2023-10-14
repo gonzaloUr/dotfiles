@@ -109,6 +109,7 @@ pacman -S --noconfirm --needed noto-fonts-emoji
 pacman -S --noconfirm --needed noto-fonts-extra
 pacman -S --noconfirm --needed ttf-joypixels
 pacman -S --noconfirm --needed otf-ipafont
+pacman -S --noconfirm --needed ttf-dejavu-nerd
 
 # yay
 yay -S --noconfirm --needed lf-bin
