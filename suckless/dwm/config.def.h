@@ -2,8 +2,8 @@
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int gappx     = 5;        /* gaps between windows */
-static const unsigned int snap      = 5;        /* snap pixel */
+static const unsigned int gappx     = 10;       /* gaps between windows */
+static const unsigned int snap      = 10;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int focusedontoptiled  = 1;        /* 1 means focused tile client is shown on top of floating windows */

@@ -1,7 +1,10 @@
 require ('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
-  use 'nvim-lua/plenary.nvim'
-  use 'Julian/lean.nvim'
+  -- oficial plugins.
+  use 'neovim/nvim-lspconfig'
+
+  -- third party vimscript plugins.
+  use 'whonore/Coqtail'
+  use 'rafi/awesome-vim-colorschemes'
 end)
 
 -- options
@@ -13,7 +16,7 @@ vim.opt.shiftwidth = 4
 vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
-vim.api.nvim_command('colorscheme abstract')
+vim.cmd.colorscheme('gruvbox')
 
 -- lsp.
 
@@ -54,8 +57,6 @@ vim.g.mapleader = ','
 vim.g.maplocalleader = '-'
 
 vim.keymap.set('n', '<Leader><Leader>', '<cmd>noh<cr>')
-vim.keymap.set('n', '<Leader>.', '<cmd>Files<cr>')
-vim.keymap.set('n', '<Leader>/', '<cmd>Buffers<cr>')
 vim.keymap.set('n', '<Leader>gD', function() vim.lsp.buf.declaration() end)
 vim.keymap.set('n', '<Leader>gd', function() vim.lsp.buf.definition() end)
 vim.keymap.set('n', '<Leader>gi', function() vim.lsp.buf.implementation() end)
@@ -170,9 +171,3 @@ end
 
 vim.keymap.set('n', '>', next_color)
 vim.keymap.set('n', '<', prev_color)
-
--- lean
-require('lean').setup{
-  lsp = { on_attach = on_attach },
-  mappings = true,
-}
