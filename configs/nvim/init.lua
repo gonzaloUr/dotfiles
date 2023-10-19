@@ -78,13 +78,15 @@ vim.keymap.set('n', '<Leader>e', function() vim.diagnostic.open_float() end)
 
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
-  command = '%s/\\s\\+$//e'
+  callback = function()
+    vim.cmd.substitute('/\\s\\+$//e')
+  end
 })
 
 vim.api.nvim_create_autocmd('CompleteDone', {
   callback = function()
-    if vim.api.nvim_call_function('pumvisible', {}) then
-      vim.api.nvim_command('pclose')
+    if vim.fn.pumvisible() then
+      vim.cmd.plcose()
     end
   end
 })
@@ -103,7 +105,9 @@ vim.api.nvim_create_autocmd('FileType', {
     'typescriptreact',
     'javascript'
   },
-  command = 'set shiftwidth=2'
+  callback = function()
+    vim.opt.shiftwidth = 2
+  end
 })
 
 vim.api.nvim_create_autocmd('Syntax', {
@@ -142,7 +146,7 @@ function get_current_color_index(colors)
 end
 
 function next_color()
-  colors = vim.api.nvim_call_function('getcompletion', {'', 'color'})
+  colors = vim.fn.getcompletion('', 'color')
   current = get_current_color_index(colors)
 
   if current == #colors then
@@ -151,12 +155,12 @@ function next_color()
     current = current + 1
   end
 
-  vim.api.nvim_command('colorscheme ' .. colors[current])
+  vim.cmd.colorscheme(colors[current])
   print(colors[current] .. ' ' .. current .. '/' .. #colors)
 end
 
 function prev_color()
-  colors = vim.api.nvim_call_function('getcompletion', {'', 'color'})
+  colors = vim.fn.getcompletion('', 'color')
   current = get_current_color_index(colors)
 
   if current == 1 then
@@ -165,9 +169,18 @@ function prev_color()
     current = current - 1
   end
 
-  vim.api.nvim_command('colorscheme ' .. colors[current])
+  vim.cmd.colorscheme(colors[current])
   print(colors[current] .. ' ' .. current .. '/' .. #colors)
 end
 
 vim.keymap.set('n', '>', next_color)
 vim.keymap.set('n', '<', prev_color)
+
+-- unicode-math.
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'coq' },
+  callback = function()
+    vim.opt.keymap = 'unicode-math'
+  end
+})
