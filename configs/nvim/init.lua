@@ -3,8 +3,11 @@ require ('packer').startup(function(use)
   use 'neovim/nvim-lspconfig'
 
   -- third party vimscript plugins.
-  use 'whonore/Coqtail'
   use 'rafi/awesome-vim-colorschemes'
+  use 'whonore/Coqtail'
+
+  -- third party lua plugins.
+  use 'folke/which-key.nvim'
 end)
 
 -- options
@@ -86,7 +89,7 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 vim.api.nvim_create_autocmd('CompleteDone', {
   callback = function()
     if vim.fn.pumvisible() then
-      vim.cmd.plcose()
+      vim.api.nvim_command("pclose")
     end
   end
 })
@@ -103,7 +106,8 @@ vim.api.nvim_create_autocmd('FileType', {
     'css',
     'typescript',
     'typescriptreact',
-    'javascript'
+    'javascript',
+    'coq'
   },
   callback = function()
     vim.opt.shiftwidth = 2
@@ -132,50 +136,6 @@ vim.api.nvim_create_autocmd('Syntax', {
   end
 })
 
--- etc
-
-function get_current_color_index(colors)
-  for i = 0, #colors do
-    if colors[i] == vim.g.colors_name then
-      current = i
-      break
-    end
-  end
-
-  return current
-end
-
-function next_color()
-  colors = vim.fn.getcompletion('', 'color')
-  current = get_current_color_index(colors)
-
-  if current == #colors then
-    current = 1
-  else
-    current = current + 1
-  end
-
-  vim.cmd.colorscheme(colors[current])
-  print(colors[current] .. ' ' .. current .. '/' .. #colors)
-end
-
-function prev_color()
-  colors = vim.fn.getcompletion('', 'color')
-  current = get_current_color_index(colors)
-
-  if current == 1 then
-    current = #colors
-  else
-    current = current - 1
-  end
-
-  vim.cmd.colorscheme(colors[current])
-  print(colors[current] .. ' ' .. current .. '/' .. #colors)
-end
-
-vim.keymap.set('n', '>', next_color)
-vim.keymap.set('n', '<', prev_color)
-
 -- unicode-math.
 
 vim.api.nvim_create_autocmd('FileType', {
@@ -184,3 +144,7 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.opt.keymap = 'unicode-math'
   end
 })
+
+require('which-key').setup()
+
+require('swap-colorscheme')

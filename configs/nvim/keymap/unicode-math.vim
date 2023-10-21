@@ -1,7 +1,8 @@
 " File:        unicode-math.vim
 " Authors:     Nicolas Tessore <n.tessore@ucl.ac.uk>
 " Version:     20210220.1
-" Description: Keymap to type Unicode math symbols by their TeX names.
+" Description: Keymap to type Unicode math symbols by their TeX names
+" (modified por mi).
 
 let b:keymap_name = "texmath"
 scriptencoding utf-8
