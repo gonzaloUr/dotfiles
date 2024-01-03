@@ -10,6 +10,7 @@ require ('packer').startup(function(use)
   use 'folke/which-key.nvim'
 end)
 
+
 -- options
 
 vim.opt.number = true
@@ -77,6 +78,11 @@ vim.keymap.set('n', '<Leader>n', function() vim.diagnostic.goto_next() end)
 vim.keymap.set('n', '<Leader>p', function() vim.diagnostic.goto_prev() end)
 vim.keymap.set('n', '<Leader>e', function() vim.diagnostic.open_float() end)
 
+-- lua
+
+require('which-key').setup()
+require('swap-colorscheme')
+
 -- autocmds
 
 vim.api.nvim_create_autocmd('BufWritePre', {
@@ -109,42 +115,14 @@ vim.api.nvim_create_autocmd('FileType', {
     'javascript',
     'coq'
   },
-  callback = function()
-    vim.opt.shiftwidth = 2
+  callback = function(args)
+    vim.bo[args.buf].shiftwidth = 2
   end
 })
-
-vim.api.nvim_create_autocmd('Syntax', {
-  pattern = 'tex',
-  callback = function()
-
-    -- Make amsmath environments traditional tex math enviroments
-    vim.api.nvim_call_function('TexNewMathZone', {'E', 'align', 1})
-    vim.api.nvim_call_function('TexNewMathZone', {'F', 'multline', 1})
-    vim.api.nvim_call_function('TexNewMathZone', {'H', 'equation', 1})
-    vim.api.nvim_call_function('TexNewMathZone', {'I', 'gather', 1})
-    vim.api.nvim_call_function('TexNewMathZone', {'I', 'gather', 1})
-
-    -- spellcheck the toplevel syntactical entity (outside begin document)
-    vim.api.nvim_command('syntax spell toplevel')
-
-    -- parsing always starts at least this many lines backwards
-    vim.api.nvim_command('syntax sync minlines=50')
-
-    -- parsing always stops after this many lines forward from minlines
-    vim.api.nvim_command('syntax sync maxlines=500')
-  end
-})
-
--- unicode-math.
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'coq' },
-  callback = function()
-    vim.opt.keymap = 'unicode-math'
+  pattern = 'coq',
+  callback = function(args)
+    vim.bo[args.buf].keymap = 'unicode-math'
   end
 })
-
-require('which-key').setup()
-
-require('swap-colorscheme')

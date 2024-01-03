@@ -13,19 +13,19 @@ window:
 
 font:
   normal:
-    family: "Source Code Pro"
+    family: "Hack"
     style: Regular
 
   bold:
-    family: "Source Code Pro"
+    family: "Hack"
     style: Bold
 
   italic:
-    family: "Source Code Pro"
+    family: "Hack"
     style: Italic
 
   bold_italic:
-    family: "Source Code Pro"
+    family: "Hack"
     style: Regular
 
   size: 7
