@@ -94,6 +94,7 @@ pacman -S --noconfirm --needed newsboat
 pacman -S --noconfirm --needed gnome-keyring
 pacman -S --noconfirm --needed seahorse
 pacman -S --noconfirm --needed light
+pacman -S --noconfirm --needed gparted
 
 # lsps
 pacman -S --noconfirm --needed texlab
