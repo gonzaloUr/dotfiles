@@ -20,7 +20,7 @@ vim.opt.shiftwidth = 4
 vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
-vim.cmd.colorscheme('gruvbox')
+vim.cmd.colorscheme('rdark-terminal2')
 
 -- lsp.
 
