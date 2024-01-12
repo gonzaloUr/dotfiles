@@ -1,4 +1,8 @@
-function get_current_color_index(colors)
+local M = {
+  current = nil,
+}
+
+function M.get_current_color_index(colors)
   for i = 0, #colors do
     if colors[i] == vim.g.colors_name then
       current = i
@@ -9,9 +13,17 @@ function get_current_color_index(colors)
   return current
 end
 
-function next_color()
+function M.set_current()
+  if M.current ~= nil then
+    return
+  end
+
   colors = vim.fn.getcompletion('', 'color')
-  current = get_current_color_index(colors)
+  M.current = M.get_current_color_index(colors)
+end
+
+function M.next_color()
+  M.set_current()
 
   if current == #colors then
     current = 1
@@ -23,9 +35,8 @@ function next_color()
   print(colors[current] .. ' ' .. current .. '/' .. #colors)
 end
 
-function prev_color()
-  colors = vim.fn.getcompletion('', 'color')
-  current = get_current_color_index(colors)
+function M.prev_color()
+  M.set_current()
 
   if current == 1 then
     current = #colors
@@ -37,5 +48,10 @@ function prev_color()
   print(colors[current] .. ' ' .. current .. '/' .. #colors)
 end
 
-vim.keymap.set('n', '>', next_color)
-vim.keymap.set('n', '<', prev_color)
+function M.setup()
+  M.set_current()
+  vim.keymap.set('n', '>', M.next_color)
+  vim.keymap.set('n', '<', M.prev_color)
+end
+
+return M

@@ -42,6 +42,7 @@ pacman -S --needed xdotool
 pacman -S --needed dunst libnotify
 pacman -S --needed xcompmgr
 pacman -S --needed xwallpaper
+pacman -S --needed xf86-input-wacom
 
 # multimedia
 pacman -S --needed pulseaudio-alsa

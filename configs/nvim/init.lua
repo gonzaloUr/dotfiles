@@ -4,14 +4,18 @@ require ('packer').startup(function(use)
 
   -- third party vimscript plugins.
   use 'rafi/awesome-vim-colorschemes'
-  use 'whonore/Coqtail'
+  use 'airblade/vim-gitgutter'
 
   -- third party lua plugins.
   use 'folke/which-key.nvim'
+  use 'tomtomjhj/vscoq.nvim'
 end)
 
+require('which-key').setup()
+require('swap-colorscheme').setup()
+vim.cmd.colorscheme('purify')
 
--- options
+-- options and global variables.
 
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -20,7 +24,6 @@ vim.opt.shiftwidth = 4
 vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
-vim.cmd.colorscheme('rdark-terminal2')
 
 -- lsp.
 
@@ -55,6 +58,8 @@ lspconfig['tsserver'].setup {}
 lspconfig['angularls'].setup {}
 lspconfig['jdtls'].setup {}
 
+require('vscoq').setup {}
+
 -- mappings
 
 vim.g.mapleader = ','
@@ -77,11 +82,6 @@ vim.keymap.set('n', '<Leader>l', function() vim.diagnostic.setqflist() end)
 vim.keymap.set('n', '<Leader>n', function() vim.diagnostic.goto_next() end)
 vim.keymap.set('n', '<Leader>p', function() vim.diagnostic.goto_prev() end)
 vim.keymap.set('n', '<Leader>e', function() vim.diagnostic.open_float() end)
-
--- lua
-
-require('which-key').setup()
-require('swap-colorscheme')
 
 -- autocmds
 
