@@ -3,17 +3,15 @@ require ('packer').startup(function(use)
   use 'neovim/nvim-lspconfig'
 
   -- third party vimscript plugins.
-  use 'rafi/awesome-vim-colorschemes'
-  use 'airblade/vim-gitgutter'
+  use 'sainnhe/everforest'
 
   -- third party lua plugins.
   use 'folke/which-key.nvim'
   use 'tomtomjhj/vscoq.nvim'
 end)
 
-require('which-key').setup()
 require('swap-colorscheme').setup()
-vim.cmd.colorscheme('purify')
+vim.cmd.colorscheme('everforest')
 
 -- options and global variables.
 
@@ -60,28 +58,47 @@ lspconfig['jdtls'].setup {}
 
 require('vscoq').setup {}
 
--- mappings
+-- mappings and which key.
 
 vim.g.mapleader = ','
 vim.g.maplocalleader = '-'
 
 vim.keymap.set('n', '<Leader><Leader>', '<cmd>noh<cr>')
-vim.keymap.set('n', '<Leader>gD', function() vim.lsp.buf.declaration() end)
-vim.keymap.set('n', '<Leader>gd', function() vim.lsp.buf.definition() end)
-vim.keymap.set('n', '<Leader>gi', function() vim.lsp.buf.implementation() end)
-vim.keymap.set('n', '<Leader>a', function() vim.lsp.buf.code_action() end)
-vim.keymap.set('n', '<Leader>h', function() vim.lsp.buf.hover() end)
-vim.keymap.set('n', '<Leader>s', function() vim.lsp.buf.signature_help() end)
-vim.keymap.set('n', '<Leader>wa', function() vim.lsp.buf.add_workspace_folder() end)
-vim.keymap.set('n', '<Leader>wr', function() vim.lsp.buf.remove_workspace_folder() end)
-vim.keymap.set('n', '<Leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end)
-vim.keymap.set('n', '<Leader>re', function() vim.lsp.buf.rename() end)
-vim.keymap.set('n', '<Leader>rf', function() vim.lsp.buf.references() end)
-vim.keymap.set('n', '<Leader>f', function() vim.lsp.buf.formatting() end)
-vim.keymap.set('n', '<Leader>l', function() vim.diagnostic.setqflist() end)
-vim.keymap.set('n', '<Leader>n', function() vim.diagnostic.goto_next() end)
-vim.keymap.set('n', '<Leader>p', function() vim.diagnostic.goto_prev() end)
-vim.keymap.set('n', '<Leader>e', function() vim.diagnostic.open_float() end)
+
+local wk = require('which-key')
+
+wk.register({
+  l = {
+    name = 'Lsp',
+    D = {function() vim.lsp.buf.declaration() end, 'Go to declaration'},
+    d = {function() vim.lsp.buf.definition() end, 'Go to definition'},
+    i = {function() vim.lsp.buf.implementation() end, 'Go to implementation'},
+    a = {function() vim.lsp.buf.code_action() end, 'Code Action'},
+    h = {function() vim.lsp.buf.hover() end, 'Hover'},
+    s = {function() vim.lsp.buf.signature_help() end, 'Show signature'},
+    af = {function() vim.lsp.buf.add_workspace_folder() end, 'Add file path to lsp root'},
+    rf = {function() vim.lsp.buf.remove_workspace_folder() end, 'Remove file path from lsp root'},
+    lf = {function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, 'List dirs as root in lsp'},
+    r = {function() vim.lsp.buf.rename() end, 'Rename'},
+    u = {function() vim.lsp.buf.references() end, 'Usages'},
+    f = {function() vim.lsp.buf.formatting() end, 'Format'},
+  },
+  d = {
+    name = 'Diagnostics',
+    n = {function() vim.diagnostic.goto_next() end, 'Go next error'},
+    p = {function() vim.diagnostic.goto_prev() end, 'Go prev error'},
+    l = {function() vim.diagnostic.open_float() end, 'Show errors'},
+  },
+--  g = {
+--    name = 'Git',
+--    s = {function() vim.cmd.GitGutterSignsToggle() end, 'Show/Hide git signs'},
+--    h = {function() vim.cmd.GitGutterLineHighlightsToggle() end, 'Turn on/off highlight for changes'},
+--    f = {function() vim.cmd.GitGutterFold() end, 'Focus/Unfocus line changes'},
+--    d = {function() vim.cmd.GitGutterDiff() end, 'Show diff'},
+--  },
+}, { prefix = '<leader>' })
+
+wk.setup()
 
 -- autocmds
 
