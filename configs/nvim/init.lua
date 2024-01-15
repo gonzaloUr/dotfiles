@@ -1,9 +1,9 @@
-require ('packer').startup(function(use)
+require('packer').startup(function(use)
   -- oficial plugins.
   use 'neovim/nvim-lspconfig'
 
   -- third party vimscript plugins.
-  use 'sainnhe/everforest'
+  use 'tomasiser/vim-code-dark'
 
   -- third party lua plugins.
   use 'folke/which-key.nvim'
@@ -11,7 +11,8 @@ require ('packer').startup(function(use)
 end)
 
 require('swap-colorscheme').setup()
-vim.cmd.colorscheme('everforest')
+vim.g.codedark_term256 = 1
+vim.cmd.colorscheme('codedark')
 
 -- options and global variables.
 
@@ -87,15 +88,8 @@ wk.register({
     name = 'Diagnostics',
     n = {function() vim.diagnostic.goto_next() end, 'Go next error'},
     p = {function() vim.diagnostic.goto_prev() end, 'Go prev error'},
-    l = {function() vim.diagnostic.open_float() end, 'Show errors'},
+    h = {function() vim.diagnostic.open_float() end, 'Show errors'},
   },
---  g = {
---    name = 'Git',
---    s = {function() vim.cmd.GitGutterSignsToggle() end, 'Show/Hide git signs'},
---    h = {function() vim.cmd.GitGutterLineHighlightsToggle() end, 'Turn on/off highlight for changes'},
---    f = {function() vim.cmd.GitGutterFold() end, 'Focus/Unfocus line changes'},
---    d = {function() vim.cmd.GitGutterDiff() end, 'Show diff'},
---  },
 }, { prefix = '<leader>' })
 
 wk.setup()
