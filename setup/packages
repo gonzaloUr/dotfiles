@@ -35,7 +35,6 @@ pacman -S --needed ntp
 pacman -S --needed xorg
 pacman -S --needed xorg-xinit
 pacman -S --needed xorg-drivers
-pacman -S --needed xorg-backlight
 pacman -S --needed xclip
 pacman -S --needed xsel
 pacman -S --needed xdotool
@@ -94,7 +93,6 @@ pacman -S --noconfirm --needed alacritty
 pacman -S --noconfirm --needed newsboat
 pacman -S --noconfirm --needed gnome-keyring
 pacman -S --noconfirm --needed seahorse
-pacman -S --noconfirm --needed light
 pacman -S --noconfirm --needed gparted
 
 # lsps
@@ -112,6 +110,7 @@ pacman -S --noconfirm --needed noto-fonts-extra
 pacman -S --noconfirm --needed ttf-joypixels
 pacman -S --noconfirm --needed otf-ipafont
 pacman -S --noconfirm --needed ttf-dejavu-nerd
+pacman -S --noconfirm --needed libertinus-font
 
 # yay
 yay -S --noconfirm --needed lf-bin

@@ -2,20 +2,17 @@ require('packer').startup(function(use)
   -- oficial plugins.
   use 'neovim/nvim-lspconfig'
 
-  -- third party vimscript plugins.
-  use 'tomasiser/vim-code-dark'
-
   -- third party lua plugins.
   use 'folke/which-key.nvim'
   use 'tomtomjhj/vscoq.nvim'
+  use 'Mofiqul/vscode.nvim'
+  use 'nvim-tree/nvim-tree.lua'
+  use 'lewis6991/gitsigns.nvim'
 end)
-
-require('swap-colorscheme').setup()
-vim.g.codedark_term256 = 1
-vim.cmd.colorscheme('codedark')
 
 -- options and global variables.
 
+vim.opt.termguicolors = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.tabstop = 4
@@ -23,6 +20,32 @@ vim.opt.shiftwidth = 4
 vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
+
+-- load script for swapping colors.
+
+require('swap-colorscheme').setup()
+
+-- vscode theme plugin.
+
+local vscode = require('vscode')
+
+vscode.setup({
+  transparent = false,
+  italic_comments = true
+})
+
+vscode.load()
+
+-- nvim-tree plugin.
+
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+require('nvim-tree').setup()
+
+-- gitsigns.nvim.
+
+require('gitsigns').setup()
 
 -- lsp.
 
@@ -65,6 +88,7 @@ vim.g.mapleader = ','
 vim.g.maplocalleader = '-'
 
 vim.keymap.set('n', '<Leader><Leader>', '<cmd>noh<cr>')
+vim.keymap.set('n', '<Leader>.', '<cmd>NvimTreeToggle<cr>')
 
 local wk = require('which-key')
 
@@ -128,12 +152,5 @@ vim.api.nvim_create_autocmd('FileType', {
   },
   callback = function(args)
     vim.bo[args.buf].shiftwidth = 2
-  end
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'coq',
-  callback = function(args)
-    vim.bo[args.buf].keymap = 'unicode-math'
   end
 })
