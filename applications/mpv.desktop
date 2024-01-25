@@ -1,0 +1,9 @@
+[Desktop Entry]
+
+# xdg desktop entry for opening text files
+# install under ~/.local/share/applications
+
+Type=Application
+Name=mpv
+MimeType=video/mp4;video/webm;video/mpeg;video/ogg;
+Exec=mpv %u

@@ -59,11 +59,12 @@ index 5e4d494..c67ff91 100644
 +	}
 +	else
 +		mw = m->ww - m->gappx;
-+	for(i = my = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
++	for(i = 0, my = m->gappx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 +		if(i < m->nmaster) {
 +			h = (m->wh - my) / (MIN(n, m->nmaster) - i) - m->gappx;
 +			resize(c, m->wx + m->gappx, m->wy + my, mw - (2*c->bw) - m->gappx, h - (2*c->bw), False);
-+			my += HEIGHT(c) + m->gappx;
++			if (my + HEIGHT(c) + m->gappx < m->wh)
++				my += HEIGHT(c) + m->gappx;
 +		}
 +		else
 +			resize(c, m->wx + mw + m->gappx, m->wy + m->gappx, m->ww - mw - (2*c->bw) - 2*m->gappx, m->wh - (2*c->bw) - 2*m->gappx, False);

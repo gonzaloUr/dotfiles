@@ -69,7 +69,6 @@ pacman -S --noconfirm --needed clipnotify
 pacman -S --noconfirm --needed poppler
 pacman -S --noconfirm --needed highlight
 pacman -S --noconfirm --needed pdfgrep
-pacman -S --noconfirm --needed light
 
 # programs
 pacman -S --noconfirm --needed neovim
@@ -100,25 +99,22 @@ pacman -S --noconfirm --needed texlab
 
 # fonts
 pacman -S --noconfirm --needed ttf-hack
-pacman -S --noconfirm --needed terminus-font
 pacman -S --noconfirm --needed ttf-dejavu
 pacman -S --noconfirm --needed ttf-linux-libertine
 pacman -S --noconfirm --needed ttf-liberation
-pacman -S --noconfirm --needed noto-fonts
 pacman -S --noconfirm --needed noto-fonts-emoji
-pacman -S --noconfirm --needed noto-fonts-extra
 pacman -S --noconfirm --needed ttf-joypixels
 pacman -S --noconfirm --needed otf-ipafont
-pacman -S --noconfirm --needed ttf-dejavu-nerd
 pacman -S --noconfirm --needed libertinus-font
+pacman -S --noconfirm --needed ttf-jetbrains-mono
 
 # yay
 yay -S --noconfirm --needed lf-bin
 yay -S --noconfirm --needed simple-mtpfs
 yay -S --noconfirm --needed dragon-drop
 yay -S --noconfirm --needed posix-manpages
-yay -S --noconfirm --needed terminus-font-ttf
 yay -S --noconfirm --needed scc-bin
 yay -S --noconfirm --needed nvim-packer-git
 yay -S --noconfirm --needed dropbox
 yay -S --noconfirm --needed dropbox-cli
+yay -S --noconfirm --needed light

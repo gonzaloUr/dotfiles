@@ -30,19 +30,19 @@ text = "#d4d4d4"
 size = 7
 
 [font.bold]
-family = "SourceCodePro"
+family = "JetBrains Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "SourceCodePro"
+family = "JetBrains Mono"
 style = "Regular"
 
 [font.italic]
-family = "SourceCodePro"
+family = "JetBrains Mono"
 style = "Italic"
 
 [font.normal]
-family = "SourceCodePro"
+family = "JetBrains Mono"
 style = "Regular"
 
 [[keyboard.bindings]]

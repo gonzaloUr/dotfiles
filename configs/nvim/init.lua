@@ -21,10 +21,6 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
--- load script for swapping colors.
-
-require('swap-colorscheme').setup()
-
 -- vscode theme plugin.
 
 local vscode = require('vscode')
