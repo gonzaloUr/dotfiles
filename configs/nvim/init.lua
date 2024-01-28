@@ -4,7 +4,6 @@ require('packer').startup(function(use)
 
   -- third party lua plugins.
   use 'folke/which-key.nvim'
-  use 'tomtomjhj/vscoq.nvim'
   use 'Mofiqul/vscode.nvim'
   use 'nvim-tree/nvim-tree.lua'
   use 'lewis6991/gitsigns.nvim'
@@ -46,8 +45,10 @@ require('gitsigns').setup()
 -- lsp.
 
 local lspconfig = require('lspconfig')
+local configs = require('lspconfig.configs')
+local util = require('lspconfig.util')
 
-lspconfig.util.default_config = vim.tbl_extend('force', lspconfig.util.default_config, {
+util.default_config = vim.tbl_extend('force', util.default_config, {
   handlers = {
     ['textDocument/publishDiagnostics'] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics,
@@ -75,8 +76,7 @@ lspconfig['texlab'].setup {}
 lspconfig['tsserver'].setup {}
 lspconfig['angularls'].setup {}
 lspconfig['jdtls'].setup {}
-
-require('vscoq').setup {}
+lspconfig['coq_lsp'].setup {}
 
 -- mappings and which key.
 
@@ -103,12 +103,9 @@ wk.register({
     r = {function() vim.lsp.buf.rename() end, 'Rename'},
     u = {function() vim.lsp.buf.references() end, 'Usages'},
     f = {function() vim.lsp.buf.formatting() end, 'Format'},
-  },
-  d = {
-    name = 'Diagnostics',
     n = {function() vim.diagnostic.goto_next() end, 'Go next error'},
     p = {function() vim.diagnostic.goto_prev() end, 'Go prev error'},
-    h = {function() vim.diagnostic.open_float() end, 'Show errors'},
+    E = {function() vim.diagnostic.open_float() end, 'Show errors'},
   },
 }, { prefix = '<leader>' })
 

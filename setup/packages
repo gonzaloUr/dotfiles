@@ -105,14 +105,13 @@ pacman -S --noconfirm --needed ttf-liberation
 pacman -S --noconfirm --needed noto-fonts-emoji
 pacman -S --noconfirm --needed ttf-joypixels
 pacman -S --noconfirm --needed otf-ipafont
-pacman -S --noconfirm --needed libertinus-font
 pacman -S --noconfirm --needed ttf-jetbrains-mono
+pacman -S --noconfirm --needed ttf-jetbrains-mono-nerd
 
 # yay
 yay -S --noconfirm --needed lf-bin
 yay -S --noconfirm --needed simple-mtpfs
 yay -S --noconfirm --needed dragon-drop
-yay -S --noconfirm --needed posix-manpages
 yay -S --noconfirm --needed scc-bin
 yay -S --noconfirm --needed nvim-packer-git
 yay -S --noconfirm --needed dropbox
