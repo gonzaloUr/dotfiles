@@ -17,9 +17,13 @@ pacman -S --needed zsh-syntax-highlighting
 pacman -S --needed zsh-history-substring-search
 pacman -S --needed zsh-autosuggestions
 
+# dbus
+pacman -S --needed dbus
+pacman -S --needed dbus-runit
+
 # networking
 pacman -S --needed dhcpcd
-pacman -S --needed dhcpcd-runit
+pacman -S --needed dhcpcd-runitnit
 pacman -S --needed wpa_supplicant
 pacman -S --needed wpa_supplicant-runit
 pacman -S --needed bluez

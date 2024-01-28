@@ -13,4 +13,7 @@ ln -s /etc/runit/sv/NetworkManager /run/runit/service
 ln -s /etc/runit/sv/ntpd /run/runit/service
 
 # setup tlp service
-ln -s /etc/runit/sv/tlp /run/runit/openntpd
+ln -s /etc/runit/sv/tlp /run/runit/service
+
+# setup dbus service
+ln -s /etc/runit/sv/dbus /run/runit/service
