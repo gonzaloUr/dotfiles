@@ -6,6 +6,14 @@ TODO:
   # obtener cantidad de ram del equipo, se utiliza para determinar el tamaño del swap.
   free -h
 
+  # obtener tipo de disco (MBR o GPT)
+  # aparece como Disklabel type, si es dos entonces es MBR
+  # queremos que sea GPT, porque es mas nuevo y permite mas cantidad de particiones
+  sudo fdisk -l /dev/sda
+
+  # si es mbr convertir a gpt, (borra todos los datos)
+  sudo fdisk /dev/sda
+
   # Particionar el disco
   #
   # Si la cantidad de particiones primarias luego de particionar va a exceder 4 particiones principales primero crear una particion de tipo extended con todo el espacio a utilizar para linux,
@@ -16,7 +24,7 @@ TODO:
   #
   # La particion UEFI debe ser primaria, por lo que antes de particionar deben haber como maximo 2 particiones primarias.
   # 
-  # Particion UEFI - cfdisk type EFI, tamaño 4Gib (id ef) (Para que haya espacio para mas boot loaders, ej: multiboot con windows)
+  # Particion UEFI - cfdisk type EFI, tamaño 4Gib (Para que haya espacio para mas boot loaders, ej: multiboot con windows)
   # Particion SWAP - cfdisk type Linux swap / Solaris (id 82), para el tamaño seguir recomendaciones de https://access.redhat.com/documentation/es-es/red_hat_enterprise_linux/7/html/storage_administration_guide/ch-swapspace
   # Particion ROOT - cfdisk type Linux (id 83), tamaño tanto como se quiera
   sudo cfdisk /dev/sda
