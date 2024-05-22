@@ -87,8 +87,37 @@ TODO:
   # Para ver todas las variables de locale seteadas:
   locale
 
-  # Boot loader (si al ejecutar el segundo comando muestra "EFI variables not supported on EFI system" es porque no se booteo con UEFI desde el usb)
+  # Instalar boot loader (si al ejecutar el segundo comando muestra "EFI variables not supported on EFI system" es porque no se booteo con UEFI desde el usb)
+
+  # Chequear que se booteo con efi
   pacman -S grub os-prober efibootmgr
+
+  # Si al ejecutar el primer comando muestra "EFI variables not supported on EFI system" es porque no se booteo con UEFI desde el usb  
   grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub
   grub-mkconfig -o /boot/grub/grub.cfg
+
+  # Cambiar constraseña de root
+  passwd
+
+  # Crear usuario
+  useradd -m gonchi
+  passwd gonchi
+
+  # en /etc/hostname escribir:
+  # artix
+  vi /etc/hostname
+
+  # en /etc/hosts escribir:
+  # 127.0.0.1        localhost
+  # ::1              localhost
+  # 127.0.1.1        artix.localdomain  artix
+  vi /etc/hosts
+
+  # instalar network manager (instala wpa_supplicant)
+  pacman -S networkmanager networkmanager-runit
+
+  # instalar dhcpcd
+  pacman -S dhcpcd dhcpcd-runit
+
+  # rebootear y logearse con el nuevo usuario
   ```
