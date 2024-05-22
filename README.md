@@ -102,8 +102,55 @@ TODO:
   useradd -m gonchi
   passwd gonchi
 
-  # Agregar usuario a grupo wheel
-  usermod -a -G wheel gonchi
+  # Agregar usuario a grupos, ej de grupos:
+  #
+  # root:x:0:root
+  # sys:x:3:bin
+  # mem:x:8:
+  # ftp:x:11:
+  # mail:x:12:
+  # log:x:19:
+  # smmsp:x:25:
+  # proc:x:26:
+  # games:x:50:
+  # lock:x:54:
+  # network:x:90:
+  # floppy:x:94:
+  # scanner:x:96:
+  # power:x:98:
+  # nobody:x:65534:
+  # adm:x:999:daemon
+  # wheel:x:998:gonchi
+  # utmp:x:997:
+  # audio:x:996:
+  # disk:x:995:
+  # input:x:994:
+  # kmem:x:993:
+  # kvm:x:992:
+  # lp:x:991:
+  # optical:x:990:
+  # render:x:989:
+  # sgx:x:988:
+  # storage:x:987:
+  # tty:x:5:
+  # uucp:x:986:
+  # video:x:985:
+  # users:x:984:
+  # groups:x:983:
+  # rfkill:x:982:
+  # bin:x:1:daemon
+  # daemon:x:2:bin
+  # http:x:33:
+  # dbus:x:81:
+  # tss:x:981:
+  # uuidd:x:68:
+  # gonchi:x:1000:
+  # polkitd:x:102:
+  # dhcpcd:x:980:
+  #
+  # Ver artix linux configuration guide.
+
+  usermod -a -G wheel,video,audio,input,power,storage,optical,lp,scanner,dbus gonchi
 
   # Agregar a suoders el grupo wheel agregando lo siguiente a /etc/suoders (en general esta comentado)
   # %wheel ALL=(ALL:ALL) NOPASSWD: ALL
