@@ -80,8 +80,7 @@ TODO:
   #
   # ejemplo de archivo:
   # 
-  # export LANG="en_US.UTF-8"
-  # export LC_COLLATE="C"
+  # LANG=en_US.UTF-8
   vi /etc/locale.conf
   
   # Para ver todas las variables de locale seteadas:
@@ -103,6 +102,13 @@ TODO:
   useradd -m gonchi
   passwd gonchi
 
+  # Agregar usuario a grupo wheel
+  usermod -a -G wheel gonchi
+
+  # Agregar a suoders el grupo wheel agregando lo siguiente a /etc/suoders (en general esta comentado)
+  # %wheel ALL=(ALL:ALL) NOPASSWD: ALL
+  visudo
+
   # en /etc/hostname escribir:
   # artix
   vi /etc/hostname
@@ -113,11 +119,11 @@ TODO:
   # 127.0.1.1        artix.localdomain  artix
   vi /etc/hosts
 
-  # instalar network manager (instala wpa_supplicant)
+  # instalar network manager (instala wpa_supplicant y tiene un dhcp interno)
   pacman -S networkmanager networkmanager-runit
 
-  # instalar dhcpcd
-  pacman -S dhcpcd dhcpcd-runit
-
   # rebootear y logearse con el nuevo usuario
+
+  # activar networkmanager
+  sudo ln -s /etc/runit/sv/NetworkManager /run/runit/service
   ```
