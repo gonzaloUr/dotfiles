@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# yay
+yay -S --noconfirm --needed lf-bin
+yay -S --noconfirm --needed simple-mtpfs
+yay -S --noconfirm --needed dragon-drop
+yay -S --noconfirm --needed scc-bin
+yay -S --noconfirm --needed nvim-packer-git
+yay -S --noconfirm --needed dropbox
+yay -S --noconfirm --needed dropbox-cli
+yay -S --noconfirm --needed light

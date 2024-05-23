@@ -4,48 +4,45 @@
 pacman -S --needed curl
 pacman -S --needed wget
 pacman -S --needed unzip
+pacman -S --needed less
 pacman -S --needed zip
 pacman -S --needed cronie
 pacman -S --needed cronie-runit
-pacman -S --needed inetutils
-pacman -S --needed net-tools
 pacman -S --needed tlp
 pacman -S --needed tlp-runit
 pacman -S --needed zsh
-pacman -S --needed zsh-completions
-pacman -S --needed zsh-syntax-highlighting
-pacman -S --needed zsh-history-substring-search
-pacman -S --needed zsh-autosuggestions
+# pacman -S --needed zsh-completions
+# pacman -S --needed zsh-syntax-highlighting
+# pacman -S --needed zsh-history-substring-search
+# pacman -S --needed zsh-autosuggestions
 
 # dbus
 pacman -S --needed dbus
 pacman -S --needed dbus-runit
 
 # networking
-pacman -S --needed dhcpcd
-pacman -S --needed dhcpcd-runitnit
-pacman -S --needed wpa_supplicant
-pacman -S --needed wpa_supplicant-runit
 pacman -S --needed bluez
 pacman -S --needed bluez-runit
 pacman -S --needed networkmanager
 pacman -S --needed networkmanager-runit
 
 # ntp
-pacman -S --needed ntp-runit
 pacman -S --needed ntp
+pacman -S --needed ntp-runit
 
 # xorg
 pacman -S --needed xorg
 pacman -S --needed xorg-xinit
 pacman -S --needed xorg-drivers
+pacman -S --needed xf86-input-wacom
+
 pacman -S --needed xclip
 pacman -S --needed xsel
 pacman -S --needed xdotool
-pacman -S --needed dunst libnotify
+pacman -S --needed dunst 
+pacman -S --needed libnotify
 pacman -S --needed xcompmgr
 pacman -S --needed xwallpaper
-pacman -S --needed xf86-input-wacom
 
 # multimedia
 pacman -S --needed pulseaudio-alsa
@@ -59,7 +56,7 @@ pacman -S --needed acpid-runit
 
 # xdg
 pacman -S --needed xdg-utils
-pacman -S --needed perl-file-mimeinfo
+# no en artix: pacman -S --needed perl-file-mimeinfo
 
 # src dependencies
 pacman -S --needed base-devel
@@ -68,11 +65,11 @@ pacman -S --needed base-devel
 pacman -S --noconfirm --needed fzf
 pacman -S --noconfirm --needed entr
 pacman -S --noconfirm --needed acpi
-pacman -S --noconfirm --needed tree
-pacman -S --noconfirm --needed clipnotify
-pacman -S --noconfirm --needed poppler
-pacman -S --noconfirm --needed highlight
-pacman -S --noconfirm --needed pdfgrep
+# pacman -S --noconfirm --needed tree
+# no en artix: pacman -S --noconfirm --needed clipnotify
+# pacman -S --noconfirm --needed poppler
+# pacman -S --noconfirm --needed highlight
+# pacman -S --noconfirm --needed pdfgrep
 
 # programs
 pacman -S --noconfirm --needed neovim
@@ -83,20 +80,20 @@ pacman -S --noconfirm --needed firefox
 pacman -S --noconfirm --needed mpv
 pacman -S --noconfirm --needed sxiv
 pacman -S --noconfirm --needed zathura
-pacman -S --noconfirm --needed zathura-pdf-mupdf
+# pacman -S --noconfirm --needed zathura-pdf-mupdf
 pacman -S --noconfirm --needed zathura-ps
 pacman -S --noconfirm --needed zathura-djvu
 pacman -S --noconfirm --needed git
 pacman -S --noconfirm --needed htop
-pacman -S --noconfirm --needed maim
+# pacman -S --noconfirm --needed maim
 pacman -S --noconfirm --needed pavucontrol
 pacman -S --noconfirm --needed tig
 pacman -S --noconfirm --needed pacman-contrib
 pacman -S --noconfirm --needed alacritty
-pacman -S --noconfirm --needed newsboat
+# pacman -S --noconfirm --needed newsboat
 pacman -S --noconfirm --needed gnome-keyring
 pacman -S --noconfirm --needed seahorse
-pacman -S --noconfirm --needed gparted
+# pacman -S --noconfirm --needed gparted
 
 # lsps
 pacman -S --noconfirm --needed texlab
@@ -111,13 +108,3 @@ pacman -S --noconfirm --needed ttf-joypixels
 pacman -S --noconfirm --needed otf-ipafont
 pacman -S --noconfirm --needed ttf-jetbrains-mono
 pacman -S --noconfirm --needed ttf-jetbrains-mono-nerd
-
-# yay
-yay -S --noconfirm --needed lf-bin
-yay -S --noconfirm --needed simple-mtpfs
-yay -S --noconfirm --needed dragon-drop
-yay -S --noconfirm --needed scc-bin
-yay -S --noconfirm --needed nvim-packer-git
-yay -S --noconfirm --needed dropbox
-yay -S --noconfirm --needed dropbox-cli
-yay -S --noconfirm --needed light
