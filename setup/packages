@@ -5,16 +5,13 @@ pacman -S --needed curl
 pacman -S --needed wget
 pacman -S --needed unzip
 pacman -S --needed less
+pacman -S --needed man
 pacman -S --needed zip
 pacman -S --needed cronie
 pacman -S --needed cronie-runit
 pacman -S --needed tlp
 pacman -S --needed tlp-runit
 pacman -S --needed zsh
-# pacman -S --needed zsh-completions
-# pacman -S --needed zsh-syntax-highlighting
-# pacman -S --needed zsh-history-substring-search
-# pacman -S --needed zsh-autosuggestions
 
 # dbus
 pacman -S --needed dbus
@@ -41,7 +38,7 @@ pacman -S --needed xsel
 pacman -S --needed xdotool
 pacman -S --needed dunst 
 pacman -S --needed libnotify
-pacman -S --needed xcompmgr
+pacman -S --needed picom
 pacman -S --needed xwallpaper
 
 # multimedia
@@ -56,55 +53,37 @@ pacman -S --needed acpid-runit
 
 # xdg
 pacman -S --needed xdg-utils
-# no en artix: pacman -S --needed perl-file-mimeinfo
 
 # src dependencies
 pacman -S --needed base-devel
+pacman -S --needed go
 
 # utilities
-pacman -S --noconfirm --needed fzf
-pacman -S --noconfirm --needed entr
-pacman -S --noconfirm --needed acpi
-# pacman -S --noconfirm --needed tree
-# no en artix: pacman -S --noconfirm --needed clipnotify
-# pacman -S --noconfirm --needed poppler
-# pacman -S --noconfirm --needed highlight
-# pacman -S --noconfirm --needed pdfgrep
+pacman -S --needed fzf
+pacman -S --needed entr
+pacman -S --needed acpi
 
 # programs
-pacman -S --noconfirm --needed neovim
-pacman -S --noconfirm --needed aspell
-pacman -S --noconfirm --needed aspell-en
-pacman -S --noconfirm --needed aspell-es
-pacman -S --noconfirm --needed firefox
-pacman -S --noconfirm --needed mpv
-pacman -S --noconfirm --needed sxiv
-pacman -S --noconfirm --needed zathura
-# pacman -S --noconfirm --needed zathura-pdf-mupdf
-pacman -S --noconfirm --needed zathura-ps
-pacman -S --noconfirm --needed zathura-djvu
-pacman -S --noconfirm --needed git
-pacman -S --noconfirm --needed htop
-# pacman -S --noconfirm --needed maim
-pacman -S --noconfirm --needed pavucontrol
-pacman -S --noconfirm --needed tig
-pacman -S --noconfirm --needed pacman-contrib
-pacman -S --noconfirm --needed alacritty
-# pacman -S --noconfirm --needed newsboat
-pacman -S --noconfirm --needed gnome-keyring
-pacman -S --noconfirm --needed seahorse
-# pacman -S --noconfirm --needed gparted
-
-# lsps
-pacman -S --noconfirm --needed texlab
+pacman -S --needed neovim
+pacman -S --needed aspell
+pacman -S --needed aspell-en
+pacman -S --needed aspell-es
+pacman -S --needed firefox
+pacman -S --needed mpv
+pacman -S --needed sxiv
+pacman -S --needed zathura
+pacman -S --needed zathura-ps
+pacman -S --needed zathura-djvu
+pacman -S --needed git
+pacman -S --needed htop
+pacman -S --needed pavucontrol
+pacman -S --needed alacritty
+pacman -S --needed gnome-keyring
+pacman -S --needed seahorse
 
 # fonts
-pacman -S --noconfirm --needed ttf-hack
-pacman -S --noconfirm --needed ttf-dejavu
-pacman -S --noconfirm --needed ttf-linux-libertine
-pacman -S --noconfirm --needed ttf-liberation
-pacman -S --noconfirm --needed noto-fonts-emoji
-pacman -S --noconfirm --needed ttf-joypixels
-pacman -S --noconfirm --needed otf-ipafont
-pacman -S --noconfirm --needed ttf-jetbrains-mono
-pacman -S --noconfirm --needed ttf-jetbrains-mono-nerd
+pacman -S --needed ttf-hack
+pacman -S --needed ttf-dejavu
+pacman -S --needed ttf-liberation
+pacman -S --needed noto-fonts-cjk
+pacman -S --needed noto-fonts-emoji
