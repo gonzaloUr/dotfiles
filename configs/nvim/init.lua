@@ -25,7 +25,7 @@ vim.opt.ignorecase = true
 local vscode = require('vscode')
 
 vscode.setup({
-  transparent = false,
+  transparent = true,
   italic_comments = true
 })
 

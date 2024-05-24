@@ -2,8 +2,8 @@
 
 wal.sh &
 dunst &
-xcompmgr &
-clipmanagerd &
+picom &
+# clipmanagerd &
 
 switch\
     -i\
@@ -24,4 +24,4 @@ eval $(gnome-keyring-daemon --start)
 # Exportar variable de gnome keyring.
 export SSH_AUTH_SOCK
 
-exec dwm
+exec dbus-run-session dwm
