@@ -5,7 +5,7 @@ VSCode determina que keyring utilizar fijandose en que DE esta corriendo. En dwm
 - Agregar a argv.json file la propiedad `"password-store": "gnome-libsecret"`
 
 ## Chequear que gnome-keyring expone en dbus la API de Secrets
-Usar secret-tool, que biene con la libreria de libsecret:
+Usar secret-tool, que viene con la libreria de libsecret:
 ```sh
 secret-tool store --label="MySecret" my password
 secret-tool lookup my MySecret
