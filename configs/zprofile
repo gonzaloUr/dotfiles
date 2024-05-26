@@ -30,24 +30,12 @@ export PATH=$PATH:~/bin
 export PATH=$PATH:~/scripts
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:$GOPATH/bin
-export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
 
 export ANDROID_HOME=$HOME/Downloads/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
-
-# runit
-export SVDIR=/etc/runit/runsvdir/current/
-
-# Gestor de npm para ubuntu.
-if [ -e "$HOME/.nvm" ]
-then
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-fi
 
 # ghc
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"

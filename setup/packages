@@ -69,6 +69,7 @@ pacman -S --needed aspell
 pacman -S --needed aspell-en
 pacman -S --needed aspell-es
 pacman -S --needed firefox
+pacman -S --needed speech-dispatcher
 pacman -S --needed mpv
 pacman -S --needed sxiv
 pacman -S --needed zathura

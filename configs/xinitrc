@@ -3,7 +3,6 @@
 wal.sh &
 dunst &
 picom &
-# clipmanagerd &
 
 switch\
     -i\
@@ -18,10 +17,16 @@ switch\
     1-1 2-1 3-1 4-1\
     1-2 2-2 3-2 4-2 &
 
-# Ejecutar daemon de gnome keyring, depende de dbus.
-eval $(gnome-keyring-daemon --start)
+# Levantar bus de usuario dbus.
+source /etc/X11/xinit/xinitrc.d/80-dbus.sh
 
-# Exportar variable de gnome keyring.
-export SSH_AUTH_SOCK
+# https://gitlab.gnome.org/GNOME/gcr/-/blob/master/gcr/gcr-ssh-agent.service.in
+gcr_tmp=/run/user/$(id -u)/gcr-ssh-agent
+mkdir -p "$gcr_tmp/gcr"
+export SSH_AUTH_SOCK="$gcr_tmp/gcr/ssh"
+/usr/lib/gcr-ssh-agent --base-dir "$gcr_tmp/gcr" &
 
-exec dbus-run-session dwm
+# Levantar keyring
+eval $(/usr/bin/gnome-keyring-daemon --start --components=secrets,ssh)
+
+exec dwm
