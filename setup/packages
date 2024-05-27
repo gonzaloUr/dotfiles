@@ -75,6 +75,7 @@ pacman -S --needed sxiv
 pacman -S --needed zathura
 pacman -S --needed zathura-ps
 pacman -S --needed zathura-djvu
+pacman -S --needed zathura-pdf-poppler
 pacman -S --needed git
 pacman -S --needed htop
 pacman -S --needed pavucontrol

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+sudo pacman --needed -S opam
+opam init
+eval $(opam env)
+opam pin add coq 8.19.0

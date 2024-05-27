@@ -20,8 +20,8 @@ Include = /etc/pacman.d/mirrorlist-arch
 #Include = /etc/pacman.d/mirrorlist-arch
 
 
-[community]
-Include = /etc/pacman.d/mirrorlist-arch
+#[community]
+#Include = /etc/pacman.d/mirrorlist-arch
 
 
 #[multilib-testing]

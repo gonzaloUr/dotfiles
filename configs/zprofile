@@ -30,6 +30,7 @@ export PATH=$PATH:~/bin
 export PATH=$PATH:~/scripts
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$HOME/.opam/default/bin
 
 export ANDROID_HOME=$HOME/Downloads/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
@@ -39,9 +40,3 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # ghc
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"
-
-# opam: ocaml install, coq install, etc.
-if [ -e "$HOME/.opam/default/bin" ]
-then
-    export PATH="$PATH:$HOME/.opam/default/bin"
-fi

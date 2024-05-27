@@ -1,0 +1,10 @@
+#!/bin/sh
+
+touch ~/.config/mimeapps.list
+
+ls /usr/share/mime/text | sed 's/^/text\//' | mimeapps nvim.desktop
+ls /usr/share/mime/video | sed 's/^/video\//' | mimeapps mpv.desktop
+ls /usr/share/mime/image | sed 's/^/image\//' | mimeapps sxiv.desktop
+echo 'inode/directory' | mimeapps lf.desktop
+echo 'application/pdf' | mimeapps zathura.desktop
+echo 'application/postscript' | mimeapps zathura.desktop
