@@ -1,0 +1,17 @@
+#!/bin/sh
+
+uid=$(id -u)
+pids="$(pgrep -d ' ' -u "$uid" -x gcr-ssh-agent)"
+
+for pid in $pids
+do
+    kill "$pid"
+done
+
+# https://gitlab.gnome.org/GNOME/gcr/-/blob/master/gcr/gcr-ssh-agent.service.in
+gcr_tmp=/run/user/$uid/gcr-ssh-agent
+mkdir -p "$gcr_tmp/gcr"
+nohup /usr/lib/gcr-ssh-agent --base-dir "$gcr_tmp/gcr" 0<&- &>/dev/null &
+
+# Imprimir variables de entorno como gnome-keyring-dameon
+echo "SSH_AUTH_SOCK="$gcr_tmp"/gcr/ssh"
