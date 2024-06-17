@@ -16,7 +16,6 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export LESSHISTFILE='-'
 export GOPATH="$XDG_DATA_HOME"/go
 alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
-alias yarn="yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config"
 
 # fix java apps
 export _JAVA_AWT_WM_NONREPARENTING=1
@@ -31,12 +30,3 @@ export PATH=$PATH:~/scripts
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:$HOME/.opam/default/bin
-
-export ANDROID_HOME=$HOME/Downloads/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-
-# ghc
-[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"

@@ -10,6 +10,11 @@ int main() {
 
     struct udev_monitor *mon = udev_monitor_new_from_netlink(udev, "udev");
     udev_monitor_filter_add_match_subsystem_devtype(mon, "block", NULL);
+    udev_monitor_filter_add_match_subsystem_devtype(mon, "input", NULL);
+    udev_monitor_filter_add_match_subsystem_devtype(mon, "net", NULL);
+    udev_monitor_filter_add_match_subsystem_devtype(mon, "usb", NULL);
+    udev_monitor_filter_add_match_subsystem_devtype(mon, "pci", NULL);
+    udev_monitor_filter_add_match_subsystem_devtype(mon, "tty", NULL);
     udev_monitor_enable_receiving(mon);
 
     int fd = udev_monitor_get_fd(mon);
@@ -24,6 +29,16 @@ int main() {
 
             if (device) {
                 printf("Device event received: %s %s\n", udev_device_get_action(device), udev_device_get_devnode(device));
+                
+                struct udev_list_entry *props = udev_device_get_properties_list_entry(device);
+                struct udev_list_entry *entry;
+
+                udev_list_entry_foreach(entry, props) {
+                    const char *key = udev_list_entry_get_name(entry);
+                    const char *value = udev_list_entry_get_value(entry);
+                    printf("Property: %s = %s\n", key, value);
+                }
+
                 udev_device_unref(device);
             }
         }
