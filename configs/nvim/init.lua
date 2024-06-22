@@ -4,14 +4,12 @@ require('packer').startup(function(use)
 
   -- third party lua plugins.
   use 'folke/which-key.nvim'
-  use 'Mofiqul/vscode.nvim'
   use 'nvim-tree/nvim-tree.lua'
   use 'lewis6991/gitsigns.nvim'
 end)
 
 -- options and global variables.
 
-vim.opt.termguicolors = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.tabstop = 4
@@ -19,17 +17,6 @@ vim.opt.shiftwidth = 4
 vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
-
--- vscode theme plugin.
-
-local vscode = require('vscode')
-
-vscode.setup({
-  transparent = false,
-  italic_comments = true
-})
-
-vscode.load()
 
 -- nvim-tree plugin.
 
