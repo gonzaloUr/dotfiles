@@ -29,3 +29,7 @@ En a configuracion actual para nerd font sourcecode, por ejemplo:  
 ### Arreglar lentitud en levantar una terminal
 
 Puede ser por zsh (en particular zshrc) o la terminal en si mismo.
+
+### Agregar config para picom
+
+Funciona medio raro.

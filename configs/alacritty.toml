@@ -2,19 +2,19 @@
 size = 7
 
 [font.bold]
-family = "monospace"
+family = "Fira Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "monospace"
+family = "Fira Mono"
 style = "Regular"
 
 [font.italic]
-family = "monospace"
+family = "Fira Mono"
 style = "Italic"
 
 [font.normal]
-family = "monospace"
+family = "Fira Mono"
 style = "Regular"
 
 [[keyboard.bindings]]

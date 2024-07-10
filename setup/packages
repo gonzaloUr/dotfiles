@@ -89,4 +89,6 @@ pacman -S --needed ttf-dejavu
 pacman -S --needed ttf-liberation
 pacman -S --needed noto-fonts-cjk
 pacman -S --needed noto-fonts-emoji
-pacman -s --needed ttf-joypixels
+pacman -S --needed ttf-joypixels
+pacman -S --needed ttf-joypixels
+pacman -S --needed ttf-fira-mono
