@@ -64,7 +64,7 @@ lspconfig['tsserver'].setup {}
 lspconfig['angularls'].setup {}
 lspconfig['jdtls'].setup {}
 lspconfig['coq_lsp'].setup {}
-lspconfig['clangd'].setup {}
+-- lspconfig['clangd'].setup {}
 
 -- mappings and which key.
 
