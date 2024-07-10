@@ -11,3 +11,9 @@ secret-tool store --label="MySecret" my password
 secret-tool lookup my MySecret
 secret-tool clear my MySecret
 ```
+
+## Crear mas scripts para verificar paquetes
+- Un script para listar los paquetes instalados que no estan en los scripts de setup.
+
+## No utilizar gnome-keyring para dbus secrets, muy bloteado.
+- Buscar alternativas
