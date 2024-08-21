@@ -90,7 +90,7 @@ wk.register({
     lf = {function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, 'List dirs as root in lsp'},
     r = {function() vim.lsp.buf.rename() end, 'Rename'},
     u = {function() vim.lsp.buf.references() end, 'Usages'},
-    f = {function() vim.lsp.buf.formatting() end, 'Format'},
+    f = {function() vim.lsp.buf.format() end, 'Format'},
     n = {function() vim.diagnostic.goto_next() end, 'Go next error'},
     p = {function() vim.diagnostic.goto_prev() end, 'Go prev error'},
     E = {function() vim.diagnostic.open_float() end, 'Show errors'},
@@ -133,5 +133,16 @@ vim.api.nvim_create_autocmd('FileType', {
   },
   callback = function(args)
     vim.bo[args.buf].shiftwidth = 2
+  end
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {
+    'go'
+  },
+  callback = function(args)
+    vim.bo[args.buf].expandtab = false
+    vim.bo[args.buf].tabstop = 4
+    vim.bo[args.buf].shiftwidth = 4
   end
 })
