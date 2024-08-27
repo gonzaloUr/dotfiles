@@ -73,20 +73,6 @@ func (p *Pulse) Loop() {
 	p.done <- struct{}{}
 }
 
-type ClientInfo struct {
-	Index int
-	Name string
-	Owner int
-	Driver string
-}
-
-func (p *Pulse) ClientInfo() ClientInfo {
-	inx := C.pa_context_get_index(p.context)
-	C.pa_context_get_client_info(p.context, inx, C.pa_client_info_cb_t(C.operationClientInfoCallback), unsafe.Pointer(p))
-
-	return ClientInfo{}
-}
-
 //export stateCallback
 func stateCallback(context *C.pa_context, userdata unsafe.Pointer) {
 	api := (*C.pa_mainloop_api)(userdata)
