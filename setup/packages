@@ -91,6 +91,14 @@ pacman -S --needed noto-fonts-cjk
 pacman -S --needed noto-fonts-emoji
 pacman -S --needed ttf-joypixels
 pacman -S --needed ttf-fira-mono
+pacman -S --needed ttf-cascadia-code
+pacman -S --needed ttf-jetbrains-mono
+pacman -S --needed ttc-iosevka
 
 # Para que nerdtree funcione.
 pacman -S --needed ttf-sourcecodepro-nerd
+pacman -S --needed ttf-go-nerd
+pacman -S --needed ttf-inconsolata-go-nerd
+pacman -S --needed ttf-hack-nerd
+pacman -S --needed ttf-jetbrains-mono-nerd
+pacman -S --needed ttf-iosevka-nerd

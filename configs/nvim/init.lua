@@ -6,6 +6,7 @@ require('packer').startup(function(use)
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
   use 'lewis6991/gitsigns.nvim'
+  use 'Mofiqul/vscode.nvim'
   use { 
     'hrsh7th/nvim-cmp',
     requires = {
@@ -19,6 +20,7 @@ end)
 
 -- options and global variables.
 
+vim.opt.wrap = false
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.tabstop = 4
@@ -26,6 +28,17 @@ vim.opt.shiftwidth = 4
 vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
+
+-- vscode.nvim
+
+local vscode = require('vscode')
+
+vscode.setup({
+  transparent = true,
+  italic_comments = true
+})
+
+vscode.load()
 
 -- nvim-tree plugin.
 
@@ -70,10 +83,6 @@ lspconfig['gopls'].setup {
 }
 lspconfig['pyright'].setup {}
 lspconfig['texlab'].setup {}
-lspconfig['tsserver'].setup {}
-lspconfig['angularls'].setup {}
-lspconfig['jdtls'].setup {}
-lspconfig['coq_lsp'].setup {}
 
 -- nvim-cmp.
 
@@ -173,8 +182,7 @@ vim.api.nvim_create_autocmd('FileType', {
     'css',
     'typescript',
     'typescriptreact',
-    'javascript',
-    'coq'
+    'javascript'
   },
   callback = function(args)
     vim.bo[args.buf].shiftwidth = 2
