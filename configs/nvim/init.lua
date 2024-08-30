@@ -199,3 +199,10 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.bo[args.buf].shiftwidth = 4
   end
 })
+
+vim.api.nvim_create_autocmd('VimResized', {
+  pattern = "*",
+  callback = function(args)
+    vim.api.nvim_command("wincmd =")
+  end
+})

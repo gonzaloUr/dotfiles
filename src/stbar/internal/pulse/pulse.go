@@ -20,17 +20,17 @@ import (
 )
 
 type Pulse struct {
-	mainloop  *C.pa_mainloop
-	api       *C.pa_mainloop_api
-	context   *C.pa_context
-	ready     *sync.Cond
-	done      *sync.Cond
+	mainloop *C.pa_mainloop
+	api      *C.pa_mainloop_api
+	context  *C.pa_context
+	ready    *sync.Cond
+	done     *sync.Cond
 }
 
 func NewPulse(name string) (*Pulse, error) {
 	ret := &Pulse{
-		ready: sync.NewCond(&sync.Mutex{}),
-		done:  sync.NewCond(&sync.Mutex{}),
+		ready:  sync.NewCond(&sync.Mutex{}),
+		done:   sync.NewCond(&sync.Mutex{}),
 	}
 
 	// Create mainloop.
@@ -174,54 +174,12 @@ func stateCallback(context *C.pa_context, userdata unsafe.Pointer) {
 }
 
 //export subscribeCallback
-func subscribeCallback(context *C.pa_context, eventType C.pa_subscription_event_type_t, index C.uint32_t, userdata unsafe.Pointer) {
-	if eventType&C.PA_SUBSCRIPTION_EVENT_SINK != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_SINK")
-	}
+func subscribeCallback(context *C.pa_context, t C.pa_subscription_event_type_t, index C.uint32_t, userdata unsafe.Pointer) {
+	handle := *(*C.uint32_t)(userdata)
+	h := cgo.Handle(handle)
+	p := h.Value().(*Pulse)
 
-	if eventType&C.PA_SUBSCRIPTION_EVENT_SOURCE != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_SOURCE")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_SINK_INPUT != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_SINK_INPUT")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_MODULE != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_MODULE")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_CLIENT != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_CLIENT")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_SAMPLE_CACHE != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_SAMPLE_CACHE")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_SERVER != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_SERVER")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_CARD != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_CARD")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_NEW != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_NEW")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_CHANGE != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_CHANGE")
-	}
-
-	if eventType&C.PA_SUBSCRIPTION_EVENT_REMOVE != 0 {
-		// log.Print("PA_SUBSCRIPTION_EVENT_REMOVE")
-	}
+	subscriptionType := createSubscriptionType(t)
 }
 
 //export operationSubscribeCallback

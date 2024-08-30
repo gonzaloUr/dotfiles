@@ -14,6 +14,10 @@ func main() {
 	p.Loop()
 	p.Ready()
 
+	if err = p.Subscribe(); err != nil {
+		panic(err)
+	}
+
 	for _, v := range p.SinkInfo() {
 		fmt.Printf("%v\n", v)
 	}
