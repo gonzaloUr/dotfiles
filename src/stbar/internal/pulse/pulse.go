@@ -14,23 +14,29 @@ extern void operationSinkInfoCallback(pa_context *c, pa_sink_info *i, int eol, v
 */
 import "C"
 import (
+	"fmt"
 	"runtime/cgo"
 	"sync"
 	"unsafe"
 )
 
 type Pulse struct {
-	mainloop *C.pa_mainloop
-	api      *C.pa_mainloop_api
-	context  *C.pa_context
-	ready    *sync.Cond
-	done     *sync.Cond
+	mainloop     *C.pa_mainloop
+	api          *C.pa_mainloop_api
+	context      *C.pa_context
+	ready        *sync.Cond
+	done         *sync.Cond
+	eventsMu     sync.RWMutex
+	eventsOut    map[chan SubscriptionEvent]struct{}
+	eventsCancel map[chan SubscriptionEvent]<-chan struct{}
 }
 
 func NewPulse(name string) (*Pulse, error) {
 	ret := &Pulse{
-		ready:  sync.NewCond(&sync.Mutex{}),
-		done:   sync.NewCond(&sync.Mutex{}),
+		ready:        sync.NewCond(&sync.Mutex{}),
+		done:         sync.NewCond(&sync.Mutex{}),
+		eventsOut:    map[chan SubscriptionEvent]struct{}{},
+		eventsCancel: map[chan SubscriptionEvent]<-chan struct{}{},
 	}
 
 	// Create mainloop.
@@ -115,6 +121,25 @@ func (p *Pulse) Subscribe() error {
 	return nil
 }
 
+func (p *Pulse) Event(cancel <-chan struct{}) <-chan SubscriptionEvent {
+	p.eventsMu.Lock()
+	ret := make(chan SubscriptionEvent)
+	p.eventsOut[ret] = struct{}{}
+	p.eventsCancel[ret] = cancel
+
+	go func() {
+		<-cancel
+		p.eventsMu.Lock()
+		delete(p.eventsOut, ret)
+		delete(p.eventsCancel, ret)
+		p.eventsMu.Unlock()
+	}()
+
+	p.eventsMu.Unlock()
+
+	return ret
+}
+
 func (p *Pulse) ClientInfo() []ClientInfo {
 	ch := make(chan ClientInfo)
 	h := C.uint32_t(cgo.NewHandle(ch))
@@ -174,12 +199,18 @@ func stateCallback(context *C.pa_context, userdata unsafe.Pointer) {
 }
 
 //export subscribeCallback
-func subscribeCallback(context *C.pa_context, t C.pa_subscription_event_type_t, index C.uint32_t, userdata unsafe.Pointer) {
+func subscribeCallback(c *C.pa_context, t C.pa_subscription_event_type_t, inx C.uint32_t, userdata unsafe.Pointer) {
 	handle := *(*C.uint32_t)(userdata)
 	h := cgo.Handle(handle)
 	p := h.Value().(*Pulse)
+	subEvent := createSubscriptionEvent(t)
 
-	subscriptionType := createSubscriptionType(t)
+	p.eventsMu.RLock()
+	for v := range p.eventsOut {
+		fmt.Printf("enviando para %v\n", v)
+		v <- subEvent
+	}
+	p.eventsMu.RUnlock()
 }
 
 //export operationSubscribeCallback

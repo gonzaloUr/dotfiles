@@ -16,6 +16,9 @@ secret-tool clear my MySecret
 
 ## Mejoras
 
+### Usar xdg-autostart o algún coso de user services como tunstile.
+Tunstile hace otras cosas capaz xdg es mejor.
+
 ### Configurar FZF y capaz snipets para neovim
 Puede ser util aunque pueda ser bloat.
 
@@ -41,7 +44,7 @@ Información util a agregar a la barra:
 - Alguna forma de verificar que la instalación de python del sistema esta "prestine", que no existen modulos instalados a travez de pip install. Puede ser que si los haya de paquetes de la forma python-.
 
 ### No utilizar gnome-keyring para dbus secrets, muy bloteado.
-- Buscar alternativas
+Buscar alternativas.
 
 ### Solucionar el tema de que los caracteres unicode y nerd fonts (si se quiere usar) se salen del tamaño del cursor
 En a configuracion actual para nerd font sourcecode, por ejemplo:  
@@ -51,6 +54,9 @@ Puede ser por zsh (en particular zshrc) o la terminal en si mismo. Alacritty est
 
 ### Agregar config para picom o removerlo por ser medio bloteado
 Funciona medio raro.
+
+### Buscar una forma de mostrar que procesos crearon deamons sin pid padre.
+Quiero relacionar los deamons sin padre con servicios de runit.
 
 ### Utilizar tree-sitter en vez de el highlighting de vim 
 nota: neovim depende de el paquete tree-sitter el cual se relaciona con otros paquetes que instalan gramaticas para cada lenjuage, por ejemplo: tree-sitter-c. Alugnas de estas gramaticas ya vienen con neovim pero otras no, capaz agregar en el script de setup una sección de donde se instalan gramaticas extra.

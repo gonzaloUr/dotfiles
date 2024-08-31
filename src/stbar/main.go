@@ -18,10 +18,19 @@ func main() {
 		panic(err)
 	}
 
-	for _, v := range p.SinkInfo() {
-		fmt.Printf("%v\n", v)
-	}
+	cancel := make(chan struct{})
 
-	p.Quit()
+	go func(ch <-chan pulse.SubscriptionEvent) {
+		for e := range ch {
+			fmt.Println(e)
+
+			if e.Facility == pulse.EventFacilitySink && e.Type == pulse.EventTypeChange {
+				for _, v := range p.SinkInfo() {
+					fmt.Printf("%v\n", v)
+				}
+			}
+		}
+	}(p.Event(cancel))
+
 	p.Done()
 }

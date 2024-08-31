@@ -4,93 +4,93 @@ package pulse
 import "C"
 import "unsafe"
 
-type SubscriptionType int
+type EventFacility int
 
 const (
-	SubscriptionTypeSink SubscriptionType = iota
-	SubscriptionTypeSource
-	SubscriptionTypeSinkInput
-	SubscriptionTypeSourceOutput
-	SubscriptionTypeModule
-	SubscriptionTypeClient
-	SubscriptionTypeSampleCache
-	SubscriptionTypeServer
-	SubscriptionTypeCard
+	EventFacilitySink EventFacility = iota
+	EventFacilitySource
+	EventFacilitySinkInput
+	EventFacilitySourceOutput
+	EventFacilityModule
+	EventFacilityClient
+	EventFacilitySampleCache
+	EventFacilityServer
+	EventFacilityCard
 )
 
-func createSubscriptionType(t C.pa_subscription_event_type_t) SubscriptionType {
-	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_SINK {
-		return SubscriptionTypeSink
+func createEventFacility(t C.pa_subscription_event_type_t) EventFacility {
+	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_SINK {
+		return EventFacilitySink
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_SOURCE {
-		return SubscriptionTypeSource
+	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_SOURCE {
+		return EventFacilitySource
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_SINK_INPUT {
-		return SubscriptionTypeSinkInput
+	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_SINK_INPUT {
+		return EventFacilitySinkInput
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT {
-		return SubscriptionTypeSourceOutput
+	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT {
+		return EventFacilitySourceOutput
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_MODULE {
-		return SubscriptionTypeModule
+	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_MODULE {
+		return EventFacilityModule
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_CLIENT {
-		return SubscriptionTypeClient
+	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_CLIENT {
+		return EventFacilityClient
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_SAMPLE_CACHE {
-		return SubscriptionTypeSampleCache
+	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_SAMPLE_CACHE {
+		return EventFacilitySampleCache
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_SERVER {
-		return SubscriptionTypeServer
+	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_SERVER {
+		return EventFacilityServer
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_CARD {
-		return SubscriptionTypeCard
+	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_CARD {
+		return EventFacilityCard
 	}
 
-	panic("unknown event type")
+	panic("unknown facility")
 }
 
-type SubscriptionFacility int
+type EventType int
 
 const (
-	SubscriptionFacilityNew = iota
-	SubscriptionFacilityChange
-	SubscriptionFacilityRemove
+	EventTypeNew = iota
+	EventTypeChange
+	EventTypeRemove
 )
 
-func createSubscriptionFacility(t C.pa_subscription_event_type_t) SubscriptionFacility {
-	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_NEW {
-		return SubscriptionFacilityNew
+func createEventType(t C.pa_subscription_event_type_t) EventType {
+	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_NEW {
+		return EventTypeNew
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_CHANGE {
-		return SubscriptionFacilityChange
+	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_CHANGE {
+		return EventTypeChange
 	}
 
-	if t&C.PA_SUBSCRIPTION_EVENT_FACILITY_MASK == C.PA_SUBSCRIPTION_EVENT_REMOVE {
-		return SubscriptionFacilityRemove
+	if t&C.PA_SUBSCRIPTION_EVENT_TYPE_MASK == C.PA_SUBSCRIPTION_EVENT_REMOVE {
+		return EventTypeRemove
 	}
 
-	panic("unknown event facility")
+	panic("unknown type")
 }
 
 type SubscriptionEvent struct {
-	Type     SubscriptionType
-	Facility SubscriptionFacility
+	Type     EventType
+	Facility EventFacility
 }
 
 func createSubscriptionEvent(t C.pa_subscription_event_type_t) SubscriptionEvent {
 	return SubscriptionEvent{
-		Type:     createSubscriptionType(t),
-		Facility: createSubscriptionFacility(t),
+		Type:     createEventType(t),
+		Facility: createEventFacility(t),
 	}
 }
 
