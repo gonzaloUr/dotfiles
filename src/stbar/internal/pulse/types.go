@@ -4,6 +4,60 @@ package pulse
 import "C"
 import "unsafe"
 
+type ContextState int
+
+const (
+	ContextUnconnected ContextState = iota
+	ContextConnecting
+	ContextAuthorizing
+	ContextSettingName
+	ContextReady
+	ContextFailed
+	ContextTerminated
+)
+
+func (c ContextState) String() string {
+	switch c {
+	case ContextUnconnected:
+		return "Unconnected"
+	case ContextConnecting:
+		return "Connecting"
+	case ContextAuthorizing:
+		return "Autorizing"
+	case ContextSettingName:
+		return "SettingName"
+	case ContextReady:
+		return "Ready"
+	case ContextFailed:
+		return "Failed"
+	case ContextTerminated:
+		return "Terminated"
+	default:
+		panic("invalid value")
+	}
+}
+
+func createContextState(s C.pa_context_state_t) ContextState {
+	switch s {
+	case C.PA_CONTEXT_UNCONNECTED:
+		return ContextUnconnected
+	case C.PA_CONTEXT_CONNECTING:
+		return ContextConnecting
+	case C.PA_CONTEXT_AUTHORIZING:
+		return ContextAuthorizing
+	case C.PA_CONTEXT_SETTING_NAME:
+		return ContextSettingName
+	case C.PA_CONTEXT_READY:
+		return ContextReady
+	case C.PA_CONTEXT_FAILED:
+		return ContextFailed
+	case C.PA_CONTEXT_TERMINATED:
+		return ContextTerminated
+	default:
+		panic("unknown context state")
+	}
+}
+
 type EventFacility int
 
 const (

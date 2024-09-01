@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/gonzaloUr/stbar/internal/pulse"
 )
 
@@ -11,26 +12,19 @@ func main() {
 		panic(err)
 	}
 
-	p.Loop()
-	p.Ready()
+	ready := make(chan struct{})
 
-	if err = p.Subscribe(); err != nil {
-		panic(err)
-	}
-
-	cancel := make(chan struct{})
-
-	go func(ch <-chan pulse.SubscriptionEvent) {
-		for e := range ch {
-			fmt.Println(e)
-
-			if e.Facility == pulse.EventFacilitySink && e.Type == pulse.EventTypeChange {
-				for _, v := range p.SinkInfo() {
-					fmt.Printf("%v\n", v)
-				}
-			}
+	go func() {
+		for state := range p.ListenStates() {
+			fmt.Println(state)
 		}
-	}(p.Event(cancel))
+	}()
 
-	p.Done()
+	if err := p.Connect(); err != nil {
+		fmt.Println("error")
+	}
+	
+	fmt.Println("connected")
+
+	<-ready
 }

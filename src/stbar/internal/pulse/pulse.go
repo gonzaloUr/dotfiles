@@ -14,92 +14,210 @@ extern void operationSinkInfoCallback(pa_context *c, pa_sink_info *i, int eol, v
 */
 import "C"
 import (
-	"fmt"
+	"context"
 	"runtime/cgo"
 	"sync"
 	"unsafe"
 )
 
 type Pulse struct {
-	mainloop     *C.pa_mainloop
-	api          *C.pa_mainloop_api
-	context      *C.pa_context
-	ready        *sync.Cond
-	done         *sync.Cond
-	eventsMu     sync.RWMutex
-	eventsOut    map[chan SubscriptionEvent]struct{}
-	eventsCancel map[chan SubscriptionEvent]<-chan struct{}
+	// Pulseaudio single thread mainloop, permits contexts to connect and run (similar to a mainloop opengl app).
+	mainloop *C.pa_mainloop
+
+	// Pulseaudio context, represents a connection to the pulseaudio daemon.
+	context *C.pa_context
+
+	// Lock to pulseaudio mainloop and context.
+	//
+	// The loop goroutine, which calls pulseaudio mainloop single thread execution, should have less priority
+	// to access pulseaudio versus each operation, otherwise, because the loop is always running, there is a
+	// chance of entering a deadlock. sync.RWMutex gives writers higher priority to readers, that is if a writer
+	// wants to access the lock and there are readers waiting, the writer wins (see docs). The loop goroutine
+	// will wait on the RLock() while each operation will wait on Lock() to give more priority to operations
+	// than the mainloop execution.
+	mutex sync.RWMutex
+
+	// Channels to communicate with loop goroutine.
+	loopDone chan struct{}
+
+	// Channels to communicate with handleState goroutine.
+	states        chan ContextState
+	statesRequest chan chan ContextState
+	statesCancel  chan chan ContextState
+	statesClosing chan chan struct{}
+	statesStop    chan struct{}
+
+	// Channels to communicate with handleEvent goroutine.
+	events        chan SubscriptionEvent
+	eventsRequest chan chan SubscriptionEvent
+	eventsCancel  chan chan SubscriptionEvent
+	eventsClosing chan chan struct{}
+	eventsStop    chan struct{}
 }
 
 func NewPulse(name string) (*Pulse, error) {
-	ret := &Pulse{
-		ready:        sync.NewCond(&sync.Mutex{}),
-		done:         sync.NewCond(&sync.Mutex{}),
-		eventsOut:    map[chan SubscriptionEvent]struct{}{},
-		eventsCancel: map[chan SubscriptionEvent]<-chan struct{}{},
+	p := &Pulse{
+		loopDone:      make(chan struct{}),
+		states:        make(chan ContextState),
+		statesRequest: make(chan chan ContextState),
+		statesCancel:  make(chan chan ContextState),
+		statesClosing: make(chan chan struct{}),
+		statesStop:    make(chan struct{}),
+		events:        make(chan SubscriptionEvent),
+		eventsRequest: make(chan chan SubscriptionEvent),
+		eventsCancel:  make(chan chan SubscriptionEvent),
+		eventsClosing: make(chan chan struct{}),
+		eventsStop:    make(chan struct{}),
 	}
 
 	// Create mainloop.
-	ret.mainloop = C.pa_mainloop_new()
+	p.mainloop = C.pa_mainloop_new()
 
-	if ret.mainloop == nil {
+	if p.mainloop == nil {
 		return nil, ErrMainloopNew
 	}
 
 	// Get mainloop api.
-	ret.api = C.pa_mainloop_get_api(ret.mainloop)
+	api := C.pa_mainloop_get_api(p.mainloop)
 
 	// Create context from mainloop api.
-	ret.context = C.pa_context_new(ret.api, C.CString(name))
+	p.context = C.pa_context_new(api, C.CString(name))
 
-	if ret.context == nil {
+	if p.context == nil {
 		return nil, ErrContextNew
 	}
 
 	// Setup callbacks for context.
-	h := C.uintptr_t(cgo.NewHandle(ret))
-	C.pa_context_set_state_callback(ret.context, C.pa_context_notify_cb_t(C.stateCallback), unsafe.Pointer(&h))
-	C.pa_context_set_subscribe_callback(ret.context, C.pa_context_subscribe_cb_t(C.subscribeCallback), unsafe.Pointer(&h))
+	h := C.uintptr_t(cgo.NewHandle(p))
+	C.pa_context_set_state_callback(p.context, C.pa_context_notify_cb_t(C.stateCallback), unsafe.Pointer(&h))
+	C.pa_context_set_subscribe_callback(p.context, C.pa_context_subscribe_cb_t(C.subscribeCallback), unsafe.Pointer(&h))
 
-	// Connect context.
-	if C.pa_context_connect(ret.context, nil, C.PA_CONTEXT_NOFLAGS, nil) < 0 {
-		return nil, ErrContextConnect
-	}
+	// Start goroutines that handle state updates and events.
+	go p.handleState()
+	go p.handleEvent()
 
-	return ret, nil
+	return p, nil
 }
 
-func (p *Pulse) Ready() {
-	p.ready.L.Lock()
-	p.ready.Wait()
-	p.ready.L.Unlock()
-}
+func (p *Pulse) loop() {
+	var retval C.int
 
-func (p *Pulse) Done() {
-	p.done.L.Lock()
-	p.done.Wait()
-	p.done.L.Unlock()
-}
+	for {
+		p.mutex.RLock()
+		C.pa_mainloop_iterate(p.mainloop, 0, &retval)
 
-func (p *Pulse) Loop() {
-	go func() {
-		var retCode C.int
-		C.pa_mainloop_run(p.mainloop, &retCode)
-
-		if retCode < 0 {
-			panic("pa_mainloop_run() failed")
+		if retval < 0 {
+			break
 		}
 
-		C.pa_context_disconnect(p.context)
-		C.pa_context_unref(p.context)
-		C.pa_mainloop_free(p.mainloop)
+		p.mutex.RUnlock()
+	}
 
-		p.done.Broadcast()
-	}()
+	C.pa_context_disconnect(p.context)
+	C.pa_context_unref(p.context)
+	C.pa_mainloop_free(p.mainloop)
+	p.mutex.RUnlock()
+
+	for {
+		select {
+		case p.loopDone <- struct{}{}:
+		default:
+			return
+		}
+	}
+}
+
+func (p *Pulse) handleState() {
+	outs := map[chan ContextState]struct{}{}
+	ch := make(chan ContextState)
+
+	for {
+		select {
+		case s := <-p.states:
+			for out := range outs {
+				select {
+				case out <- s:
+				default:
+				}
+			}
+
+		case p.statesRequest <- ch:
+			outs[ch] = struct{}{}
+			ch = make(chan ContextState)
+
+		case cancelCh := <-p.statesCancel:
+			delete(outs, cancelCh)
+			close(cancelCh)
+
+		case <-p.statesStop:
+			for out := range outs {
+				close(out)
+			}
+			return
+		}
+	}
+}
+
+func (p *Pulse) handleEvent() {
+	outs := map[chan SubscriptionEvent]struct{}{}
+	ch := make(chan SubscriptionEvent)
+
+	for {
+		select {
+		case e := <-p.events:
+			for out := range outs {
+				select {
+				case out <- e:
+				default:
+				}
+			}
+
+		case p.eventsRequest <- ch:
+			outs[ch] = struct{}{}
+			ch = make(chan SubscriptionEvent)
+
+		case cancelCh := <-p.eventsCancel:
+			delete(outs, cancelCh)
+			close(cancelCh)
+
+		case <-p.eventsStop:
+			for out := range outs {
+				close(out)
+			}
+			return
+		}
+	}
+}
+
+func (p *Pulse) Connect() error {
+	p.mutex.Lock()
+	ret := C.pa_context_connect(p.context, nil, C.PA_CONTEXT_NOFAIL, nil)
+	p.mutex.Unlock()
+
+	if ret < 0 {
+		return ErrContextConnect
+	}
+
+	return nil
+}
+
+func (p *Pulse) Run() {
+	go p.loop()
+}
+
+func (p *Pulse) ListenStates(ctx context.Context) <-chan ContextState {
+	ch := <-p.statesRequest
+	return ch
 }
 
 func (p *Pulse) Quit() {
-	C.pa_mainloop_quit(p.mainloop, 1)
+	p.eventsStop <- struct{}{}
+	p.statesStop <- struct{}{}
+	C.pa_mainloop_quit(p.mainloop, 0)
+}
+
+func (p *Pulse) Done() <-chan struct{} {
+	return p.loopDone
 }
 
 func (p *Pulse) Subscribe() error {
@@ -119,25 +237,6 @@ func (p *Pulse) Subscribe() error {
 	}
 
 	return nil
-}
-
-func (p *Pulse) Event(cancel <-chan struct{}) <-chan SubscriptionEvent {
-	p.eventsMu.Lock()
-	ret := make(chan SubscriptionEvent)
-	p.eventsOut[ret] = struct{}{}
-	p.eventsCancel[ret] = cancel
-
-	go func() {
-		<-cancel
-		p.eventsMu.Lock()
-		delete(p.eventsOut, ret)
-		delete(p.eventsCancel, ret)
-		p.eventsMu.Unlock()
-	}()
-
-	p.eventsMu.Unlock()
-
-	return ret
 }
 
 func (p *Pulse) ClientInfo() []ClientInfo {
@@ -189,64 +288,52 @@ func stateCallback(context *C.pa_context, userdata unsafe.Pointer) {
 	h := cgo.Handle(handle)
 	p := h.Value().(*Pulse)
 
-	switch state := C.pa_context_get_state(context); state {
-	case C.PA_CONTEXT_READY:
-		p.ready.Broadcast()
-
-	case C.PA_CONTEXT_FAILED, C.PA_CONTEXT_TERMINATED:
-		p.done.Broadcast()
-	}
+	state := C.pa_context_get_state(context)
+	p.states <- createContextState(state)
 }
 
 //export subscribeCallback
 func subscribeCallback(c *C.pa_context, t C.pa_subscription_event_type_t, inx C.uint32_t, userdata unsafe.Pointer) {
-	handle := *(*C.uint32_t)(userdata)
-	h := cgo.Handle(handle)
-	p := h.Value().(*Pulse)
-	subEvent := createSubscriptionEvent(t)
-
-	p.eventsMu.RLock()
-	for v := range p.eventsOut {
-		fmt.Printf("enviando para %v\n", v)
-		v <- subEvent
-	}
-	p.eventsMu.RUnlock()
+	// handle := *(*C.uint32_t)(userdata)
+	// h := cgo.Handle(handle)
+	// p := h.Value().(*Pulse)
+	// subEvent := createSubscriptionEvent(t)
 }
 
 //export operationSubscribeCallback
 func operationSubscribeCallback(_ *C.pa_context, success C.int, userdata unsafe.Pointer) {
-	handle := *(*C.uint32_t)(userdata)
-	h := cgo.Handle(handle)
-	ch := h.Value().(chan bool)
+	// handle := *(*C.uint32_t)(userdata)
+	// h := cgo.Handle(handle)
+	// ch := h.Value().(chan bool)
 
-	ch <- int(success) != 0
-	close(ch)
+	// ch <- int(success) != 0
+	// close(ch)
 }
 
 //export operationClientInfoCallback
 func operationClientInfoCallback(_ *C.pa_context, i *C.pa_client_info, eol C.int, userdata unsafe.Pointer) {
-	handle := *(*C.uint32_t)(userdata)
-	h := cgo.Handle(handle)
-	ch := h.Value().(chan ClientInfo)
+	// handle := *(*C.uint32_t)(userdata)
+	// h := cgo.Handle(handle)
+	// ch := h.Value().(chan ClientInfo)
 
-	if eol != 0 {
-		close(ch)
-		return
-	}
+	// if eol != 0 {
+	// 	close(ch)
+	// 	return
+	// }
 
-	ch <- createClientInfo(i)
+	// ch <- createClientInfo(i)
 }
 
 //export operationSinkInfoCallback
 func operationSinkInfoCallback(_ *C.pa_context, i *C.pa_sink_info, eol C.int, userdata unsafe.Pointer) {
-	handle := *(*C.uint32_t)(userdata)
-	h := cgo.Handle(handle)
-	ch := h.Value().(chan SinkInfo)
+	// handle := *(*C.uint32_t)(userdata)
+	// h := cgo.Handle(handle)
+	// ch := h.Value().(chan SinkInfo)
 
-	if eol != 0 {
-		close(ch)
-		return
-	}
+	// if eol != 0 {
+	// 	close(ch)
+	// 	return
+	// }
 
-	ch <- createSinkInfo(i)
+	// ch <- createSinkInfo(i)
 }

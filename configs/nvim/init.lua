@@ -16,6 +16,9 @@ require('packer').startup(function(use)
       'hrsh7th/cmp-buffer'
     }
   }
+
+  -- vimscript plugins.
+  use 'whonore/Coqtail'
 end)
 
 -- options and global variables.

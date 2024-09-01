@@ -65,6 +65,8 @@ pacman -S --needed acpi
 
 # programs
 pacman -S --needed neovim
+pacman -S --needed python
+pacman -S --needed python-pynvim
 pacman -S --needed aspell
 pacman -S --needed aspell-en
 pacman -S --needed aspell-es
