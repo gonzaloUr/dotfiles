@@ -60,3 +60,13 @@ Quiero relacionar los deamons sin padre con servicios de runit.
 
 ### Utilizar tree-sitter en vez de el highlighting de vim 
 nota: neovim depende de el paquete tree-sitter el cual se relaciona con otros paquetes que instalan gramaticas para cada lenjuage, por ejemplo: tree-sitter-c. Alugnas de estas gramaticas ya vienen con neovim pero otras no, capaz agregar en el script de setup una sección de donde se instalan gramaticas extra.
+
+### Areglar el clipboard manager
+Podria ser que esta vez corre por debajo de xdg-autostart o lo que sea.
+
+### Crear una forma de administrar mejor imagenes y texto
+1. Capaz exista algo como mongo () pero mas chiquito.
+2. En el shell poder "copiar" una imagen a una "galeria" de la computadora.
+3. La "galeria" se encarga de organizar las imagenes segun su fecha, etc.
+4. Buscar otras integraciones, capaz con firefox?: si estas descargando una imagen de firefox, entonces
+   firefox llama a nuestro programa para organizar a donde va a ir esa imagen.

@@ -6,8 +6,8 @@ require('packer').startup(function(use)
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
   use 'lewis6991/gitsigns.nvim'
-  use 'Mofiqul/vscode.nvim'
-  use { 
+  use 'catppuccin/nvim'
+  use {
     'hrsh7th/nvim-cmp',
     requires = {
       -- Completation sources, see nvim-cmp setup sources.
@@ -32,16 +32,13 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
--- vscode.nvim
+-- catppuccin
 
-local vscode = require('vscode')
+require('catppuccin').setup {
+  transparent_background = true
+}
 
-vscode.setup({
-  transparent = true,
-  italic_comments = true
-})
-
-vscode.load()
+vim.cmd.colorscheme('catppuccin')
 
 -- nvim-tree plugin.
 

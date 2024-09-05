@@ -15,8 +15,8 @@ extern void operationSinkInfoCallback(pa_context *c, pa_sink_info *i, int eol, v
 import "C"
 import (
 	"context"
+	"fmt"
 	"runtime/cgo"
-	"sync"
 	"unsafe"
 )
 
@@ -35,38 +35,42 @@ type Pulse struct {
 	// wants to access the lock and there are readers waiting, the writer wins (see docs). The loop goroutine
 	// will wait on the RLock() while each operation will wait on Lock() to give more priority to operations
 	// than the mainloop execution.
-	mutex sync.RWMutex
+	// mutex sync.RWMutex
 
 	// Channels to communicate with loop goroutine.
-	loopDone chan struct{}
+	loopStart   chan struct{}
+	loopRunning chan bool
+	loopPause   chan struct{}
+	loopPlay    chan struct{}
+	loopDone    chan struct{}
 
 	// Channels to communicate with handleState goroutine.
 	states        chan ContextState
 	statesRequest chan chan ContextState
 	statesCancel  chan chan ContextState
-	statesClosing chan chan struct{}
 	statesStop    chan struct{}
 
 	// Channels to communicate with handleEvent goroutine.
 	events        chan SubscriptionEvent
 	eventsRequest chan chan SubscriptionEvent
 	eventsCancel  chan chan SubscriptionEvent
-	eventsClosing chan chan struct{}
 	eventsStop    chan struct{}
 }
 
 func NewPulse(name string) (*Pulse, error) {
 	p := &Pulse{
+		loopStart:     make(chan struct{}),
+		loopRunning:   make(chan bool),
+		loopPause:     make(chan struct{}),
+		loopPlay:      make(chan struct{}),
 		loopDone:      make(chan struct{}),
 		states:        make(chan ContextState),
 		statesRequest: make(chan chan ContextState),
 		statesCancel:  make(chan chan ContextState),
-		statesClosing: make(chan chan struct{}),
 		statesStop:    make(chan struct{}),
 		events:        make(chan SubscriptionEvent),
 		eventsRequest: make(chan chan SubscriptionEvent),
 		eventsCancel:  make(chan chan SubscriptionEvent),
-		eventsClosing: make(chan chan struct{}),
 		eventsStop:    make(chan struct{}),
 	}
 
@@ -92,37 +96,62 @@ func NewPulse(name string) (*Pulse, error) {
 	C.pa_context_set_state_callback(p.context, C.pa_context_notify_cb_t(C.stateCallback), unsafe.Pointer(&h))
 	C.pa_context_set_subscribe_callback(p.context, C.pa_context_subscribe_cb_t(C.subscribeCallback), unsafe.Pointer(&h))
 
-	// Start goroutines that handle state updates and events.
+	// Start goroutines.
 	go p.handleState()
 	go p.handleEvent()
+	go p.loop()
 
 	return p, nil
 }
 
 func (p *Pulse) loop() {
-	var retval C.int
-
+L1:
 	for {
-		p.mutex.RLock()
-		C.pa_mainloop_iterate(p.mainloop, 0, &retval)
-
-		if retval < 0 {
-			break
+		select {
+		case <-p.loopStart:
+			fmt.Println("Starting")
+			break L1
+		case p.loopRunning <- false:
+			fmt.Println("Answer not running")
+		case <-p.loopPause:
+			fmt.Println("Pausing...")
+			<-p.loopPlay
+			fmt.Println("Resuming...")
 		}
-
-		p.mutex.RUnlock()
 	}
 
+	var retval C.int
+
+L2:
+	for {
+		select {
+		case <-p.loopStart:
+			fmt.Println("Ignoring start request")
+		case p.loopRunning <- true:
+			fmt.Println("Answer running")
+		case <-p.loopPause:
+			fmt.Println("Pausing...")
+			<-p.loopPlay
+			fmt.Println("Resuming...")
+		default:
+			fmt.Println("Iterate")
+			C.pa_mainloop_iterate(p.mainloop, 0, &retval)
+
+			if retval < 0 {
+				break L2
+			}
+		}
+	}
+
+	fmt.Println("freeing...")
 	C.pa_context_disconnect(p.context)
 	C.pa_context_unref(p.context)
 	C.pa_mainloop_free(p.mainloop)
-	p.mutex.RUnlock()
 
 	for {
 		select {
 		case p.loopDone <- struct{}{}:
 		default:
-			return
 		}
 	}
 }
@@ -134,6 +163,9 @@ func (p *Pulse) handleState() {
 	for {
 		select {
 		case s := <-p.states:
+			fmt.Printf("len(outs) = %d\n", len(outs))
+			fmt.Printf("state = %v\n", s)
+
 			for out := range outs {
 				select {
 				case out <- s:
@@ -142,7 +174,10 @@ func (p *Pulse) handleState() {
 			}
 
 		case p.statesRequest <- ch:
+			fmt.Println("sent request chan")
 			outs[ch] = struct{}{}
+			fmt.Printf("len(outs) = %d\n", len(outs))
+
 			ch = make(chan ContextState)
 
 		case cancelCh := <-p.statesCancel:
@@ -190,9 +225,9 @@ func (p *Pulse) handleEvent() {
 }
 
 func (p *Pulse) Connect() error {
-	p.mutex.Lock()
+	p.loopPause <- struct{}{}
 	ret := C.pa_context_connect(p.context, nil, C.PA_CONTEXT_NOFAIL, nil)
-	p.mutex.Unlock()
+	p.loopPlay <- struct{}{}
 
 	if ret < 0 {
 		return ErrContextConnect
@@ -202,12 +237,34 @@ func (p *Pulse) Connect() error {
 }
 
 func (p *Pulse) Run() {
-	go p.loop()
+	p.loopStart <- struct{}{}
 }
 
 func (p *Pulse) ListenStates(ctx context.Context) <-chan ContextState {
 	ch := <-p.statesRequest
-	return ch
+	ret := make(chan ContextState)
+
+	go func() {
+	loop:
+		for {
+			select {
+			case v, ok := <-ch:
+				if ok {
+					ret <- v
+				} else {
+					close(ret)
+					break loop
+				}
+
+			case <-ctx.Done():
+				p.statesCancel <- ch
+				close(ret)
+				break loop
+			}
+		}
+	}()
+
+	return ret
 }
 
 func (p *Pulse) Quit() {
@@ -288,6 +345,7 @@ func stateCallback(context *C.pa_context, userdata unsafe.Pointer) {
 	h := cgo.Handle(handle)
 	p := h.Value().(*Pulse)
 
+	fmt.Println("got context state notification")
 	state := C.pa_context_get_state(context)
 	p.states <- createContextState(state)
 }
