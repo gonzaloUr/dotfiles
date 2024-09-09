@@ -2,17 +2,19 @@
 autoload -Uz colors
 colors
 
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git cvs svn
-setopt promptsubst
-precmd() { vcs_info }
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' unstagedstr '*'
-zstyle ':vcs_info:*' stagedstr '+'
-zstyle ':vcs_info:git:*' formats '%b %u %c'
-zstyle ':vcs_info:git:*' actionformats '%b | %a %u %c'
+# autoload -Uz vcs_info
+# zstyle ':vcs_info:*' enable git cvs svn
+# setopt promptsubst
+# precmd() { vcs_info }
+# zstyle ':vcs_info:*' check-for-changes true
+# zstyle ':vcs_info:*' unstagedstr '*'
+# zstyle ':vcs_info:*' stagedstr '+'
+# zstyle ':vcs_info:git:*' formats '%b %u %c'
+# zstyle ':vcs_info:git:*' actionformats '%b | %a %u %c'
+# 
+# PROMPT="%B%d%b"' ${vcs_info_msg_0_}'$'\n'"%# "
 
-PROMPT="%B%d%b"' ${vcs_info_msg_0_}'$'\n'"%# "
+PROMPT="%B%d%b"$'\n'"%# "
 
 autoload -Uz compinit
 zstyle ':completion:*' menu select
@@ -29,7 +31,7 @@ bindkey -M menuselect '^[' vi-cmd-mode
 
 HISTSIZE=10000
 SAVEHIST=10000
-mkdir -p ~/.cache/zsh
+[ -e ~/.cache/zsh ] || mkdir -p ~/.cache/zsh
 HISTFILE=~/.cache/zsh/history
 
 bindkey -v
@@ -81,7 +83,6 @@ lfcd() {
 bindkey -s '^o' 'lfcd\n'
 bindkey '^R' history-incremental-search-backward
 
-# source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
-# source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
-# bindkey '^P' autosuggest-accept
-# bindkey '^X' autosuggest-execute
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+bindkey '^P' autosuggest-accept

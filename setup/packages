@@ -13,6 +13,10 @@ pacman -S --needed tlp
 pacman -S --needed tlp-runit
 pacman -S --needed zsh
 
+# zsh
+pacman -S --needed zsh-autosuggestions
+pacman -S --needed zsh-syntax-highlighting
+
 # dbus
 pacman -S --needed dbus
 pacman -S --needed dbus-runit

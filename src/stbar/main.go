@@ -3,35 +3,55 @@ package main
 import (
 	"context"
 	"fmt"
-	"time"
 
-	"github.com/gonzaloUr/stbar/internal/pulse"
+	"github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse"
+	"github.com/gonzaloUr/dotfiles/src/stbar/internal/udev"
 )
 
-func main() {
+func pulseExample() {
 	p, err := pulse.NewPulse("stbar")
 	if err != nil {
 		panic(err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
-	ch := p.ListenStates(ctx)
-
 	go func() {
-		for state := range ch {
-			fmt.Printf("State is: %v\n", state)
+		for state := range p.ListenStates(context.Background()) {
+			if state == pulse.ContextReady {
+				p.Subscribe()
+			}
 		}
 	}()
 
-	fmt.Println("connecting...")
-
 	if err := p.Connect(); err != nil {
-		fmt.Println("error")
+		panic(err)
 	}
 
-	fmt.Println("connected...")
+	p.Run()
+
+	for event := range p.ListenEvents(context.Background()) {
+		fmt.Println(event)
+		sinkInfo := p.SinkInfo()
+		fmt.Println(sinkInfo)
+	}
 
 	<-p.Done()
+}
+
+func udevExample() {
+	ctx := udev.NewContext()
+	defer ctx.Unref()
+
+	backlight := ctx.NewDeviceFromSubsystemSysname("backlight", "intel_backlight")
+	defer backlight.Unref()
+
+	attrs := backlight.Attrs()
+
+	for k := range attrs.All() {
+		v := backlight.GetAttr(k)
+		fmt.Printf("k = %v, v = %v\n", k, v)
+	}
+}
+
+func main() {
+	udevExample()
 }

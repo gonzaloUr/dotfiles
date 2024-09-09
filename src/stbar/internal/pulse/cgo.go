@@ -1,6 +1,4 @@
 package pulse
 
-/*
-#cgo LDFLAGS: -lpulse
-*/
+// #cgo LDFLAGS: -lpulse
 import "C"

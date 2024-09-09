@@ -1,5 +1,5 @@
 #!/bin/sh
 
 out="$(mktemp -t screenshot-XXXXXXXX.png)"
-maim -s | tee "$out" | xclip -selection clipboard -t image/png
+maim -s -m 10 | tee "$out" | xclip -selection clipboard -t image/png
 notify-send "screenshot $out"

@@ -35,6 +35,7 @@ vim.opt.ignorecase = true
 -- catppuccin
 
 require('catppuccin').setup {
+  flavour = "mocha",
   transparent_background = true
 }
 
@@ -197,6 +198,15 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.bo[args.buf].expandtab = false
     vim.bo[args.buf].tabstop = 4
     vim.bo[args.buf].shiftwidth = 4
+  end
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {
+    'tex'
+  },
+  callback = function(args)
+    vim.wo.wrap = true
   end
 })
 

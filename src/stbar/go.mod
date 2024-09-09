@@ -1,3 +1,3 @@
-module github.com/gonzaloUr/stbar
+module github.com/gonzaloUr/dotfiles/src/stbar
 
-go 1.22.5
+go 1.23
