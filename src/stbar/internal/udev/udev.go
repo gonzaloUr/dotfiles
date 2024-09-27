@@ -119,3 +119,11 @@ func (m Monitor) FilterMatchTag(tag string) int {
 func (m Monitor) EnableReceiving() {
 	C.udev_monitor_enable_receiving(m.monitor);
 }
+
+type Enumerate struct {
+	enumerate *C.struct_udev_enumerate
+}
+
+func (c Context) NewEnumerate() Enumerate {
+	return Enumerate{C.udev_enumerate_new(c.udev)}
+}

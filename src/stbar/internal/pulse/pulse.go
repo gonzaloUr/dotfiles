@@ -21,7 +21,7 @@ import (
 )
 
 type Pulse struct {
-	// Pulseaudio single thread mainloop, permits contexts to connect and run (similar to a mainloop opengl app).
+	// Pulseaudio single thread mainloop, permits contexts to connect and run (similar to opengl app mainloop).
 	mainloop *C.pa_mainloop
 
 	// Pulseaudio context, represents a connection to the pulseaudio daemon.
