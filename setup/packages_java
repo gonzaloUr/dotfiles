@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# jdks/jres.
+pacman -S --needed jre11-openjdk
+pacman -S --needed jre17-openjdk
+
+# programs.
+pacman -S --needed languagetool
+yay -S --needed textidote-bin

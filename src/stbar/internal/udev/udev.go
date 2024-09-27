@@ -91,3 +91,31 @@ func (d Device) Attrs() ListEntry {
 func (d Device) GetAttr(sysattr string) string {
 	return C.GoString(C.udev_device_get_sysattr_value(d.device, C.CString(sysattr)))
 }
+
+type Monitor struct {
+	monitor *C.struct_udev_monitor
+}
+
+func (c Context) NewMonitorFromNetlink(name string) Monitor {
+	return Monitor{C.udev_monitor_new_from_netlink(c.udev, C.CString(name))}
+}
+
+func (m Monitor) Ref() Monitor {
+	return Monitor{C.udev_monitor_ref(m.monitor)}
+}
+
+func (m Monitor) Unref() {
+	C.udev_monitor_unref(m.monitor)
+}
+
+func (m Monitor) FilterSubsystemDevtype(subsystem, devtype string) int {
+	return int(C.udev_monitor_filter_add_match_subsystem_devtype(m.monitor, C.CString(subsystem), C.CString(devtype)))
+}
+
+func (m Monitor) FilterMatchTag(tag string) int {
+	return int(C.udev_monitor_filter_add_match_tag(m.monitor, C.CString(tag)))
+}
+
+func (m Monitor) EnableReceiving() {
+	C.udev_monitor_enable_receiving(m.monitor);
+}

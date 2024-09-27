@@ -1,0 +1,25 @@
+From ae62fec1930b088b9f510393101daef7571c6575 Mon Sep 17 00:00:00 2001
+From: gonzaloUr <gonzalour@protonmail.com>
+Date: Mon, 9 Sep 2024 14:27:14 -0300
+Subject: [PATCH] fullgaps monocle
+
+---
+ dwm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dwm.c b/dwm.c
+index 67c6b2b..e3fcd32 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -1122,7 +1122,7 @@ monocle(Monitor *m)
+ 	if (n > 0) /* override layout symbol */
+ 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
+ 	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
+-		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
++		resize(c, m->wx + gappx, m->wy + gappx, m->ww - 2 * c->bw - gappx * 2, m->wh - 2 * c->bw - gappx * 2, 0);
+ }
+ 
+ void
+-- 
+2.46.0
+

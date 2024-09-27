@@ -19,6 +19,7 @@ require('packer').startup(function(use)
 
   -- vimscript plugins.
   use 'whonore/Coqtail'
+  use 'PatrBal/vim-textidote'
 end)
 
 -- options and global variables.
@@ -41,10 +42,12 @@ require('catppuccin').setup {
 
 vim.cmd.colorscheme('catppuccin')
 
--- nvim-tree plugin.
+-- vim-textidote
 
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+vim.g.textidote_jar = '/usr/share/java/textidote.jar'
+vim.g.textidote_lang = 'es'
+
+-- nvim-tree plugin.
 
 require('nvim-tree').setup()
 
