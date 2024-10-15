@@ -42,7 +42,7 @@ pacman -S --needed xsel
 pacman -S --needed xdotool
 pacman -S --needed dunst 
 pacman -S --needed libnotify
-pacman -S --needed picom
+pacman -S --needed xcompmgr
 pacman -S --needed xwallpaper
 
 # multimedia
