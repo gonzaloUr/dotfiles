@@ -117,7 +117,7 @@ func (m Monitor) FilterMatchTag(tag string) int {
 }
 
 func (m Monitor) EnableReceiving() {
-	C.udev_monitor_enable_receiving(m.monitor);
+	C.udev_monitor_enable_receiving(m.monitor)
 }
 
 type Enumerate struct {
@@ -126,4 +126,53 @@ type Enumerate struct {
 
 func (c Context) NewEnumerate() Enumerate {
 	return Enumerate{C.udev_enumerate_new(c.udev)}
+}
+
+func (e Enumerate) Ref() Enumerate {
+	return Enumerate{C.udev_enumerate_ref(e.enumerate)}
+}
+
+func (e Enumerate) Unref() {
+	C.udev_enumerate_unref(e.enumerate)
+}
+
+func (e Enumerate) AddMatchSubsystem(subsytem string) {
+	C.udev_enumerate_add_match_subsystem(e.enumerate, C.CString(subsytem))
+}
+
+func (e Enumerate) AddNoMatchSubsystem(subsystem string) {
+	C.udev_enumerate_add_no_match_subsystem(e.enumerate, C.CString(subsystem));
+}
+
+func (e Enumerate) AddMatchSysattr(sysattr string, value string) {
+	C.udev_enumerate_add_match_sysattr(e.enumerate, C.CString(sysattr), C.CString(value))
+}
+
+func (e Enumerate) AddNoMatchSysattr(sysattr string, value string) {
+	C.udev_enumerate_add_no_match_sysattr(e.enumerate, C.CString(sysattr), C.CString(value))
+}
+
+func (e Enumerate) AddMatchProperty(property string, value string) {
+	C.udev_enumerate_add_match_property(e.enumerate, C.CString(property), C.CString(value))
+}
+
+func (e Enumerate) AddMatchSysname(sysname string) {
+}
+
+func (e Enumerate) AddMatchTag(tag string) {
+}
+
+func (e Enumerate) AddMatchParent(device Device) {
+}
+
+func (e Enumerate) AddMatchIsInit() {
+}
+
+func (e Enumerate) AddSyspath(syspath string) {
+}
+
+func (e Enumerate) ScanDevices() {
+}
+
+func (e Enumerate) ScanSubsystems() {
 }
