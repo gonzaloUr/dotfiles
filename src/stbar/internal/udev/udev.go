@@ -141,7 +141,7 @@ func (e Enumerate) AddMatchSubsystem(subsytem string) {
 }
 
 func (e Enumerate) AddNoMatchSubsystem(subsystem string) {
-	C.udev_enumerate_add_no_match_subsystem(e.enumerate, C.CString(subsystem));
+	C.udev_enumerate_add_nomatch_subsystem(e.enumerate, C.CString(subsystem));
 }
 
 func (e Enumerate) AddMatchSysattr(sysattr string, value string) {
@@ -149,7 +149,7 @@ func (e Enumerate) AddMatchSysattr(sysattr string, value string) {
 }
 
 func (e Enumerate) AddNoMatchSysattr(sysattr string, value string) {
-	C.udev_enumerate_add_no_match_sysattr(e.enumerate, C.CString(sysattr), C.CString(value))
+	C.udev_enumerate_add_nomatch_sysattr(e.enumerate, C.CString(sysattr), C.CString(value))
 }
 
 func (e Enumerate) AddMatchProperty(property string, value string) {
@@ -157,22 +157,33 @@ func (e Enumerate) AddMatchProperty(property string, value string) {
 }
 
 func (e Enumerate) AddMatchSysname(sysname string) {
+	C.udev_enumerate_add_match_sysname(e.enumerate, C.CString(sysname))
 }
 
 func (e Enumerate) AddMatchTag(tag string) {
+	C.udev_enumerate_add_match_tag(e.enumerate, C.CString(tag))
 }
 
 func (e Enumerate) AddMatchParent(device Device) {
+	C.udev_enumerate_add_match_parent(e.enumerate, device.device)
 }
 
 func (e Enumerate) AddMatchIsInit() {
+	C.udev_enumerate_add_match_is_initialized(e.enumerate)
 }
 
 func (e Enumerate) AddSyspath(syspath string) {
+	C.udev_enumerate_add_syspath(e.enumerate, C.CString(syspath))
 }
 
 func (e Enumerate) ScanDevices() {
+	C.udev_enumerate_scan_devices(e.enumerate)
 }
 
 func (e Enumerate) ScanSubsystems() {
+	C.udev_enumerate_scan_subsystems(e.enumerate)
+}
+
+func (e Enumerate) Enumerate() ListEntry {
+	return ListEntry{C.udev_enumerate_get_list_entry(e.enumerate)}
 }

@@ -43,7 +43,9 @@ vim.cmd.colorscheme('catppuccin')
 
 -- nvim-tree plugin.
 
-require('nvim-tree').setup()
+require('nvim-tree').setup({
+  sort_by = 'extension'
+})
 
 -- gitsigns.nvim.
 

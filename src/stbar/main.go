@@ -37,7 +37,7 @@ func pulseExample() {
 	<-p.Done()
 }
 
-func udevExample() {
+func udevExample1() {
 	ctx := udev.NewContext()
 	defer ctx.Unref()
 
@@ -52,6 +52,28 @@ func udevExample() {
 	}
 }
 
+func udevExample2() {
+	ctx := udev.NewContext()
+	defer ctx.Unref()
+
+	enum := ctx.NewEnumerate()
+	defer ctx.Unref()
+
+	enum.AddMatchSubsystem("net")
+	enum.ScanDevices()
+	list := enum.Enumerate()
+
+	for path := range list.All() {
+		dev := ctx.NewDeviceFromSyspath(path)
+		defer dev.Unref()
+
+		for k := range dev.Attrs().All() {
+			attr := dev.GetAttr(k)
+			fmt.Println(k, attr)
+		}
+	}
+}
+
 func main() {
-	udevExample()
+	udevExample2()
 }

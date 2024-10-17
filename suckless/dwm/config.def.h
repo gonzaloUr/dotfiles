@@ -40,6 +40,8 @@ static const Rule rules[] = {
 	{ "Gimp",           NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",        NULL,       NULL,       1 << 8,       0,           -1 },
 	{ "firefox",        NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Librewolf",      NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "librewolf",      NULL,       NULL,       1 << 8,       0,           -1 },
 	{ "brave-browser",  NULL,       NULL,       1 << 8,       0,           -1 },
 	{ "Brave-browser",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
