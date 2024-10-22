@@ -92,6 +92,10 @@ func (d Device) GetAttr(sysattr string) string {
 	return C.GoString(C.udev_device_get_sysattr_value(d.device, C.CString(sysattr)))
 }
 
+func (d Device) GetAction() string {
+	return C.GoString(C.udev_device_get_action(d.device))
+}
+
 type Monitor struct {
 	monitor *C.struct_udev_monitor
 }
@@ -108,16 +112,32 @@ func (m Monitor) Unref() {
 	C.udev_monitor_unref(m.monitor)
 }
 
-func (m Monitor) FilterSubsystemDevtype(subsystem, devtype string) int {
+func (m Monitor) EnableReceiving() {
+	C.udev_monitor_enable_receiving(m.monitor)
+}
+
+func (m Monitor) Fd() int {
+	return int(C.udev_monitor_get_fd(m.monitor))
+}
+
+func (m Monitor) ReciveDevice() Device {
+	return Device{C.udev_monitor_receive_device(m.monitor)}
+}
+
+func (m Monitor) FilterAddMatchSubsystemDevtype(subsystem, devtype string) int {
 	return int(C.udev_monitor_filter_add_match_subsystem_devtype(m.monitor, C.CString(subsystem), C.CString(devtype)))
 }
 
-func (m Monitor) FilterMatchTag(tag string) int {
+func (m Monitor) FilterAddMatchTag(tag string) int {
 	return int(C.udev_monitor_filter_add_match_tag(m.monitor, C.CString(tag)))
 }
 
-func (m Monitor) EnableReceiving() {
-	C.udev_monitor_enable_receiving(m.monitor)
+func (m Monitor) FilterUpdate() int {
+	return int(C.udev_monitor_filter_update(m.monitor))
+}
+
+func (m Monitor) FilterRemove() int {
+	return int(C.udev_monitor_filter_remove(m.monitor))
 }
 
 type Enumerate struct {

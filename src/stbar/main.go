@@ -74,6 +74,48 @@ func udevExample2() {
 	}
 }
 
+func udevExample3() {
+	ctx := udev.NewContext()
+	defer ctx.Unref()
+
+	mon := ctx.NewMonitorFromNetlink("udev")
+	defer mon.Unref()
+
+	// mon.FilterAddMatchSubsystemDevtype("net", "wlan")
+	mon.FilterAddMatchTag("usb")
+	mon.EnableReceiving()
+
+	/*
+		fd := mon.Fd()
+		pfd := unix.PollFd{Fd: int32(fd), Events: unix.POLLIN}
+
+		for {
+			n, err := unix.Poll([]unix.PollFd{pfd}, -1)
+
+			if err != nil {
+				if err == unix.EINTR {
+					continue
+				}
+
+				fmt.Fprintf(os.Stderr, "Poll error: %v\n", err)
+				break
+			}
+
+			if n > 0 && (pfd.Revents & unix.POLLIN) != 0 {
+				dev := mon.ReciveDevice()
+				defer dev.Unref()
+
+				fmt.Printf("Action: %s\n", dev.GetAction())
+			}
+		}
+	*/
+
+	for {
+		dev := mon.ReciveDevice()
+		fmt.Printf("Action: %s\n", dev.GetAction())
+	}
+}
+
 func main() {
-	udevExample2()
+	udevExample3()
 }

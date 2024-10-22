@@ -172,6 +172,7 @@ vim.api.nvim_create_autocmd('CompleteDone', {
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
+    'c',
     'lua',
     'yaml',
     'json',
