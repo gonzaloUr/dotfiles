@@ -85,26 +85,24 @@ vim.keymap.set('n', '<Leader>.', '<cmd>NvimTreeToggle<cr>')
 
 local wk = require('which-key')
 
-wk.register({
-  l = {
-    name = 'Lsp',
-    D = {function() vim.lsp.buf.declaration() end, 'Go to declaration'},
-    d = {function() vim.lsp.buf.definition() end, 'Go to definition'},
-    i = {function() vim.lsp.buf.implementation() end, 'Go to implementation'},
-    a = {function() vim.lsp.buf.code_action() end, 'Code Action'},
-    h = {function() vim.lsp.buf.hover() end, 'Hover'},
-    s = {function() vim.lsp.buf.signature_help() end, 'Show signature'},
-    af = {function() vim.lsp.buf.add_workspace_folder() end, 'Add file path to lsp root'},
-    rf = {function() vim.lsp.buf.remove_workspace_folder() end, 'Remove file path from lsp root'},
-    lf = {function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, 'List dirs as root in lsp'},
-    r = {function() vim.lsp.buf.rename() end, 'Rename'},
-    u = {function() vim.lsp.buf.references() end, 'Usages'},
-    f = {function() vim.lsp.buf.format() end, 'Format'},
-    n = {function() vim.diagnostic.goto_next() end, 'Go next error'},
-    p = {function() vim.diagnostic.goto_prev() end, 'Go prev error'},
-    E = {function() vim.diagnostic.open_float() end, 'Show errors'},
-  },
-}, { prefix = '<Leader>' })
+wk.add({
+  { "<Leader>l", group = "Lsp" },
+  { "<Leader>lD", function() vim.lsp.buf.declaration() end, desc = "Go to declaration" },
+  { "<Leader>ld", function() vim.lsp.buf.definition() end, desc = "Go to definition" },
+  { "<Leader>li", function() vim.lsp.buf.implementation() end, desc = "Go to implementation" },
+  { "<Leader>la", function() vim.lsp.buf.code_action() end, desc = "Code Action" },
+  { "<Leader>lh", function() vim.lsp.buf.hover() end, desc = "Hover" },
+  { "<Leader>ls", function() vim.lsp.buf.signature_help() end, desc = "Show signature" },
+  { "<Leader>laf", function() vim.lsp.buf.add_workspace_folder() end, desc = "Add file path to lsp root" },
+  { "<Leader>lrf", function() vim.lsp.buf.remove_workspace_folder() end, desc = "Remove file path from lsp root" },
+  { "<Leader>llf", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, desc = "List dirs as root in lsp" },
+  { "<Leader>lr", function() vim.lsp.buf.rename() end, desc = "Rename" },
+  { "<Leader>lu", function() vim.lsp.buf.references() end, desc = "Usages" },
+  { "<Leader>lf", function() vim.lsp.buf.format() end, desc = "Format" },
+  { "<Leader>ln", function() vim.diagnostic.goto_next() end, desc = "Go next error" },
+  { "<Leader>lp", function() vim.diagnostic.goto_prev() end, desc = "Go prev error" },
+  { "<Leader>lE", function() vim.diagnostic.open_float() end, desc = "Show errors" },
+})
 
 wk.setup()
 
