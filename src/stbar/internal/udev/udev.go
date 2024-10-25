@@ -100,8 +100,14 @@ type Monitor struct {
 	monitor *C.struct_udev_monitor
 }
 
-func (c Context) NewMonitorFromNetlink(name string) Monitor {
-	return Monitor{C.udev_monitor_new_from_netlink(c.udev, C.CString(name))}
+func (c Context) NewMonitorFromNetlink(name string) (Monitor, error) {
+	mon := C.udev_monitor_new_from_netlink(c.udev, C.CString(name))
+
+	if mon == nil {
+		return Monitor{}, ErrNewMonitor
+	}
+
+	return Monitor{mon}, nil
 }
 
 func (m Monitor) Ref() Monitor {

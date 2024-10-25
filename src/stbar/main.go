@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse"
 	"github.com/gonzaloUr/dotfiles/src/stbar/internal/udev"
+	"golang.org/x/sys/unix"
 )
 
 func pulseExample() {
@@ -78,41 +80,50 @@ func udevExample3() {
 	ctx := udev.NewContext()
 	defer ctx.Unref()
 
-	mon := ctx.NewMonitorFromNetlink("udev")
+	mon, err := ctx.NewMonitorFromNetlink("udev")
+	if err != nil {
+		panic(err)
+	}
 	defer mon.Unref()
 
-	// mon.FilterAddMatchSubsystemDevtype("net", "wlan")
-	mon.FilterAddMatchTag("usb")
+	mon.FilterAddMatchSubsystemDevtype("net", "wlan")
+	mon.FilterAddMatchSubsystemDevtype("backlight", "intel_backlight")
+	mon.FilterAddMatchSubsystemDevtype("block", "sdb")
 	mon.EnableReceiving()
 
-	/*
-		fd := mon.Fd()
-		pfd := unix.PollFd{Fd: int32(fd), Events: unix.POLLIN}
+	fd := mon.Fd()
+	if err := unix.SetNonblock(fd, true); err != nil {
+		panic(err)
+	}
 
-		for {
-			n, err := unix.Poll([]unix.PollFd{pfd}, -1)
+	epfd, err := unix.EpollCreate1(0)
+	if err != nil {
+		panic(err)
+	}
 
-			if err != nil {
-				if err == unix.EINTR {
-					continue
-				}
+	var event unix.EpollEvent
+	event.Events = unix.EPOLLIN | unix.EPOLLET
+	event.Fd = int32(fd)
+	if err := unix.EpollCtl(epfd, unix.EPOLL_CTL_ADD, fd, &event); err != nil {
+		panic(err)
+	}
 
-				fmt.Fprintf(os.Stderr, "Poll error: %v\n", err)
-				break
-			}
-
-			if n > 0 && (pfd.Revents & unix.POLLIN) != 0 {
-				dev := mon.ReciveDevice()
-				defer dev.Unref()
-
-				fmt.Printf("Action: %s\n", dev.GetAction())
-			}
-		}
-	*/
+	var events [32]unix.EpollEvent
 
 	for {
-		dev := mon.ReciveDevice()
-		fmt.Printf("Action: %s\n", dev.GetAction())
+		fmt.Println("waiting...")
+		n, err := unix.EpollWait(epfd, events[:], 100)
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			continue
+		}
+
+		for i := range n {
+			if int(events[i].Fd) == fd {
+				fmt.Println("evento")
+			}
+		}
 	}
 }
 

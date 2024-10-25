@@ -5,17 +5,8 @@ require('packer').startup(function(use)
   -- third party lua plugins.
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
-  use 'lewis6991/gitsigns.nvim'
   use 'catppuccin/nvim'
-  use {
-    'hrsh7th/nvim-cmp',
-    requires = {
-      -- Completation sources, see nvim-cmp setup sources.
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-buffer'
-    }
-  }
+  use 'echasnovski/mini.completion'
 
   -- vimscript plugins.
   use 'whonore/Coqtail'
@@ -46,10 +37,6 @@ vim.cmd.colorscheme('catppuccin')
 require('nvim-tree').setup({
   sort_by = 'extension'
 })
-
--- gitsigns.nvim.
-
-require('gitsigns').setup()
 
 -- lsp.
 
@@ -84,41 +71,9 @@ lspconfig['gopls'].setup {
 lspconfig['pyright'].setup {}
 lspconfig['texlab'].setup {}
 
--- nvim-cmp.
+-- mini.completion
 
-local cmp = require('cmp')
-
-cmp.setup {
-  mapping = {
-    -- https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion#nvim-cmp
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      else
-        fallback()
-      end
-    end, { 'i', 's' })
-  },
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'path' },
-    { name = 'buffer' }
-  }
-}
+require('mini.completion').setup()
 
 -- mappings and which key.
 

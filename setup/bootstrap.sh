@@ -177,4 +177,4 @@ pacman -S networkmanager networkmanager-runit
 # rebootear y logearse con el nuevo usuario
 
 # activar networkmanager
-sudo ln -s /etc/runit/sv/NetworkManager /run/runit/service
+sudo ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default
