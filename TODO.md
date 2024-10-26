@@ -1,5 +1,11 @@
 ## Mejoras
 
+### Capaz remover udev rule para permitir modificar el brightness para los usuarios en el grupo video
+La utilidad light ya agrega udev rules iguales.
+
+### Cambiar lugar donde installar udev rule para backlight
+En la archwiki dice que es mejor en /etc/udev/rules.d/
+
 ### Usar xdg-autostart o algún coso de user services como tunstile.
 Tunstile hace otras cosas capaz xdg es mejor.
 

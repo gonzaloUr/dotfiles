@@ -96,6 +96,18 @@ func (d Device) GetAction() string {
 	return C.GoString(C.udev_device_get_action(d.device))
 }
 
+func (d Device) GetDevpath() string {
+	return C.GoString(C.udev_device_get_devpath(d.device))
+}
+
+func (d Device) GetSubsystem() string {
+	return C.GoString(C.udev_device_get_subsystem(d.device))
+}
+
+func (d Device) GetDevtype() string {
+	return C.GoString(C.udev_device_get_devtype(d.device))
+}
+
 type Monitor struct {
 	monitor *C.struct_udev_monitor
 }
@@ -126,12 +138,27 @@ func (m Monitor) Fd() int {
 	return int(C.udev_monitor_get_fd(m.monitor))
 }
 
-func (m Monitor) ReciveDevice() Device {
-	return Device{C.udev_monitor_receive_device(m.monitor)}
+func (m Monitor) ReciveDevices() []Device {
+	var ret []Device
+
+	for {
+		dev := C.udev_monitor_receive_device(m.monitor)
+		if dev == nil {
+			break
+		}
+		ret = append(ret, Device{dev})
+	}
+
+	return ret
 }
 
 func (m Monitor) FilterAddMatchSubsystemDevtype(subsystem, devtype string) int {
 	return int(C.udev_monitor_filter_add_match_subsystem_devtype(m.monitor, C.CString(subsystem), C.CString(devtype)))
+}
+
+// TODO: chequear
+func (m Monitor) FilterAddMatchSubsystem(subsystem string) int {
+	return int(C.udev_monitor_filter_add_match_subsystem_devtype(m.monitor, C.CString(subsystem), nil))
 }
 
 func (m Monitor) FilterAddMatchTag(tag string) int {

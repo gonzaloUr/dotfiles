@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
+	"syscall"
 
 	"github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse"
 	"github.com/gonzaloUr/dotfiles/src/stbar/internal/udev"
@@ -86,9 +86,7 @@ func udevExample3() {
 	}
 	defer mon.Unref()
 
-	mon.FilterAddMatchSubsystemDevtype("net", "wlan")
-	mon.FilterAddMatchSubsystemDevtype("backlight", "intel_backlight")
-	mon.FilterAddMatchSubsystemDevtype("block", "sdb")
+	mon.FilterAddMatchSubsystem("backlight")
 	mon.EnableReceiving()
 
 	fd := mon.Fd()
@@ -96,10 +94,16 @@ func udevExample3() {
 		panic(err)
 	}
 
+	var stat syscall.Stat_t
+	if err := syscall.Fstat(fd, &stat); err != nil {
+		panic(err)
+	}
+
 	epfd, err := unix.EpollCreate1(0)
 	if err != nil {
 		panic(err)
 	}
+	defer unix.Close(epfd)
 
 	var event unix.EpollEvent
 	event.Events = unix.EPOLLIN | unix.EPOLLET
@@ -111,17 +115,30 @@ func udevExample3() {
 	var events [32]unix.EpollEvent
 
 	for {
-		fmt.Println("waiting...")
-		n, err := unix.EpollWait(epfd, events[:], 100)
+		n, err := unix.EpollWait(epfd, events[:], 1000)
+		errno, isErrno := err.(syscall.Errno)
 
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "error: %v\n", err)
-			continue
+		if (err != nil && !isErrno) || (isErrno && errno != syscall.EINTR) {
+			break
 		}
 
 		for i := range n {
 			if int(events[i].Fd) == fd {
-				fmt.Println("evento")
+				if events[i].Events & unix.EPOLLIN != 0 {
+					for _, dev := range mon.ReciveDevices() {
+						fmt.Printf("devpath = %s\n", dev.GetDevpath())
+						fmt.Printf("subsystem = %s\n", dev.GetSubsystem())
+
+						devtype := dev.GetDevtype()
+						fmt.Printf("devtype = %s\n", devtype)
+						fmt.Printf("devtype len = %d\n", len(devtype))
+
+						for k := range dev.Attrs().All() {
+							fmt.Printf("k = %s, v = %s\n", k, dev.GetAttr(k))
+						}
+						fmt.Println()
+					}
+				}
 			}
 		}
 	}
