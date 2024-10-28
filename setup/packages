@@ -45,6 +45,7 @@ pacman -S --needed dunst
 pacman -S --needed libnotify
 pacman -S --needed xcompmgr
 pacman -S --needed xwallpaper
+pacman -S --needed maim
 
 # multimedia
 pacman -S --needed pulseaudio-alsa
