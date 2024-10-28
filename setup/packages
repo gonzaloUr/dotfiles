@@ -24,6 +24,7 @@ pacman -S --needed dbus-runit
 # networking
 pacman -S --needed bluez
 pacman -S --needed bluez-runit
+pacman -S --needed bluez-utils
 pacman -S --needed networkmanager
 pacman -S --needed networkmanager-runit
 

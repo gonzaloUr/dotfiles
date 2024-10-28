@@ -156,7 +156,6 @@ func (m Monitor) FilterAddMatchSubsystemDevtype(subsystem, devtype string) int {
 	return int(C.udev_monitor_filter_add_match_subsystem_devtype(m.monitor, C.CString(subsystem), C.CString(devtype)))
 }
 
-// TODO: chequear
 func (m Monitor) FilterAddMatchSubsystem(subsystem string) int {
 	return int(C.udev_monitor_filter_add_match_subsystem_devtype(m.monitor, C.CString(subsystem), nil))
 }

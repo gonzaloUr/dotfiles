@@ -87,6 +87,13 @@ func udevExample3() {
 	defer mon.Unref()
 
 	mon.FilterAddMatchSubsystem("backlight")
+	mon.FilterAddMatchSubsystem("power_supply")
+	mon.FilterAddMatchSubsystem("block")
+	mon.FilterAddMatchSubsystem("bluetooth")
+	mon.FilterAddMatchSubsystem("graphics")
+	mon.FilterAddMatchSubsystem("input")
+	mon.FilterAddMatchSubsystem("mem")
+	mon.FilterAddMatchSubsystem("net")
 	mon.EnableReceiving()
 
 	fd := mon.Fd()

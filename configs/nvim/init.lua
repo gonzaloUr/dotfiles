@@ -5,7 +5,6 @@ require('packer').startup(function(use)
   -- third party lua plugins.
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
-  use 'catppuccin/nvim'
   use 'echasnovski/mini.completion'
 
   -- vimscript plugins.
@@ -23,14 +22,13 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
--- catppuccin
+-- colorscheme
 
-require('catppuccin').setup {
-  flavour = "mocha",
-  transparent_background = true
-}
-
-vim.cmd.colorscheme('catppuccin')
+vim.cmd [[
+    highlight Normal guibg=NONE ctermbg=NONE
+    highlight NonText guibg=NONE ctermbg=NONE
+    highlight LineNr guibg=NONE ctermbg=NONE
+]]
 
 -- nvim-tree plugin.
 

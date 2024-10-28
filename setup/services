@@ -17,3 +17,6 @@ ln -s /etc/runit/sv/tlp /run/runit/service
 
 # setup dbus service
 ln -s /etc/runit/sv/dbus /run/runit/service
+
+# setup bluez service
+ln -s /etc/runit/sv/bluetoothd /run/runit/service
