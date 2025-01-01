@@ -6,6 +6,7 @@ require('packer').startup(function(use)
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
   use 'echasnovski/mini.completion'
+  use 'catppuccin/nvim'
 
   -- vimscript plugins.
   use 'whonore/Coqtail'
@@ -24,11 +25,11 @@ vim.opt.ignorecase = true
 
 -- colorscheme
 
-vim.cmd [[
-    highlight Normal guibg=NONE ctermbg=NONE
-    highlight NonText guibg=NONE ctermbg=NONE
-    highlight LineNr guibg=NONE ctermbg=NONE
-]]
+require('catppuccin').setup({
+  transparent_background = true
+})
+
+vim.cmd.colorscheme('catppuccin-macchiato')
 
 -- nvim-tree plugin.
 
@@ -84,22 +85,22 @@ vim.keymap.set('n', '<Leader>.', '<cmd>NvimTreeToggle<cr>')
 local wk = require('which-key')
 
 wk.add({
-  { "<Leader>l", group = "Lsp" },
-  { "<Leader>lD", function() vim.lsp.buf.declaration() end, desc = "Go to declaration" },
-  { "<Leader>ld", function() vim.lsp.buf.definition() end, desc = "Go to definition" },
-  { "<Leader>li", function() vim.lsp.buf.implementation() end, desc = "Go to implementation" },
-  { "<Leader>la", function() vim.lsp.buf.code_action() end, desc = "Code Action" },
-  { "<Leader>lh", function() vim.lsp.buf.hover() end, desc = "Hover" },
-  { "<Leader>ls", function() vim.lsp.buf.signature_help() end, desc = "Show signature" },
-  { "<Leader>laf", function() vim.lsp.buf.add_workspace_folder() end, desc = "Add file path to lsp root" },
-  { "<Leader>lrf", function() vim.lsp.buf.remove_workspace_folder() end, desc = "Remove file path from lsp root" },
-  { "<Leader>llf", function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, desc = "List dirs as root in lsp" },
-  { "<Leader>lr", function() vim.lsp.buf.rename() end, desc = "Rename" },
-  { "<Leader>lu", function() vim.lsp.buf.references() end, desc = "Usages" },
-  { "<Leader>lf", function() vim.lsp.buf.format() end, desc = "Format" },
-  { "<Leader>ln", function() vim.diagnostic.goto_next() end, desc = "Go next error" },
-  { "<Leader>lp", function() vim.diagnostic.goto_prev() end, desc = "Go prev error" },
-  { "<Leader>lE", function() vim.diagnostic.open_float() end, desc = "Show errors" },
+  { '<Leader>l', group = 'Lsp' },
+  { '<Leader>lD', function() vim.lsp.buf.declaration() end, desc = 'Go to declaration' },
+  { '<Leader>ld', function() vim.lsp.buf.definition() end, desc = 'Go to definition' },
+  { '<Leader>li', function() vim.lsp.buf.implementation() end, desc = 'Go to implementation' },
+  { '<Leader>la', function() vim.lsp.buf.code_action() end, desc = 'Code Action' },
+  { '<Leader>lh', function() vim.lsp.buf.hover() end, desc = 'Hover' },
+  { '<Leader>ls', function() vim.lsp.buf.signature_help() end, desc = 'Show signature' },
+  { '<Leader>laf', function() vim.lsp.buf.add_workspace_folder() end, desc = 'Add file path to lsp root' },
+  { '<Leader>lrf', function() vim.lsp.buf.remove_workspace_folder() end, desc = 'Remove file path from lsp root' },
+  { '<Leader>llf', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, desc = 'List dirs as root in lsp' },
+  { '<Leader>lr', function() vim.lsp.buf.rename() end, desc = 'Rename' },
+  { '<Leader>lu', function() vim.lsp.buf.references() end, desc = 'Usages' },
+  { '<Leader>lf', function() vim.lsp.buf.format() end, desc = 'Format' },
+  { '<Leader>ln', function() vim.diagnostic.goto_next() end, desc = 'Go next error' },
+  { '<Leader>lp', function() vim.diagnostic.goto_prev() end, desc = 'Go prev error' },
+  { '<Leader>lE', function() vim.diagnostic.open_float() end, desc = 'Show errors' },
 })
 
 wk.setup()
@@ -116,14 +117,13 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 vim.api.nvim_create_autocmd('CompleteDone', {
   callback = function()
     if vim.fn.pumvisible() then
-      vim.api.nvim_command("pclose")
+      vim.api.nvim_command('pclose')
     end
   end
 })
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
-    'c',
     'lua',
     'yaml',
     'json',
@@ -162,8 +162,8 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 vim.api.nvim_create_autocmd('VimResized', {
-  pattern = "*",
+  pattern = '*',
   callback = function(args)
-    vim.api.nvim_command("wincmd =")
+    vim.api.nvim_command('wincmd =')
   end
 })

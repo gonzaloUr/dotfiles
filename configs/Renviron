@@ -1,0 +1,5 @@
+# install at ~/.Renviron
+
+# This folder must be created manually, R does not recognize R_LIBS_USER as a correct path for libraries if it does not
+# exist as a folder and it does not create it automatically. Run mkdir ~/R.
+R_LIBS_USER=~/R
