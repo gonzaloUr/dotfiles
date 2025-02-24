@@ -3,10 +3,9 @@
 # Create folder for R_LIBS_USER, see Renviron config file.
 mkdir -p ~/R
 
-# Choose mirror and install packages.
+# Install packages.
 R --interactive <<EOT
-chooseCRANmirror()
-
-install.packages("rmarkdown")
-install.packages("languageserver")
+install.packages("rmarkdown", repo="https://cran.r-project.org/")
+install.packages("languageserver", repo="https://cran.r-project.org/")
+install.packages("reticulate", repo="https://cran.r-project.org/")
 EOT

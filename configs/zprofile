@@ -29,5 +29,7 @@ export PATH=$PATH:~/bin
 export PATH=$PATH:~/scripts
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:$GOPATH/bin
-export PATH=$PATH:$HOME/.opam/default/bin
 export PATH=$PATH:/usr/lib/rstudio
+
+# opam ocaml
+command -v opam 2>&1 >/dev/null && eval $(opam env)

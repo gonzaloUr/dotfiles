@@ -5,7 +5,6 @@ require('packer').startup(function(use)
   -- third party lua plugins.
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
-  use 'echasnovski/mini.completion'
   use 'catppuccin/nvim'
 
   -- vimscript plugins.
@@ -69,10 +68,7 @@ lspconfig['gopls'].setup {
 }
 lspconfig['pyright'].setup {}
 lspconfig['texlab'].setup {}
-
--- mini.completion
-
-require('mini.completion').setup()
+lspconfig['r_language_server'].setup {}
 
 -- mappings and which key.
 

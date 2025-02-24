@@ -1,0 +1,14 @@
+#!/bin/sh
+
+sudo pacman --needed -S ocaml
+sudo pacman --needed -S opam
+
+opam init
+eval $(opam env)
+
+# installs the latest versions of the packages.
+opam install dune
+opam install utop
+
+# pins are like installs but fixed to a specific version.
+opam pin add coq '8.19.0'
