@@ -6,8 +6,6 @@ require('packer').startup(function(use)
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
   use 'catppuccin/nvim'
-  use 'mfussenegger/nvim-dap'
-  use 'leoluz/nvim-dap-go'
 
   -- vimscript plugins.
   use 'whonore/Coqtail'
@@ -73,31 +71,6 @@ lspconfig['pyright'].setup {}
 lspconfig['texlab'].setup {}
 lspconfig['r_language_server'].setup {}
 
--- nvim-dap y nvim-dap-go.
-local dap = require('dap')
-
-require('dap-go').setup {
-  dap_configurations = {
-    {
-      type = "go",
-      name = "Attach remote",
-      mode = "remote",
-      request = "attach"
-    }
-  },
-  delve = {
-    path = "dlv",
-    initialize_timeout_sec = 20,
-    port = "${port}",
-    args = {},
-    build_flags = {},
-    cwd = nil
-  },
-  tests = {
-    verbose = false
-  }
-}
-
 -- mappings and which key.
 
 vim.g.mapleader = ','
@@ -126,17 +99,6 @@ wk.add({
     { '<Leader>ln', function() vim.diagnostic.goto_next() end, desc = 'Go next error' },
     { '<Leader>lp', function() vim.diagnostic.goto_prev() end, desc = 'Go prev error' },
     { '<Leader>lE', function() vim.diagnostic.open_float() end, desc = 'Show errors' },
-
-    -- nvim-dap keybindings.
-    { '<Leader>d', group = 'Debugger' },
-    { '<Leader>d<F5>', function() require('dap').continue() end, desc = 'Continue' },
-    { '<Leader>d<F10>', function() require('dap').step_over() end, desc = 'Step over' },
-    { '<Leader>d<F11>', function() require('dap').step_into() end, desc = 'Step into' },
-    { '<Leader>d<F12>', function() require('dap').step_out() end, desc = 'Step out' },
-    { '<Leader>db', function() require('dap').toggle_breakpoint() end, desc = 'Toggle breakpoint' },
-    { '<Leader>dB', function() require('dap').set_breakpoint() end, desc = 'Set breakpoint' },
-    { '<Leader>dr', function() require('dap').repl.open() end, desc = 'Open repl' },
-    { '<Leader>dh', function() require('dap.ui.widgets').preview() end, desc = 'Hover in preview window' }
 });
 
 wk.setup()
