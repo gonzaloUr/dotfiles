@@ -1,5 +1,6 @@
 # for zsh install as ~/.zprofile
 
+# programs
 export EDITOR=nvim
 export BROWSER=firefox
 export READER=zathura
@@ -24,12 +25,19 @@ export AWT_TOOLKIT=MToolkit
 # pacdiff editor
 export DIFFPROGRAM=$EDITOR
 
+# android
+export ANDROID_HOME=~/Android/Sdk
+
 # path
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/scripts
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:/usr/lib/rstudio
+export PATH=$PATH:$HOME/.opam/default/bin
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/emulator
 
 # opam ocaml
 command -v opam 2>&1 >/dev/null && eval $(opam env)
