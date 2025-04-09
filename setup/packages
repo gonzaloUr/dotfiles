@@ -91,6 +91,9 @@ pacman -S --needed alacritty
 pacman -S --needed gnome-keyring
 pacman -S --needed seahorse
 
+# mount android, hay que asegurarse de estar en el grupo que crea este paquete.
+pacman -S --needed aft-mtp-mount
+
 # fonts
 pacman -S --needed ttf-hack
 pacman -S --needed ttf-dejavu

@@ -2,7 +2,6 @@
 
 # yay
 yay -S --needed lf-bin
-yay -S --needed simple-mtpfs
 yay -S --needed dragon-drop
 yay -S --needed nvim-packer-git
 yay -S --needed dropbox
