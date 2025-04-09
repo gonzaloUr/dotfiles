@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"syscall"
 
-	"github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse"
+	"github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse_old"
 	"github.com/gonzaloUr/dotfiles/src/stbar/internal/udev"
 	"golang.org/x/sys/unix"
 )
