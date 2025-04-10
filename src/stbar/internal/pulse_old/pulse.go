@@ -380,7 +380,7 @@ func subscribeCallback(c *C.pa_context, t C.pa_subscription_event_type_t, inx C.
 }
 
 //export operationSubscribeCallback
-func operationSubscribeCallback(_ *C.pa_context, success C.int, userdata unsafe.Pointer) {
+func operationSubscribeCallback(c *C.pa_context, success C.int, userdata unsafe.Pointer) {
 	handle := *(*C.uint32_t)(userdata)
 	h := cgo.Handle(handle)
 	ch := h.Value().(chan bool)
@@ -390,7 +390,7 @@ func operationSubscribeCallback(_ *C.pa_context, success C.int, userdata unsafe.
 }
 
 //export operationClientInfoCallback
-func operationClientInfoCallback(_ *C.pa_context, i *C.pa_client_info, eol C.int, userdata unsafe.Pointer) {
+func operationClientInfoCallback(c *C.pa_context, i *C.pa_client_info, eol C.int, userdata unsafe.Pointer) {
 	handle := *(*C.uint32_t)(userdata)
 	h := cgo.Handle(handle)
 	ch := h.Value().(chan ClientInfo)
@@ -404,7 +404,7 @@ func operationClientInfoCallback(_ *C.pa_context, i *C.pa_client_info, eol C.int
 }
 
 //export operationSinkInfoCallback
-func operationSinkInfoCallback(_ *C.pa_context, i *C.pa_sink_info, eol C.int, userdata unsafe.Pointer) {
+func operationSinkInfoCallback(c *C.pa_context, i *C.pa_sink_info, eol C.int, userdata unsafe.Pointer) {
 	handle := *(*C.uint32_t)(userdata)
 	h := cgo.Handle(handle)
 	ch := h.Value().(chan SinkInfo)

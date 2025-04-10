@@ -3,22 +3,24 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"syscall"
 
-	"github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse_old"
+	"github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse"
+	pulse2 "github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse_old"
 	"github.com/gonzaloUr/dotfiles/src/stbar/internal/udev"
 	"golang.org/x/sys/unix"
 )
 
-func pulseExample() {
-	p, err := pulse.NewPulse("stbar")
+func pulse2Example() {
+	p, err := pulse2.NewPulse("stbar")
 	if err != nil {
 		panic(err)
 	}
 
 	go func() {
 		for state := range p.ListenStates(context.Background()) {
-			if state == pulse.ContextReady {
+			if state == pulse2.ContextReady {
 				p.Subscribe()
 			}
 		}
@@ -37,6 +39,24 @@ func pulseExample() {
 	}
 
 	<-p.Done()
+}
+
+func pulseExample() {
+	mainloop, err := pulse.NewMainloop()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	api := mainloop.NewApi()
+
+	c, err := api.NewContext("stbar")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := c.Connect(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func udevExample1() {
@@ -152,5 +172,5 @@ func udevExample3() {
 }
 
 func main() {
-	udevExample3()
+	pulseExample()
 }
