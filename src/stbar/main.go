@@ -1,45 +1,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"syscall"
 
 	"github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse"
-	pulse2 "github.com/gonzaloUr/dotfiles/src/stbar/internal/pulse_old"
 	"github.com/gonzaloUr/dotfiles/src/stbar/internal/udev"
 	"golang.org/x/sys/unix"
 )
-
-func pulse2Example() {
-	p, err := pulse2.NewPulse("stbar")
-	if err != nil {
-		panic(err)
-	}
-
-	go func() {
-		for state := range p.ListenStates(context.Background()) {
-			if state == pulse2.ContextReady {
-				p.Subscribe()
-			}
-		}
-	}()
-
-	if err := p.Connect(); err != nil {
-		panic(err)
-	}
-
-	p.Run()
-
-	for event := range p.ListenEvents(context.Background()) {
-		fmt.Println(event)
-		sinkInfo := p.SinkInfo()
-		fmt.Println(sinkInfo)
-	}
-
-	<-p.Done()
-}
 
 func pulseExample() {
 	mainloop, err := pulse.NewMainloop()
@@ -57,6 +26,8 @@ func pulseExample() {
 	if err := c.Connect(); err != nil {
 		log.Fatal(err)
 	}
+
+	mainloop.Run()
 }
 
 func udevExample1() {
@@ -151,7 +122,7 @@ func udevExample3() {
 
 		for i := range n {
 			if int(events[i].Fd) == fd {
-				if events[i].Events & unix.EPOLLIN != 0 {
+				if events[i].Events&unix.EPOLLIN != 0 {
 					for _, dev := range mon.ReciveDevices() {
 						fmt.Printf("devpath = %s\n", dev.GetDevpath())
 						fmt.Printf("subsystem = %s\n", dev.GetSubsystem())

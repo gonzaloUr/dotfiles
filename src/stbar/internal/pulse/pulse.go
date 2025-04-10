@@ -6,7 +6,6 @@ package pulse
 // Context callbacks.
 extern void stateCallback(pa_context *context, void *userdata);
 extern void subscribeCallback(pa_context *context, pa_subscription_event_type_t eventType, uint32_t idx, void *userdata);
-
 */
 import "C"
 import (
@@ -20,7 +19,8 @@ type Mainloop struct {
 }
 
 type Api struct {
-	api *C.pa_mainloop_api
+	api               *C.pa_mainloop_api
+	stateChannels     map[chan C.pa_context_state_t]struct{}
 }
 
 type Context struct {
@@ -36,7 +36,10 @@ func NewMainloop() (*Mainloop, error) {
 }
 
 func (m *Mainloop) NewApi() *Api {
-	return &Api{C.pa_mainloop_get_api(m.mainloop)}
+	return &Api{
+		C.pa_mainloop_get_api(m.mainloop),
+		map[chan C.pa_context_state_t]struct{}{},
+	}
 }
 
 func (a *Api) NewContext(name string) (*Context, error) {
@@ -57,7 +60,7 @@ func (a *Api) NewContext(name string) (*Context, error) {
 func (c *Context) Connect() error {
 	res := C.pa_context_connect(c.context, nil, C.PA_CONTEXT_NOFLAGS, nil)
 	if res < 0 {
-		return errors.New("Error connecting context")
+		return errors.New("error connecting context")
 	}
 
 	return nil
