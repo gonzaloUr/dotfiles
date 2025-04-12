@@ -15,19 +15,32 @@ func pulseExample() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	mainloop.Run()
 
-	api := mainloop.NewApi()
-
-	c, err := api.NewContext("stbar")
+	context, err := mainloop.NewContext("test")
 	if err != nil {
 		log.Fatal(err)
 	}
+	context.Connect()
 
-	if err := c.Connect(); err != nil {
-		log.Fatal(err)
+	for x := range context.StateChan() {
+		fmt.Println(x)
+
+		switch x {
+		case pulse.ContextReady:
+			mainloop.Quit(0)
+		case pulse.ContextTerminated:
+		case pulse.ContextFailed:
+			break
+		}
 	}
 
-	mainloop.Run()
+	/*
+	context.Disconnect()
+	context.Close()
+	*/
+
+	mainloop.Done()
 }
 
 func udevExample1() {
