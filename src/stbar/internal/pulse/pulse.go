@@ -10,80 +10,36 @@ extern void subscribeCallback(pa_context *context, pa_subscription_event_type_t 
 import "C"
 import (
 	"errors"
-	"fmt"
 	"runtime/cgo"
 	"unsafe"
 )
 
 type Mainloop struct {
-	mainloop *C.pa_mainloop
-	api      *C.pa_mainloop_api
-	pause    chan struct{}
-	play     chan struct{}
-	stop     chan struct{}
-	done     chan int
+	mainloop *C.pa_theaded_mainloop
 }
 
 type Context struct {
+	mainloop *C.pa_threaded_mainloop
 	context *C.pa_context
 	state   chan ContextState
 }
 
 func NewMainloop() (*Mainloop, error) {
 	// Create mainloop.
-	mainloop := C.pa_mainloop_new()
+	mainloop := C.pa_threaded_mainloop_new()
 	if mainloop == nil {
 		return nil, errors.New("error while creating mainloop")
 	}
 
-	// Get mainloop api.
-	api := C.pa_mainloop_get_api(mainloop)
-
-	// Create return value.
-	ret := &Mainloop{
-		mainloop: mainloop,
-		api:      api,
-		pause:    make(chan struct{}),
-		play:     make(chan struct{}),
-		done:     make(chan int),
-	}
-
-	return ret, nil
-}
-
-func (m *Mainloop) loop() {
-	var retval C.int
-
-	for {
-		select {
-		case <-m.pause:
-			fmt.Println("pausing")
-			<-m.play
-			fmt.Println("playing")
-		default:
-		}
-
-		C.pa_mainloop_iterate(m.mainloop, 0, &retval)
-		if retval < 0 {
-			break
-		}
-	}
-
-	m.done <- int(retval)
+	return &Mainloop{mainloop}, nil
 }
 
 func (m *Mainloop) Run() {
-	go m.loop()
+	C.pa_threaded_mainloop_start(m.mainloop)
 }
 
-func (m *Mainloop) Quit(retval int) {
-	m.pause <- struct{}{}
+func (m *Mainloop) Stop() {
 	C.pa_mainloop_quit(m.mainloop, C.int(retval))
-	m.play <- struct{}{}
-}
-
-func (m *Mainloop) Done() int {
-	return <-m.done
 }
 
 func (m *Mainloop) NewContext(name string) (*Context, error) {
