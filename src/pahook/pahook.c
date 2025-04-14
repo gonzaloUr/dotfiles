@@ -1,5 +1,4 @@
 #include "pahook.h"
-#include <pulse/pulseaudio.h>
 #include <stdio.h>
 
 int main() {
@@ -25,6 +24,7 @@ int main() {
     // Setup context callbacks.
     pa_context_set_state_callback(ctx, ctx_state_callback, mainloop);
     pa_context_set_event_callback(ctx, ctx_event_callback, mainloop);
+    pa_context_set_subscribe_callback(ctx, ctx_subscribe_callback, mainloop);
 
     // Connect context.
     if (pa_context_connect(ctx, NULL, PA_CONTEXT_NOFLAGS, NULL) < 0) {
@@ -73,6 +73,9 @@ int main() {
         pa_threaded_mainloop_wait(mainloop);
     }
 
+    pa_context_subscribe(ctx, PA_SUBSCRIPTION_MASK_ALL, NULL, NULL);
+    pa_threaded_mainloop_wait(mainloop);
+
     pa_threaded_mainloop_unlock(mainloop);
     pa_threaded_mainloop_stop(mainloop);
     pa_context_disconnect(ctx);
@@ -82,7 +85,7 @@ int main() {
     return 0;
 }
 
-// no locking is necesary because this callback runs inside the mainloop.
+// no need to lock the mainloop thread because these run in that same thread.
 void ctx_state_callback(pa_context *ctx, void *userdata) {
     pa_threaded_mainloop *mainloop = userdata;
     pa_context_state_t state = pa_context_get_state(ctx);
@@ -120,6 +123,113 @@ void ctx_state_callback(pa_context *ctx, void *userdata) {
     pa_threaded_mainloop_signal(mainloop, 0);
 }
 
-// no locking is necesary because this callback runs inside the mainloop.
+// no need to lock the mainloop thread because these run in that same thread.
 void ctx_event_callback(pa_context *ctx, const char *name, pa_proplist *pl, void *userdata) {
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_subscribe_callback(pa_context *ctx, pa_subscription_event_type_t t, uint32_t idx, void *userdata) {
+    printf("EVENT\n");
+    printf("Pulseaudio obj id/index that caused the event: %d\n", idx);
+
+    switch (t & PA_SUBSCRIPTION_EVENT_TYPE_MASK) {
+        case PA_SUBSCRIPTION_EVENT_NEW:
+            printf("event type: PA_SUBSCRIPTION_EVENT_NEW\n");
+            break;
+        case PA_SUBSCRIPTION_EVENT_CHANGE:
+            printf("event type: PA_SUBSCRIPTION_EVENT_CHANGE\n");
+            break;
+        case PA_SUBSCRIPTION_EVENT_REMOVE:
+            printf("event type: PA_SUBSCRIPTION_EVENT_REMOVE\n");
+            break;
+    }
+
+    switch (t & PA_SUBSCRIPTION_EVENT_FACILITY_MASK) {
+        case PA_SUBSCRIPTION_EVENT_SINK:
+            printf("event facility: PA_SUBSCRIPTION_EVENT_SINK\n");
+            pa_context_get_sink_info_by_index(ctx, idx, ctx_sink_info_callback, userdata);
+            break;
+        case PA_SUBSCRIPTION_EVENT_SOURCE:
+            printf("event facility: PA_SUBSCRIPTION_EVENT_SOURCE\n");
+            pa_context_get_source_info_by_index(ctx, idx, ctx_source_info_callback, userdata);
+            break;
+        case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
+            printf("event facility: PA_SUBSCRIPTION_EVENT_SINK_INPUT\n");
+            pa_context_get_sink_input_info(ctx, idx, ctx_sink_input_info_callback, userdata);
+            break;
+        case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
+            printf("event facility: PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT\n");
+            pa_context_get_source_output_info(ctx, idx, ctx_source_output_info_callback, userdata);
+            break;
+        case PA_SUBSCRIPTION_EVENT_MODULE:
+            printf("event facility: PA_SUBSCRIPTION_EVENT_MODULE\n");
+            pa_context_get_module_info(ctx, idx, ctx_module_info_callback, userdata);
+            break;
+        case PA_SUBSCRIPTION_EVENT_CLIENT:
+            printf("event facility: PA_SUBSCRIPTION_EVENT_CLIENT\n");
+            pa_context_get_client_info(ctx, idx, ctx_client_info_callback, userdata);
+            break;
+        case PA_SUBSCRIPTION_EVENT_SAMPLE_CACHE:
+            printf("event facility: PA_SUBSCRIPTION_EVENT_SAMPLE_CACHE\n");
+            pa_context_get_sample_info_by_index(ctx, idx, ctx_sample_info_callback, userdata);
+            break;
+        case PA_SUBSCRIPTION_EVENT_SERVER:
+            printf("event facility: PA_SUBSCRIPTION_EVENT_SERVER\n");
+            pa_context_get_server_info(ctx, ctx_server_info_callback, userdata);
+            break;
+        case PA_SUBSCRIPTION_EVENT_CARD:
+            printf("event facility: PA_SUBSCRIPTION_EVENT_CARD\n");
+            pa_context_get_card_info_by_index(ctx, idx, ctx_card_info_callback, userdata);
+            break;
+    }
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
+
+    printf("name: %s\n", i->name);
+    printf("desc: %s\n", i->description);
+
+    for (uint8_t k = 0; k < i->volume.channels; k++)
+        printf("volume %d: %d\n", k, i->volume.values[k]);
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_sink_input_info_callback(pa_context *ctx, const pa_sink_input_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_source_output_info_callback(pa_context *ctx, const pa_source_output_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_module_info_callback(pa_context *ctx, const pa_module_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_client_info_callback(pa_context *ctx, const pa_client_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_sample_info_callback(pa_context *ctx, const pa_sample_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata) {
+}
+
+// no need to lock the mainloop thread because these run in that same thread.
+void ctx_card_info_callback(pa_context *ctx, const pa_card_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
 }
