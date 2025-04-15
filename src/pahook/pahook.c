@@ -2,22 +2,19 @@
 #include <stdio.h>
 
 int main() {
-    // Create threaded mainloop.
-    pa_threaded_mainloop *mainloop = pa_threaded_mainloop_new();
+    // Create mainloop.
+    pa_mainloop *mainloop = pa_mainloop_new();
     if (!mainloop) {
-        fprintf(stderr, "error creating threaded mainloop\n");
+        fprintf(stderr, "error creating mainloop\n");
         return 1;
     }
 
     // Create context.
-    pa_mainloop_api *api = pa_threaded_mainloop_get_api(mainloop);
+    pa_mainloop_api *api = pa_mainloop_get_api(mainloop);
     pa_context *ctx = pa_context_new(api, "pahook");
     if (!ctx) {
         fprintf(stderr, "error creating context\n");
-
-        pa_threaded_mainloop_stop(mainloop);
-        pa_threaded_mainloop_free(mainloop);
-
+        pa_mainloop_free(mainloop);
         return 1;
     }
 
@@ -30,64 +27,27 @@ int main() {
     if (pa_context_connect(ctx, NULL, PA_CONTEXT_NOFLAGS, NULL) < 0) {
         fprintf(stderr, "error connecting context\n");
 
-        pa_threaded_mainloop_stop(mainloop);
-        pa_context_disconnect(ctx);
         pa_context_unref(ctx);
-        pa_threaded_mainloop_free(mainloop);
+        pa_mainloop_free(mainloop);
 
         return 1;
     }
 
-    // Lock mainloop.
-    pa_threaded_mainloop_lock(mainloop);
+    // Run mainloop.
+    int retval;
+    pa_mainloop_run(mainloop, &retval);
 
-    // Start mainloop.
-    if (pa_threaded_mainloop_start(mainloop) < 0) {
-        fprintf(stderr, "error starting mainloop\n");
-
-        pa_threaded_mainloop_unlock(mainloop);
-        pa_threaded_mainloop_stop(mainloop);
-        pa_context_disconnect(ctx);
-        pa_context_unref(ctx);
-        pa_threaded_mainloop_free(mainloop);
-
-        return 1;
-    }
-
-    // Wait until ready.
-    while (1) {
-        pa_context_state_t state = pa_context_get_state(ctx);
-
-        if (state == PA_CONTEXT_READY) {
-            break;
-        } else if (state == PA_CONTEXT_FAILED || state == PA_CONTEXT_TERMINATED) {
-            pa_threaded_mainloop_unlock(mainloop);
-            pa_threaded_mainloop_stop(mainloop);
-            pa_context_disconnect(ctx);
-            pa_context_unref(ctx);
-            pa_threaded_mainloop_free(mainloop);
-
-            return 1;
-        }
-
-        pa_threaded_mainloop_wait(mainloop);
-    }
-
-    pa_context_subscribe(ctx, PA_SUBSCRIPTION_MASK_ALL, NULL, NULL);
-    pa_threaded_mainloop_wait(mainloop);
-
-    pa_threaded_mainloop_unlock(mainloop);
-    pa_threaded_mainloop_stop(mainloop);
+    // Clean up.
     pa_context_disconnect(ctx);
     pa_context_unref(ctx);
-    pa_threaded_mainloop_free(mainloop);
+    pa_mainloop_free(mainloop);
 
-    return 0;
+    return retval;
 }
 
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_state_callback(pa_context *ctx, void *userdata) {
-    pa_threaded_mainloop *mainloop = userdata;
+    pa_mainloop *mainloop = userdata;
     pa_context_state_t state = pa_context_get_state(ctx);
 
     switch (state) {
@@ -109,18 +69,22 @@ void ctx_state_callback(pa_context *ctx, void *userdata) {
 
         case PA_CONTEXT_READY:
             printf("PA_CONTEXT_READY\n");
+
+            pa_operation *op = pa_context_subscribe(ctx, PA_SUBSCRIPTION_MASK_ALL, NULL, NULL);
+            pa_operation_unref(op);
+
             break;
 
         case PA_CONTEXT_FAILED:
             printf("PA_CONTEXT_FAILED\n");
+            pa_mainloop_quit(mainloop, 1);
             break;
 
         case PA_CONTEXT_TERMINATED:
             printf("PA_CONTEXT_TERMINATED\n");
+            pa_mainloop_quit(mainloop, 0);
             break;
     }
-
-    pa_threaded_mainloop_signal(mainloop, 0);
 }
 
 // no need to lock the mainloop thread because these run in that same thread.
@@ -184,6 +148,7 @@ void ctx_subscribe_callback(pa_context *ctx, pa_subscription_event_type_t t, uin
     }
 }
 
+// An event related to a sink, a sink is an audio output device, like your speakers, headphones, HDMI audio, etc.
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
@@ -195,40 +160,48 @@ void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, voi
         printf("volume %d: %d\n", k, i->volume.values[k]);
 }
 
+// An event related to a source, which is an audio input device, like a microphone or a virtual capture source.
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 }
 
+// An event about a sink input, which is an audio stream that’s going to a sink.
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_sink_input_info_callback(pa_context *ctx, const pa_sink_input_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 }
 
+// An event about a source output, which is a stream being recorded from a source.
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_source_output_info_callback(pa_context *ctx, const pa_source_output_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 }
 
+// An event about a PulseAudio module. Modules are plug-ins that provide functionality, like Bluetooth support.
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_module_info_callback(pa_context *ctx, const pa_module_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 }
 
+// An event about a PulseAudio client, which is any process connected to the server.
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_client_info_callback(pa_context *ctx, const pa_client_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 }
 
+// An event about a sample cache item, which is an audio sample stored for quick playback.
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_sample_info_callback(pa_context *ctx, const pa_sample_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 }
 
+// Indicates a global server state change.
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata) {
 }
 
+// An event about an audio card, which is a representation of a physical or virtual sound device.
 // no need to lock the mainloop thread because these run in that same thread.
 void ctx_card_info_callback(pa_context *ctx, const pa_card_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
