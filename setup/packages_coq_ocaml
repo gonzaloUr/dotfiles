@@ -11,4 +11,4 @@ opam install dune
 opam install utop
 
 # pins are like installs but fixed to a specific version.
-opam pin add coq '8.19.0'
+opam pin add rocq-prover '9.0.0'

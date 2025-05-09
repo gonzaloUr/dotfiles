@@ -5,7 +5,7 @@ require('packer').startup(function(use)
   -- third party lua plugins.
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
-  use 'catppuccin/nvim'
+  use 'ellisonleao/gruvbox.nvim'
 
   -- vimscript plugins.
   use 'whonore/Coqtail'
@@ -25,11 +25,35 @@ vim.opt.ignorecase = true
 
 -- colorscheme
 
-require('catppuccin').setup({
-  transparent_background = true
+require("gruvbox").setup({
+  -- add neovim terminal colors
+  terminal_colors = true, 
+  undercurl = true,
+  underline = true,
+  bold = true,
+  italic = {
+    strings = false,
+    emphasis = false,
+    comments = false,
+    operators = false,
+    folds = false,
+  },
+  strikethrough = true,
+  invert_selection = false,
+  invert_signs = false,
+  invert_tabline = false,
+  invert_intend_guides = false,
+  -- invert background for search, diffs, statuslines and errors
+  inverse = true, 
+  -- can be "hard", "soft" or empty string
+  contrast = "", 
+  palette_overrides = {},
+  overrides = {},
+  dim_inactive = false,
+  transparent_mode = true,
 })
 
-vim.cmd.colorscheme('catppuccin-macchiato')
+vim.cmd.colorscheme('gruvbox')
 
 -- nvim-tree plugin.
 
@@ -83,22 +107,21 @@ local wk = require('which-key')
 
 wk.add({
     -- lsp keybindings.
-    { '<Leader>l', group = 'Lsp' },
-    { '<Leader>lD', function() vim.lsp.buf.declaration() end, desc = 'Go to declaration' },
-    { '<Leader>ld', function() vim.lsp.buf.definition() end, desc = 'Go to definition' },
-    { '<Leader>li', function() vim.lsp.buf.implementation() end, desc = 'Go to implementation' },
-    { '<Leader>la', function() vim.lsp.buf.code_action() end, desc = 'Code Action' },
-    { '<Leader>lh', function() vim.lsp.buf.hover() end, desc = 'Hover' },
-    { '<Leader>ls', function() vim.lsp.buf.signature_help() end, desc = 'Show signature' },
-    { '<Leader>laf', function() vim.lsp.buf.add_workspace_folder() end, desc = 'Add file path to lsp root' },
-    { '<Leader>lrf', function() vim.lsp.buf.remove_workspace_folder() end, desc = 'Remove file path from lsp root' },
-    { '<Leader>llf', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, desc = 'List dirs as root in lsp' },
-    { '<Leader>lr', function() vim.lsp.buf.rename() end, desc = 'Rename' },
-    { '<Leader>lu', function() vim.lsp.buf.references() end, desc = 'Usages' },
-    { '<Leader>lf', function() vim.lsp.buf.format() end, desc = 'Format' },
-    { '<Leader>ln', function() vim.diagnostic.goto_next() end, desc = 'Go next error' },
-    { '<Leader>lp', function() vim.diagnostic.goto_prev() end, desc = 'Go prev error' },
-    { '<Leader>lE', function() vim.diagnostic.open_float() end, desc = 'Show errors' },
+    { '<Leader>a', function() vim.lsp.buf.code_action() end, desc = 'Code Action' },
+    { '<Leader>d', function() vim.lsp.buf.definition() end, desc = 'Go to definition' },
+    { '<Leader>D', function() vim.lsp.buf.declaration() end, desc = 'Go to declaration' },
+    { '<Leader>i', function() vim.lsp.buf.implementation() end, desc = 'Go to implementation' },
+    { '<Leader>e', function() vim.diagnostic.open_float() end, desc = 'Show errors' },
+    { '<Leader>f', function() vim.lsp.buf.format() end, desc = 'Format' },
+    { '<Leader>Fa', function() vim.lsp.buf.add_workspace_folder() end, desc = 'Add file path to lsp root' },
+    { '<Leader>Fr', function() vim.lsp.buf.remove_workspace_folder() end, desc = 'Remove file path from lsp root' },
+    { '<Leader>Fl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, desc = 'List dirs as root in lsp' },
+    { '<Leader>h', function() vim.lsp.buf.hover() end, desc = 'Hover' },
+    { '<Leader>r', function() vim.lsp.buf.rename() end, desc = 'Rename' },
+    { '<Leader>s', function() vim.lsp.buf.signature_help() end, desc = 'Show signature' },
+    { '<Leader>u', function() vim.lsp.buf.references() end, desc = 'Usages' },
+    { '<Leader>n', function() vim.diagnostic.goto_next() end, desc = 'Go next error' },
+    { '<Leader>p', function() vim.diagnostic.goto_prev() end, desc = 'Go prev error' },
 });
 
 wk.setup()
@@ -150,6 +173,13 @@ vim.api.nvim_create_autocmd('FileType', {
   end
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "coq",
+  callback = function()
+    vim.cmd("highlight Error NONE")
+  end,
+})
+
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
     'tex'
@@ -159,9 +189,9 @@ vim.api.nvim_create_autocmd('FileType', {
   end
 })
 
-vim.api.nvim_create_autocmd('VimResized', {
-  pattern = '*',
-  callback = function(args)
-    vim.api.nvim_command('wincmd =')
-  end
-})
+-- vim.api.nvim_create_autocmd('VimResized', {
+--   pattern = '*',
+--   callback = function(args)
+--     vim.api.nvim_command('wincmd =')
+--   end
+-- })

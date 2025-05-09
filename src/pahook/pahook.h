@@ -3,6 +3,9 @@
 
 #include <pulse/pulseaudio.h>
 
+// Signal handling.
+void signal_callback(pa_mainloop_api *api, pa_signal_event *e, int sig, void *userdata);
+
 // Main context callbacks.
 void ctx_event_callback(pa_context *ctx, const char *name, pa_proplist *pl, void *userdata);
 void ctx_state_callback(pa_context *ctx, void *userdata);
