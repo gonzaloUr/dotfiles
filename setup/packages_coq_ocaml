@@ -9,6 +9,13 @@ eval $(opam env)
 # installs the latest versions of the packages.
 opam install dune
 opam install utop
+opam install ocaml-lsp-server
+opam install ocamlformat
 
-# pins are like installs but fixed to a specific version.
+# add repos.
+opam repo add rocq-released 'https://rocq-prover.org/opam/released'
+
+# pins are like installs but fixed to a specific version that should change if other packages
+# are installed later, also it can install from local files or git repos not only the opam 
+# repositories themselves i think.
 opam pin add rocq-prover '9.0.0'

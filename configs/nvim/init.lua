@@ -5,7 +5,7 @@ require('packer').startup(function(use)
   -- third party lua plugins.
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
-  use 'ellisonleao/gruvbox.nvim'
+  use { "catppuccin/nvim", as = "catppuccin" }
 
   -- vimscript plugins.
   use 'whonore/Coqtail'
@@ -25,35 +25,11 @@ vim.opt.ignorecase = true
 
 -- colorscheme
 
-require("gruvbox").setup({
-  -- add neovim terminal colors
-  terminal_colors = true, 
-  undercurl = true,
-  underline = true,
-  bold = true,
-  italic = {
-    strings = false,
-    emphasis = false,
-    comments = false,
-    operators = false,
-    folds = false,
-  },
-  strikethrough = true,
-  invert_selection = false,
-  invert_signs = false,
-  invert_tabline = false,
-  invert_intend_guides = false,
-  -- invert background for search, diffs, statuslines and errors
-  inverse = true, 
-  -- can be "hard", "soft" or empty string
-  contrast = "", 
-  palette_overrides = {},
-  overrides = {},
-  dim_inactive = false,
-  transparent_mode = true,
+require("catppuccin").setup({
+  transparent_background = true
 })
 
-vim.cmd.colorscheme('gruvbox')
+vim.cmd.colorscheme("catppuccin")
 
 -- nvim-tree plugin.
 
@@ -94,6 +70,7 @@ lspconfig['gopls'].setup {
 lspconfig['pyright'].setup {}
 lspconfig['texlab'].setup {}
 lspconfig['r_language_server'].setup {}
+lspconfig['ocamllsp'].setup {}
 
 -- mappings and which key.
 
@@ -189,9 +166,9 @@ vim.api.nvim_create_autocmd('FileType', {
   end
 })
 
--- vim.api.nvim_create_autocmd('VimResized', {
---   pattern = '*',
---   callback = function(args)
---     vim.api.nvim_command('wincmd =')
---   end
--- })
+vim.api.nvim_create_autocmd('VimResized', {
+  pattern = '*',
+  callback = function(args)
+    vim.api.nvim_command('wincmd =')
+  end
+})
