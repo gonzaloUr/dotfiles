@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# El compilador de ghc funciona similar al de ocaml (ver packages_coq_ocaml). Tiene definido
+# rutas donde busca codigo de librerias, estas rutas son relativas a la instalacion de ghc, 
+# similar a como ocaml y python funcionan.
+#
+# Cabal es una herramienta oficial de ghc, basicamente es una package manager y una build tool
+# al mismo tiempo. Instala paquetes de repos en las rutas de ghc y define archivos .cabal con los 
+# cuales uno puede definir como instalar un proyecto a partir de su codigo fuente. Luego de llamar
+# cabal update se crea ~/.cabal/config file y se installan dependencias en el home.
+#
+# Stack por otra parte no es oficial o defacto de ghc. Es una heramienta que permite crear 
+# instalaciones del compilador, similar a un venv en python o a opam en ocaml, tambien maneja la 
+# instalacion de paquetes para cada entorno con compilador permitiendo utilizar repositorios de 
+# paquetes LTS. Ademas de esto ofrece funcionalidades de build tool, que funcionan en paralelo con 
+# cabal, es decir al llamar stack install no se genera o usa un archivo de cabal sino que archivos 
+# propios de stack. Esto es debido a que stack maneja estas instalacciones o environments previamente
+# mencionados. A pesar de esto stack permite la generacion de archivos de cabal a partir de los 
+# archivos de stack.
+#
+# En resumen cabal es el sistema oficial pero stack permite algo similar a environments.
+
+sudo pacman -S ghc
+sudo pacman -S cabal-install
+
+# creates ~/.cabal/config file
+cabal update

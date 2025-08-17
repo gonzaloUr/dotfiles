@@ -132,7 +132,8 @@ vim.api.nvim_create_autocmd('FileType', {
     'css',
     'typescript',
     'typescriptreact',
-    'javascript'
+    'javascript',
+    'ocaml'
   },
   callback = function(args)
     vim.bo[args.buf].shiftwidth = 2

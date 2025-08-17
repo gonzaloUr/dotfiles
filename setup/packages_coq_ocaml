@@ -1,16 +1,32 @@
 #!/bin/sh
 
+# installar opam
+#
+# Opam gestiona instalacciones de ocaml, es parecido a un venv de python.
+#
+# Los compandos siguientes instalan ocaml y dependencias en la carpeta de usuario en ~/.opam/default donde
+# default es el nombre de la instalacion por defecto.
+#
+# El compilador de ocaml busca dependencias en ciertas subcarpetas de la instalacion default, opam maneja
+# e installa paquetes en estos directorios de forma tal que el compilador conoce de su existencia.
 sudo pacman --needed -S ocaml
 sudo pacman --needed -S opam
 
+# Configura una instalaicion de ocaml en ~/.opam.
 opam init
 eval $(opam env)
 
 # installs the latest versions of the packages.
+#
+# Dune es una build tool de ocaml. Basicamente define stanzas, que son como reglas de compilacion conocidas.
+#
+# Dune realiza estas tareas utilizando el compilador encontrado en el PATH, es decir dune es una herramienta a parte
+# de opam.
 opam install dune
 opam install utop
 opam install ocaml-lsp-server
 opam install ocamlformat
+opam install ocaml-manual odig
 
 # add repos.
 opam repo add rocq-released 'https://rocq-prover.org/opam/released'
