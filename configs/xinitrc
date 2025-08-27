@@ -35,4 +35,4 @@ export GNOME_KEYRING_CONTROL=/run/user/$(id -u)/keyring
 # Inicializar daemon de keyring creado por pam, requiere variable GNOME_KEYRING_CONTROL y SSH_AUTH_SOCK.
 gnome-keyring-daemon --start --components=secrets,ssh
 
-exec dwm
+exec /usr/local/src/dwm/dwm

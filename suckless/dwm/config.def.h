@@ -142,12 +142,12 @@ static const Key keys[] = {
 	{ ShiftMask,                    XF86AudioLowerVolume,  spawn,          {.v = micdown } },
 	{ 0,                            XF86AudioMicMute,      spawn,          {.v = micmute } },
 
-	{ MODKEY|ShiftMask,             XK_j,      pushdown,       {0} },
-	{ MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
-	{ MODKEY,                       XK_c,      setlayout,      {.v = &layouts[3]} },
-	{ MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
-	{ MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
+	{ MODKEY|ShiftMask,             XK_j,      pushdown,         {0} },
+	{ MODKEY|ShiftMask,             XK_k,      pushup,           {0} },
+	{ MODKEY,                       XK_c,      setlayout,        {.v = &layouts[3]} },
+	{ MODKEY,                       XK_minus,  setgaps,          {.i = -1 } },
+	{ MODKEY,                       XK_equal,  setgaps,          {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_equal,  setgaps,          {.i = 0  } },
 };
 
 /* button definitions */

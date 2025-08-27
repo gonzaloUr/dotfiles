@@ -6,6 +6,7 @@ require('packer').startup(function(use)
   use 'folke/which-key.nvim'
   use 'nvim-tree/nvim-tree.lua'
   use { "catppuccin/nvim", as = "catppuccin" }
+  use { 'nvim-telescope/telescope.nvim', tag = '0.1.8', requires = { {'nvim-lua/plenary.nvim'} } }
 
   -- vimscript plugins.
   use 'whonore/Coqtail'
@@ -37,6 +38,9 @@ require('nvim-tree').setup({
   sort_by = 'extension'
 })
 
+-- telescope plugin.
+require('telescope').setup {}
+
 -- lsp.
 
 local lspconfig = require('lspconfig')
@@ -55,8 +59,7 @@ util.default_config = vim.tbl_extend('force', util.default_config, {
       float = {
         source = 'always',
       },
-    }
-    )
+    })
   }
 })
 
@@ -71,6 +74,7 @@ lspconfig['pyright'].setup {}
 lspconfig['texlab'].setup {}
 lspconfig['r_language_server'].setup {}
 lspconfig['ocamllsp'].setup {}
+lspconfig['hls'].setup {}
 
 -- mappings and which key.
 
@@ -81,6 +85,7 @@ vim.keymap.set('n', '<Leader><Leader>', '<cmd>noh<cr>')
 vim.keymap.set('n', '<Leader>.', '<cmd>NvimTreeToggle<cr>')
 
 local wk = require('which-key')
+local builtin = require('telescope.builtin')
 
 wk.add({
     -- lsp keybindings.
@@ -99,6 +104,12 @@ wk.add({
     { '<Leader>u', function() vim.lsp.buf.references() end, desc = 'Usages' },
     { '<Leader>n', function() vim.diagnostic.goto_next() end, desc = 'Go next error' },
     { '<Leader>p', function() vim.diagnostic.goto_prev() end, desc = 'Go prev error' },
+
+    -- telescope bindings.
+    { '<Leader>tf', builtin.find_files, desc = 'Telescope find files' },
+    { '<Leader>tg', builtin.live_grep, desc = 'Telescope live grep' },
+    { '<Leader>tb', builtin.buffers, desc = 'Telescope buffers' },
+    { '<Leader>th', builtin.help_tags, desc = 'Telescope help tags' },
 });
 
 wk.setup()
