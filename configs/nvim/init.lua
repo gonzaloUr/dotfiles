@@ -75,6 +75,8 @@ lspconfig['texlab'].setup {}
 lspconfig['r_language_server'].setup {}
 lspconfig['ocamllsp'].setup {}
 lspconfig['hls'].setup {}
+-- TODO: el lsp no tira ningun error desde la terminal pero no anda en neovim.
+-- lspconfig['ltex_plus'].setup {}
 
 -- mappings and which key.
 
@@ -106,10 +108,8 @@ wk.add({
     { '<Leader>p', function() vim.diagnostic.goto_prev() end, desc = 'Go prev error' },
 
     -- telescope bindings.
-    { '<Leader>tf', builtin.find_files, desc = 'Telescope find files' },
-    { '<Leader>tg', builtin.live_grep, desc = 'Telescope live grep' },
-    { '<Leader>tb', builtin.buffers, desc = 'Telescope buffers' },
-    { '<Leader>th', builtin.help_tags, desc = 'Telescope help tags' },
+    { '<Leader>t', builtin.find_files, desc = 'Telescope find files' },
+    { '<Leader>b', builtin.buffers, desc = 'Telescope buffers' },
 });
 
 wk.setup()
@@ -144,7 +144,8 @@ vim.api.nvim_create_autocmd('FileType', {
     'typescript',
     'typescriptreact',
     'javascript',
-    'ocaml'
+    'ocaml',
+    'haskell'
   },
   callback = function(args)
     vim.bo[args.buf].shiftwidth = 2
@@ -171,7 +172,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
-    'tex'
+    'tex',
+    'lhaskell'
   },
   callback = function(args)
     vim.wo.wrap = true

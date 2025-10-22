@@ -8,3 +8,12 @@ ls /usr/share/mime/image | sed 's/^/image\//' | mimeapps sxiv.desktop
 echo 'inode/directory' | mimeapps lf.desktop
 echo 'application/pdf' | mimeapps zathura.desktop
 echo 'application/postscript' | mimeapps zathura.desktop
+
+echo 'x-scheme-handler/unknown' | mimeapps librewolf.desktop
+echo 'x-scheme-handler/about' | mimeapps librewolf.desktop
+echo 'application/xhtml_xml' | mimeapps librewolf.desktop
+echo 'x-scheme-handler/http' | mimeapps librewolf.desktop
+echo 'x-scheme-handler/https' | mimeapps librewolf.desktop
+echo 'application/xhtml+xml' | mimeapps librewolf.desktop
+echo 'application/x-xpinstall' | mimeapps librewolf.desktop
+echo 'application/json' | mimeapps librewolf.desktop
