@@ -61,7 +61,7 @@ index 4f345ee..d93dc4b 100644
 +static void restorewin(const Arg *arg);
 +static void hideotherwins(const Arg *arg);
 +static void restoreotherwins(const Arg *arg);
-+static int issinglewin(const Arg *arg);
++static int countwins(const Arg *arg);
 +static void focuswin(const Arg *arg);
  static void unfocus(Client *c, int setfocus);
  static void unmanage(Client *c, int destroyed);
@@ -91,7 +91,7 @@ index 4f345ee..d93dc4b 100644
 @@ -810,6 +823,42 @@ focus(Client *c)
  	drawbars();
  }
- 
+
 +void
 +hide(Client *c) {
 +	if (!c || HIDDEN(c))
@@ -134,12 +134,16 @@ index 4f345ee..d93dc4b 100644
 @@ -839,19 +888,25 @@ focusstack(const Arg *arg)
  {
  	Client *c = NULL, *i;
- 
-+	if (issinglewin(arg)) {
-+		focuswin(arg);
++	int wins = countwins(arg);
++
++	if (wins == 0) {
 +		return;
 +	}
 +
++	if (wins == 1) {
++		focuswin(arg);
++		return;
++	}
 +
  	if (!selmon->sel || (selmon->sel->isfullscreen && lockfullscreen))
  		return;
@@ -246,7 +250,7 @@ index 4f345ee..d93dc4b 100644
 +    }
 +}
 +
-+int issinglewin(const Arg *arg) {
++int countwins(const Arg *arg) {
 +    Client *c = NULL;
 +    int cot = 0;
 +    int tag = selmon->tagset[selmon->seltags];
@@ -254,16 +258,13 @@ index 4f345ee..d93dc4b 100644
 +        if (ISVISIBLE(c) && !HIDDEN(c) && c->tags == tag) {
 +            cot++;
 +        }
-+        if (cot > 1) {
-+            return 0;
-+        }
 +    }
-+    return 1;
++    return cot;
 +}
 +
 +void focuswin(const Arg *arg) {
 +    Client *c = NULL, *i;
-+    int j, k;
++    int j;
 +
 +    if (arg->i > 0) {
 +        for (c = selmon->sel->next;
