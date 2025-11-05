@@ -74,7 +74,12 @@ lspconfig['pyright'].setup {}
 lspconfig['texlab'].setup {}
 lspconfig['r_language_server'].setup {}
 lspconfig['ocamllsp'].setup {}
-lspconfig['hls'].setup {}
+lspconfig['hls'].setup {
+  root_dir = function(fname)
+    return util.root_pattern('hie.yaml', 'stack.yaml', 'cabal.project', '*.cabal', 'package.yaml')(fname) or vim.fn.getcwd()
+  end
+}
+
 -- TODO: el lsp no tira ningun error desde la terminal pero no anda en neovim.
 -- lspconfig['ltex_plus'].setup {}
 
