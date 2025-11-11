@@ -148,10 +148,12 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_equal,  setgaps,          {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,          {.i = 0  } },
 
+    /* WIP
 	{ MODKEY,						XK_o, 	   hidewin, 	     {0}},
     { MODKEY|ShiftMask, 			XK_o, 	   restorewin, 	     {0}},
     { MODKEY, 						XK_w, 	   hideotherwins,    {0}},
     { MODKEY|ShiftMask, 			XK_w, 	   restoreotherwins, {0}},
+    */
 };
 
 /* button definitions */

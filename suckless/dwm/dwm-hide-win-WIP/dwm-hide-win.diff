@@ -17,9 +17,9 @@ index 81c3fc0..fc9b75b 100644
  	TAGKEYS(                        XK_9,                      8)
  	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 +
-+	{MODKEY,			XK_o, 	   hidewin, 	   {0}},
++	{MODKEY,			    XK_o, 	   hidewin, 	   {0}},
 +	{MODKEY|ShiftMask, 		XK_o, 	   restorewin, 	   {0}},
-+	{MODKEY, 			XK_w, 	   hideotherwins,  {0}},
++	{MODKEY, 			    XK_w, 	   hideotherwins,  {0}},
 +	{MODKEY|ShiftMask, 		XK_w, 	   restoreotherwins, {0}},
 +
  };

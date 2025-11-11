@@ -39,11 +39,11 @@ require('nvim-tree').setup({
 })
 
 -- telescope plugin.
+
 require('telescope').setup {}
 
 -- lsp.
 
-local lspconfig = require('lspconfig')
 local configs = require('lspconfig.configs')
 local util = require('lspconfig.util')
 
@@ -63,20 +63,42 @@ util.default_config = vim.tbl_extend('force', util.default_config, {
   }
 })
 
-lspconfig['gopls'].setup {
+vim.lsp.config['gopls'] = {
+  cmd = { 'gopls' },
   settings = {
     gopls = {
       staticcheck = true
     }
   }
 }
-lspconfig['pyright'].setup {}
-lspconfig['texlab'].setup {}
-lspconfig['r_language_server'].setup {}
-lspconfig['ocamllsp'].setup {}
-lspconfig['hls'].setup {}
+
+vim.lsp.config['pyright'] = {
+  cmd = { 'pyright-langserver', '--stdio' },
+}
+
+vim.lsp.config['texlab'] = {
+  cmd = { 'texlab' },
+}
+
+vim.lsp.config['r_language_server'] = {
+  cmd = { 'R', '--slave', '-e', 'languageserver::run()' },
+}
+
+vim.lsp.config['ocamllsp'] = {
+  cmd = { 'ocamllsp' },
+}
+
+vim.lsp.config['hls'] = {
+  cmd = { 'haskell-language-server-wrapper', '--lsp' },
+  -- root_dir = function(fname)
+  --   return vim.fs.root(fname, { 'hie.yaml', 'stack.yaml', 'cabal.project', '*.cabal', 'package.yaml' }) or vim.fn.getcwd()
+  -- end
+}
+
 -- TODO: el lsp no tira ningun error desde la terminal pero no anda en neovim.
--- lspconfig['ltex_plus'].setup {}
+-- vim.lsp.config['ltex_plus'] = {
+--   cmd = { 'ltex-ls' },
+-- }
 
 -- mappings and which key.
 
@@ -180,9 +202,9 @@ vim.api.nvim_create_autocmd('FileType', {
   end
 })
 
-vim.api.nvim_create_autocmd('VimResized', {
-  pattern = '*',
-  callback = function(args)
-    vim.api.nvim_command('wincmd =')
-  end
-})
+-- vim.api.nvim_create_autocmd('VimResized', {
+--   pattern = '*',
+--   callback = function(args)
+--     vim.api.nvim_command('wincmd =')
+--   end
+-- })

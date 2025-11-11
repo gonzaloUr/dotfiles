@@ -1,13 +1,12 @@
 #!/bin/sh
 
 # yay
-yay -S --needed lf-bin
 yay -S --needed dragon-drop
 yay -S --needed nvim-packer-git
 yay -S --needed dropbox
 yay -S --needed dropbox-cli
 yay -S --needed light
-yay -S --needed bluetui-bin
+yay -S --needed librewolf-bin
 
 # Needed for live share (vs code)
 yay -S --needed icu69-bin

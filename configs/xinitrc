@@ -21,8 +21,8 @@ switch\
 source /etc/X11/xinit/xinitrc.d/80-dbus.sh
 
 # Levantar ssh-agent de gcr usando mi script, requerido por gnome-keyring ssh.
-eval $(start-gcr-ssh-agent)
-export SSH_AUTH_SOCK
+# eval $(start-gcr-ssh-agent)
+# export SSH_AUTH_SOCK
 
 # Gnome keyring se inicializa en dos pasos:
 #
@@ -33,6 +33,6 @@ export SSH_AUTH_SOCK
 export GNOME_KEYRING_CONTROL=/run/user/$(id -u)/keyring
 
 # Inicializar daemon de keyring creado por pam, requiere variable GNOME_KEYRING_CONTROL y SSH_AUTH_SOCK.
-gnome-keyring-daemon --start --components=secrets,ssh
+gnome-keyring-daemon --start --components=secrets
 
 exec /usr/local/src/dwm/dwm

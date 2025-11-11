@@ -22,4 +22,16 @@ void ctx_sample_info_callback(pa_context *ctx, const pa_sample_info *i, int eol,
 void ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata);
 void ctx_card_info_callback(pa_context *ctx, const pa_card_info *i, int eol, void *userdata);
 
+// Utils.
+typedef struct {
+    void *userdata;
+    pa_subscription_event_type_t t;
+    uint32_t idx;
+} context_get_callback_userdata;
+
+const char *pa_sample_format_to_string(pa_sample_format_t format);
+const char *pa_sink_state_to_string(pa_sink_state_t state);
+const char *pa_subscribe_event_type_t_event_type_str(pa_subscription_event_type_t);
+const char *pa_subscribe_event_type_t_event_facility_str(pa_subscription_event_type_t);
+
 #endif

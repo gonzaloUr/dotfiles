@@ -48,6 +48,7 @@ pacman -S --needed xwallpaper
 pacman -S --needed maim
 
 # multimedia
+pacman -S --needed sof-firmware
 pacman -S --needed pulseaudio-alsa
 pacman -S --needed pulseaudio-bluetooth
 pacman -S --needed pulseaudio-jack
@@ -76,7 +77,6 @@ pacman -S --needed python-pynvim
 pacman -S --needed aspell
 pacman -S --needed aspell-en
 pacman -S --needed aspell-es
-pacman -S --needed librewolf
 pacman -S --needed speech-dispatcher
 pacman -S --needed mpv
 pacman -S --needed sxiv
@@ -91,8 +91,8 @@ pacman -S --needed alacritty
 pacman -S --needed gnome-keyring
 pacman -S --needed seahorse
 
-# mount android, hay que asegurarse de estar en el grupo que crea este paquete.
-pacman -S --needed aft-mtp-mount
+# mount android, hay que asegurarse de estar en el grupo que crea este paquete, adbusers.
+pacman -S --needed android-file-transfer
 
 # fonts
 pacman -S --needed ttf-hack
