@@ -10,7 +10,6 @@ require('packer').startup(function(use)
 
   -- vimscript plugins.
   use 'whonore/Coqtail'
-  use 'maelvalais/gmpl.vim'
 end)
 
 -- options and global variables.
@@ -44,25 +43,6 @@ require('telescope').setup {}
 
 -- lsp.
 
-local configs = require('lspconfig.configs')
-local util = require('lspconfig.util')
-
-util.default_config = vim.tbl_extend('force', util.default_config, {
-  handlers = {
-    ['textDocument/publishDiagnostics'] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics,
-    {
-      virtual_text = false,
-      signs = true,
-      update_in_insert = false,
-      underline = true,
-      float = {
-        source = 'always',
-      },
-    })
-  }
-})
-
 vim.lsp.config['gopls'] = {
   cmd = { 'gopls' },
   settings = {
@@ -90,15 +70,7 @@ vim.lsp.config['ocamllsp'] = {
 
 vim.lsp.config['hls'] = {
   cmd = { 'haskell-language-server-wrapper', '--lsp' },
-  -- root_dir = function(fname)
-  --   return vim.fs.root(fname, { 'hie.yaml', 'stack.yaml', 'cabal.project', '*.cabal', 'package.yaml' }) or vim.fn.getcwd()
-  -- end
 }
-
--- TODO: el lsp no tira ningun error desde la terminal pero no anda en neovim.
--- vim.lsp.config['ltex_plus'] = {
---   cmd = { 'ltex-ls' },
--- }
 
 -- mappings and which key.
 
@@ -202,9 +174,82 @@ vim.api.nvim_create_autocmd('FileType', {
   end
 })
 
--- vim.api.nvim_create_autocmd('VimResized', {
---   pattern = '*',
---   callback = function(args)
---     vim.api.nvim_command('wincmd =')
+vim.api.nvim_create_autocmd('VimResized', {
+  pattern = '*',
+  callback = function(args)
+    vim.api.nvim_command('wincmd =')
+  end
+})
+
+-- Create many insert-mode unicode remaps at once
+local function add_math_remaps(maps)
+  for lhs, rhs in pairs(maps) do
+    vim.keymap.set("i", lhs, rhs, { noremap = true })
+  end
+end
+
+-- Rocq rewrite to unicode
+
+-- local math_maps = {
+--   ["\\forall"] = "∀",
+--   ["\\exists"] = "∃",
+--   ["\\nexists"] = "∄",
+--   ["\\not"] = "¬",
+--   ["\\->"] = "→",
+--   ["\\-->"] = "⟶",
+--   ["\\<-"] = "←",
+--   ["\\<->"] = "↔",
+--   ["\\=>"] = "⇒",
+--   ["\\<="] = "⇐",
+--   ["\\<=>"] = "⇔",
+--   ["\\:="]   = "≔",
+-- 
+--   ["\\in"] = "∈",
+--   ["\\notin"] = "∉",
+--   ["\\subset"] = "⊂",
+--   ["\\subseteq"] = "⊆",
+--   ["\\superset"] = "⊃",
+--   ["\\prop"] = "∝",
+--   ["\\empty"] = "∅",
+-- 
+--   ["\\pm"] = "±",
+--   ["\\cdot"] = "·",
+--   ["\\times"] = "×",
+-- 
+--   ["\\fun"] = "λ",
+--   ["\\lambda"] = "λ",
+--   ["\\alpha"] = "α",
+--   ["\\beta"]  = "β",
+--   ["\\gamma"] = "γ",
+--   ["\\delta"] = "δ",
+--   ["\\eps"]   = "ε",
+--   ["\\phi"]   = "φ",
+--   ["\\pi"]    = "π",
+--   ["\\theta"] = "θ",
+-- 
+--   ["\\|-"] = "⊢",
+--   ["\\||-"] = "⊩",
+-- 
+--   ["\\mapsto"] = "↦",
+--   ["\\to"]     = "→",
+-- 
+--   ["\\<<"]  = "⟪",
+--   ["\\>>"]  = "⟫",
+--   ["\\<["]  = "⟨",
+--   ["\\]>"]  = "⟩",
+--   ["\\<"]  = "⟨",
+--   ["\\>"]  = "⟩",
+-- }
+-- 
+-- local function add_math_remaps(maps)
+--   for lhs, rhs in pairs(maps) do
+--     vim.keymap.set("i", lhs, rhs, { noremap = true })
 --   end
+-- end
+-- 
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = "coq",
+--   callback = function()
+--     add_math_remaps(math_maps)
+--   end,
 -- })

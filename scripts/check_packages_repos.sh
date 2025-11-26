@@ -10,32 +10,43 @@
 #
 # Aparentemente pacman -Qi en archilinux retorna un campo repository pero artix no.
 
+tmpdir=$(mktemp -d)
+
 # Obtener paquetes instalados de repos y no de AUR.
-explicit="$(pacman -Qqen | tr '\n' ' ')"
+explicit="$(pacman -Qqen)"
+
+echo "Se comparan campos de los paqutes locales con los de los repos remotos"
+echo "Si el repo tiene una versión mas actualizada puede tener campos distintos"
+echo
 
 # Para cada paquete instalado explicitamente
 for x in $explicit
 do
-    echo "package: $x"
-
     # Obtener fields de la base de datos de paqutes instalados locales y remover lineas en blanco.
     pkg_fields="$(expac -Q '%p|%b' "$x" | sed '/^$/d')"
 
     # Obtener fields de la base de datos de paqutes remotos con su repo y remover lineas en blanco.
-    pkgs_fields_remote="$(expac -S '%r|%p|%b' "$x" | sed '/^$/d')"
+    expac -S '%r|%p|%b' "$x" | sed '/^$/d' > "$tmpdir/pkg_fields_remote"
 
-    echo "$pkgs_fields_remote" | while IFS= read -r pkg_fields_remote
+    found=0
+
+    # Para cada paqute remoto que matchea el nombre del paqute local chequear si los campos son iguales.
+    while IFS= read -r pkg_fields_remote
     do
-        # Obtener repo.
-        repo="$(echo "$pkg_fields_remote" | cut -d '|' -f1)"
+        repo=$(printf '%s\n' "$pkg_fields_remote" | cut -d '|' -f1)
+        pkg_fields_remote_no_repo=$(printf '%s\n' "$pkg_fields_remote" | cut -d '|' -f2-)
 
-        # Remover repo.
-        pkg_fields_remote_no_repo="$(echo "$pkg_fields_remote" | cut -d '|' -f2-)"
-
-        # Comparar fields locales con los del repo, si son iguales informar.
-        if [ "$pkg_fields_remote_no_repo" = "$pkg_fields" ]
-        then
-            echo "matchea con repo: $repo"
+        if [ "$pkg_fields_remote_no_repo" = "$pkg_fields" ]; then
+            echo "package $x matchea con repo: $repo"
+            found=1
         fi
-    done
+    done < "$tmpdir/pkg_fields_remote"
+
+    # Si no se encuentra ningun remoto que matchee, mostrar una advertencia.
+    if [ "$found" -eq 0 ]
+    then
+        echo "package $x no matchea con ningun repo, actualizar este paquete para que matchee con los repos remotos"
+    fi
 done
+
+rm -rf "$tmpdir"

@@ -64,17 +64,23 @@ alias e=exit
 
 # Functions.
 zle-keymap-select() {
+    # Echo terminal special terminal command to change the shape of the cursor depending on the keymap.
     case $KEYMAP in
+        # Echo control caracters to make the cursor a block when in non insert mode.
         vicmd) echo -ne '\e[1 q';;
+
+        # Echo control caracters to make the cursor a line when in insert mode or main the default if no vim mode activated.
         viins|main) echo -ne '\e[5 q';;
     esac
 }
 
 zle-line-init() {
+    # When zsh starts echo special terminal command to show the cursor as a line
     echo -ne '\e[5 q'
 }
 
 preexec() {
+    # Previous to zsh running a command echo special terminal command to show the cursor as a block, reseting it.
     echo -ne '\e[1 q'
 }
 

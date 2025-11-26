@@ -58,53 +58,69 @@ void signal_callback(pa_mainloop_api *api, pa_signal_event *e, int sig, void *us
     api->quit(api, 0);
 }
 
+// An event related to the mainloop of this pulseaudio client.
 void ctx_state_callback(pa_context *ctx, void *userdata) {
     pa_mainloop *mainloop = userdata;
     pa_context_state_t state = pa_context_get_state(ctx);
 
     switch (state) {
         case PA_CONTEXT_UNCONNECTED:
-            printf("PA_CONTEXT_UNCONNECTED\n");
+            printf("type=state value=PA_CONTEXT_UNCONNECTED\n");
             break;
 
         case PA_CONTEXT_CONNECTING:
-            printf("PA_CONTEXT_CONNECTING\n");
+            printf("type=state value=PA_CONTEXT_CONNECTING\n");
             break;
 
         case PA_CONTEXT_AUTHORIZING:
-            printf("PA_CONTEXT_AUTHORIZING\n");
+            printf("type=state value=PA_CONTEXT_AUTHORIZING\n");
             break;
 
         case PA_CONTEXT_SETTING_NAME:
-            printf("PA_CONTEXT_SETTING_NAME\n");
+            printf("type=state value=PA_CONTEXT_SETTING_NAME\n");
             break;
 
         case PA_CONTEXT_READY:
-            printf("PA_CONTEXT_READY\n");
+            printf("type=state value=PA_CONTEXT_READY\n");
 
-            pa_operation *op = pa_context_subscribe(ctx, PA_SUBSCRIPTION_MASK_ALL, NULL, NULL);
+            pa_operation *op; 
+
+            // Activate subscriptions to event.
+            op = pa_context_subscribe(ctx, PA_SUBSCRIPTION_MASK_ALL, NULL, NULL);
+            pa_operation_unref(op);
+
+            // Force a call to ctx_server_info_callback even there is no event in order to get the current state of pulseaudio.
+            context_get_callback_userdata *userdata = malloc(sizeof(context_get_callback_userdata));
+            userdata->invalid_t_and_inx = 1;
+            userdata->userdata = mainloop;
+
+            op = pa_context_get_server_info(ctx, ctx_server_info_callback, userdata);
             pa_operation_unref(op);
 
             break;
 
         case PA_CONTEXT_FAILED:
-            printf("PA_CONTEXT_FAILED\n");
+            printf("type=state value=PA_CONTEXT_FAILED\n");
             pa_mainloop_quit(mainloop, 1);
             break;
 
         case PA_CONTEXT_TERMINATED:
-            printf("PA_CONTEXT_TERMINATED\n");
+            printf("type=state value=PA_CONTEXT_TERMINATED\n");
             pa_mainloop_quit(mainloop, 0);
             break;
     }
+
+    fflush(stdout);
 }
 
 void ctx_event_callback(pa_context *ctx, const char *name, pa_proplist *pl, void *userdata) {
+    // TODO.
 }
 
 void ctx_subscribe_callback(pa_context *ctx, pa_subscription_event_type_t t, uint32_t idx, void *userdata) {
 
     context_get_callback_userdata *new_userdata = malloc(sizeof(context_get_callback_userdata));
+    new_userdata->invalid_t_and_inx = 0;
     new_userdata->userdata = userdata;
     new_userdata->t = t;
     new_userdata->idx = idx;
@@ -145,41 +161,51 @@ void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, voi
     if (eol > 0 || !i) return;
 
     context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("\nEVENT\n");
-    printf("Pulseaudio obj id/index that caused the event: %d\n", cb_userdata->idx);
-    printf("event type: %s\n", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-    printf("event facility: %s\n", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    printf("type=sinkinfo ");
 
-    printf("name: %s\n", i->name);
-    printf("index: %d\n", i->index);
-    printf("desc: %s\n", i->description);
-    printf("sample spec rate: %u\n", i->sample_spec.rate);
-    printf("sample spec format: %s\n", pa_sample_format_to_string(i->sample_spec.format));
-    printf("sample spec channels: %u\n", i->sample_spec.channels);
-    // channel_map.
-    // owner_module.
+    if (!cb_userdata->invalid_t_and_inx) {
+        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    }
 
-    for (uint8_t k = 0; k < i->volume.channels; k++)
-        printf("volume %d: %d\n", k, i->volume.values[k]);
+    printf("name=\"%s\" ", i->name);
+    printf("index=%d ", i->index);
+    printf("desc=\"%s\" ", i->description);
+    printf("sample_spec_rate=%u ", i->sample_spec.rate);
+    printf("sample_spec_format=\"%s\" ", pa_sample_format_str(i->sample_spec.format));
+    printf("sample_spec_channels=%u ", i->sample_spec.channels);
+    // TODO: channel_map.
+    // TODO: owner_module.
 
-    printf("mute: %d\n", i->mute);
-    printf("monitor source index: %u\n", i->monitor_source);
-    printf("monitor source name: %s\n", i->monitor_source_name);
-    printf("latency: %llu\n", (unsigned long long)i->latency);
-    printf("driver: %s\n", i->driver);
-    // flags.
-    // proplist.
-    printf("configured latency: %llu\n", (unsigned long long)i->configured_latency);
-    printf("base volume: %u\n", i->base_volume);
-    printf("state: %s\n", pa_sink_state_to_string(i->state));
-    printf("n volume steps: %u\n", i->n_volume_steps);
-    printf("card: %u\n", i->card);
-    // n_ports.
-    // ports.
-    // active_port.
-    // n_formats.
-    // formats.
+    /*
+    printf("volume=\"");
+    if (i->volume.channels) {
+        for (uint8_t k = 0; k < i->volume.channels - 1; k++) printf("%d,", i->volume.values[k]);
+        printf("%d", i->volume.values[i->volume.channels - 1]);
+    }
+    printf("\" ");
+    */
+    printf("volume=%d ", pa_cvolume_max(&i->volume));
 
+    printf("mute=%d ", i->mute);
+    printf("monitor_source_index=%u ", i->monitor_source);
+    printf("monitor_source_name=\"%s\" ", i->monitor_source_name);
+    printf("latency=%llu ", (unsigned long long)i->latency);
+    printf("driver=\"%s\" ", i->driver);
+    // TODO: flags.
+    // TODO: proplist.
+    printf("configured_latency=%llu ", (unsigned long long)i->configured_latency);
+    printf("base_volume=%u ", i->base_volume);
+    printf("state=\"%s\" ", pa_sink_state_str(i->state));
+    printf("n_volume_steps=%u ", i->n_volume_steps);
+    printf("card=%u\n", i->card);
+    // TODO: n_ports.
+    // TODO: ports.
+    // TODO: active_port.
+    // TODO: n_formats.
+    // TODO: formats.
+
+    fflush(stdout);
     free(userdata);
 }
 
@@ -188,76 +214,94 @@ void ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol,
     if (eol > 0 || !i) return;
 
     context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("\nEVENT\n");
-    printf("Pulseaudio obj id/index that caused the event: %d\n", cb_userdata->idx);
-    printf("event type: %s\n", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-    printf("event facility: %s\n", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    printf("type=sourceinfo ");
 
-    printf("name: %s\n", i->name);
-    printf("index: %d\n", i->index);
-    printf("desc: %s\n", i->description);
-    printf("sample spec rate: %u\n", i->sample_spec.rate);
-    printf("sample spec format: %s\n", pa_sample_format_to_string(i->sample_spec.format));
-    printf("sample spec channels: %u\n", i->sample_spec.channels);
-    // channel_map.
-    // owner_module.
+    if (!cb_userdata->invalid_t_and_inx) {
+        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    }
 
-    for (uint8_t k = 0; k < i->volume.channels; k++)
-        printf("volume %d: %d\n", k, i->volume.values[k]);
+    printf("name=\"%s\" ", i->name);
+    printf("index=%d ", i->index);
+    printf("desc=\"%s\" ", i->description);
+    printf("sample_spec_rate=%u ", i->sample_spec.rate);
+    printf("sample_spec_format=\"%s\" ", pa_sample_format_str(i->sample_spec.format));
+    printf("sample_spec_channels=%u ", i->sample_spec.channels);
+    // TODO: channel_map.
+    // TODO: owner_module.
 
-    printf("mute: %d\n", i->mute);
-    printf("monitor of sink: %d\n", i->monitor_of_sink);
-    printf("monitor of sink name: %s\n", i->monitor_of_sink_name);
-    printf("latency: %llu\n", (unsigned long long)i->latency);
-    printf("driver: %s\n", i->driver);
-    // flags.
-    // proplist.
-    printf("configured latency: %llu\n", (unsigned long long)i->configured_latency);
-    printf("base volume: %u\n", i->base_volume);
-    printf("state: %s\n", pa_sink_state_to_string(i->state));
-    // n_ports.
-    // ports.
-    // active_port.
-    // n_formats.
-    // formats.
+    /*
+    printf("volume=\"");
+    if (i->volume.channels) {
+        for (uint8_t k = 0; k < i->volume.channels - 1; k++) printf("%d,", i->volume.values[k]);
+        printf("%d", i->volume.values[i->volume.channels - 1]);
+    }
+    printf("\" ");
+    */
 
+    printf("volume=%d ", pa_cvolume_max(&i->volume));
+
+    printf("mute=%d ", i->mute);
+    printf("monitor_of_sink=%d ", i->monitor_of_sink);
+    printf("monitor_of_sink_name=\"%s\" ", i->monitor_of_sink_name);
+    printf("latency=%llu ", (unsigned long long)i->latency);
+    printf("driver=\"%s\" ", i->driver);
+    // TODO: flags.
+    // TODO: proplist.
+    printf("configured_latency=%llu ", (unsigned long long)i->configured_latency);
+    printf("base_volume=%u ", i->base_volume);
+    printf("state=\"%s\"\n", pa_sink_state_str(i->state));
+    // TODO: n_ports.
+    // TODO: ports.
+    // TODO: active_port.
+    // TODO: n_formats.
+    // TODO: formats.
+
+    fflush(stdout);
     free(userdata);
 }
 
-// An event about a sink input, which is an audio stream that’s going to a sink.
+// An event about a sink input, which is an audio stream that’s going into a sink.
 void ctx_sink_input_info_callback(pa_context *ctx, const pa_sink_input_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
     context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("\nEVENT\n");
-    printf("Pulseaudio obj id/index that caused the event: %d\n", cb_userdata->idx);
-    printf("event type: %s\n", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-    printf("event facility: %s\n", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    printf("type=sinkinputinfo ");
 
-    printf("name: %s\n", i->name);
-    printf("index: %d\n", i->index);
-    printf("owner module: %d\n", i->owner_module);
-    printf("client: %d\n", i->client);
-    printf("sink: %d\n", i->sink);
-    printf("sample spec rate: %u\n", i->sample_spec.rate);
-    printf("sample spec format: %s\n", pa_sample_format_to_string(i->sample_spec.format));
-    printf("sample spec channels: %u\n", i->sample_spec.channels);
-    // channel map.
+    if (!cb_userdata->invalid_t_and_inx) {
+        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    }
 
-    for (uint8_t k = 0; k < i->volume.channels; k++)
-        printf("volume %d: %d\n", k, i->volume.values[k]);
+    printf("name=\"%s\" ", i->name);
+    printf("index=%d ", i->index);
+    printf("owner_module=%d ", i->owner_module);
+    printf("client=%d ", i->client);
+    printf("sink=%d ", i->sink);
+    printf("sample_spec_rate=%u ", i->sample_spec.rate);
+    printf("sample_spec_format=%s ", pa_sample_format_str(i->sample_spec.format));
+    printf("sample_spec_channels=%u ", i->sample_spec.channels);
+    // TODO: channel map.
 
-    printf("buffer usec: %llu\n", (unsigned long long)i->buffer_usec);
-    printf("sink usec: %llu\n", (unsigned long long)i->sink_usec);
-    printf("resample method: %s\n", i->resample_method);
-    printf("driver: %s\n", i->driver);
-    printf("mute: %d\n", i->mute);
-    // proplist
-    printf("corked: %d\n", i->corked);
-    printf("has volume: %d\n", i->has_volume);
-    printf("volume writable: %d\n", i->volume_writable);
-    // format.
+    printf("volume=\"");
+    if (i->volume.channels) {
+        for (uint8_t k = 0; k < i->volume.channels - 1; k++) printf("%d,", i->volume.values[k]);
+        printf("%d", i->volume.values[i->volume.channels - 1]);
+    }
+    printf("\" ");
 
+    printf("buffer_usec=%llu ", (unsigned long long)i->buffer_usec);
+    printf("sink_usec=%llu ", (unsigned long long)i->sink_usec);
+    printf("resample_method=\"%s\" ", i->resample_method);
+    printf("driver=\"%s\" ", i->driver);
+    printf("mute=%d ", i->mute);
+    // TODO: proplist
+    printf("corked=%d ", i->corked);
+    printf("has_volume=%d ", i->has_volume);
+    printf("volume_writable=%d\n", i->volume_writable);
+    // TODO: format.
+
+    fflush(stdout);
     free(userdata);
 }
 
@@ -266,30 +310,33 @@ void ctx_source_output_info_callback(pa_context *ctx, const pa_source_output_inf
     if (eol > 0 || !i) return;
 
     context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("\nEVENT\n");
-    printf("Pulseaudio obj id/index that caused the event: %d\n", cb_userdata->idx);
-    printf("event type: %s\n", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-    printf("event facility: %s\n", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    printf("type=sourceoutputinfo ");
 
-    printf("name: %s\n", i->name);
-    printf("index: %d\n", i->index);
-    printf("owner module: %d\n", i->owner_module);
-    printf("client: %d\n", i->client);
-    printf("source: %d\n", i->client);
-    // sample_spec.
-    // channel_map.
-    printf("buffer usec: %llu\n", (unsigned long long)i->buffer_usec);
-    printf("source usec: %llu\n", (unsigned long long)i->source_usec);
-    printf("resample method: %s\n", i->resample_method);
-    printf("driver: %s\n", i->driver);
-    // proplist.
-    printf("corked: %d\n", i->corked);
-    // pa_cvolume.
-    printf("mute: %d\n", i->mute);
-    printf("has volume: %d\n", i->has_volume);
-    printf("volume writable: %d\n", i->volume_writable);
-    // format.
+    if (!cb_userdata->invalid_t_and_inx) {
+        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    }
 
+    printf("name=\"%s\" ", i->name);
+    printf("index=%d ", i->index);
+    printf("owner_module=%d ", i->owner_module);
+    printf("client=%d ", i->client);
+    printf("source=%d ", i->client);
+    // TODO: sample_spec.
+    // TODO: channel_map.
+    printf("buffer_usec=%llu ", (unsigned long long)i->buffer_usec);
+    printf("source_usec=%llu ", (unsigned long long)i->source_usec);
+    printf("resample_method=\"%s\" ", i->resample_method);
+    printf("driver=\"%s\" ", i->driver);
+    // TODO: proplist.
+    printf("corked=%d ", i->corked);
+    // TODO: pa_cvolume.
+    printf("mute=%d ", i->mute);
+    printf("has_volume=%d ", i->has_volume);
+    printf("volume_writable=%d\n", i->volume_writable);
+    // TODO: format.
+
+    fflush(stdout);
     free(userdata);
 }
 
@@ -298,17 +345,20 @@ void ctx_module_info_callback(pa_context *ctx, const pa_module_info *i, int eol,
     if (eol > 0 || !i) return;
 
     context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("\nEVENT\n");
-    printf("Pulseaudio obj id/index that caused the event: %d\n", cb_userdata->idx);
-    printf("event type: %s\n", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-    printf("event facility: %s\n", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    printf("type=moduleinfo ");
 
-    printf("name: %s\n", i->name);
-    printf("index: %d\n", i->index);
-    printf("argument: %s\n", i->argument);
-    printf("n used: %d\n", i->n_used);
-    // proplist.
+    if (!cb_userdata->invalid_t_and_inx) {
+        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    }
 
+    printf("name=\"%s\" ", i->name);
+    printf("index=%d ", i->index);
+    printf("argument=\"%s\" ", i->argument);
+    printf("n_used=%d\n", i->n_used);
+    // TODO: proplist.
+
+    fflush(stdout);
     free(userdata);
 }
 
@@ -317,17 +367,20 @@ void ctx_client_info_callback(pa_context *ctx, const pa_client_info *i, int eol,
     if (eol > 0 || !i) return;
 
     context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("\nEVENT\n");
-    printf("Pulseaudio obj id/index that caused the event: %d\n", cb_userdata->idx);
-    printf("event type: %s\n", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-    printf("event facility: %s\n", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    printf("type=clientinfo ");
 
-    printf("name: %s\n", i->name);
-    printf("index: %d\n", i->index);
-    printf("owner module: %d\n", i->owner_module);
-    printf("driver: %s\n", i->driver);
-    // proplist.
+    if (!cb_userdata->invalid_t_and_inx) {
+        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    }
 
+    printf("name=\"%s\" ", i->name);
+    printf("index=%d ", i->index);
+    printf("owner_module=%d ", i->owner_module);
+    printf("driver=\"%s\"\n", i->driver);
+    // TODO: proplist.
+
+    fflush(stdout);
     free(userdata);
 }
 
@@ -336,50 +389,60 @@ void ctx_sample_info_callback(pa_context *ctx, const pa_sample_info *i, int eol,
     if (eol > 0 || !i) return;
 
     context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("\nEVENT\n");
-    printf("Pulseaudio obj id/index that caused the event: %d\n", cb_userdata->idx);
-    printf("event type: %s\n", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-    printf("event facility: %s\n", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    printf("type=sampleinfo ");
 
-    printf("name: %s\n", i->name);
-    printf("index: %d\n", i->index);
+    if (!cb_userdata->invalid_t_and_inx) {
+        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    }
 
-    for (uint8_t k = 0; k < i->volume.channels; k++)
-        printf("volume %d: %d\n", k, i->volume.values[k]);
+    printf("name=\"%s\" ", i->name);
+    printf("index=%d ", i->index);
 
-    printf("sample spec rate: %u\n", i->sample_spec.rate);
-    printf("sample spec format: %s\n", pa_sample_format_to_string(i->sample_spec.format));
-    printf("sample spec channels: %u\n", i->sample_spec.channels);
-    // channel_map.
-    printf("duration: %llu\n", (unsigned long long)i->duration);
-    printf("bytes: %d\n", i->bytes);
-    printf("lazy: %d\n", i->lazy);
-    printf("filename: %s\n", i->filename);
-    // proplist.
+    printf("volume=\"");
+    if (i->volume.channels) {
+        for (uint8_t k = 0; k < i->volume.channels - 1; k++) printf("%d,", i->volume.values[k]);
+        printf("%d", i->volume.values[i->volume.channels - 1]);
+    }
+    printf("\" ");
 
+    printf("sample_spec_rate=%u ", i->sample_spec.rate);
+    printf("sample_spec_format=%s ", pa_sample_format_str(i->sample_spec.format));
+    printf("sample_spec_channels=%u ", i->sample_spec.channels);
+    // TODO: channel_map.
+    printf("duration=%llu ", (unsigned long long)i->duration);
+    printf("bytes=%d ", i->bytes);
+    printf("lazy=%d ", i->lazy);
+    printf("filename=\"%s\"\n", i->filename);
+    // TODO: proplist.
+
+    fflush(stdout);
     free(userdata);
 }
 
 // Indicates a global server state change.
 void ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata) {
     context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("\nEVENT\n");
-    printf("Pulseaudio obj id/index that caused the event: %d\n", cb_userdata->idx);
-    printf("event type: %s\n", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-    printf("event facility: %s\n", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    printf("type=serverinfo ");
 
-    printf("user name: %s\n", i->user_name);
-    printf("host name: %s\n", i->host_name);
-    printf("server version: %s\n", i->server_version);
-    printf("server name: %s\n", i->server_name);
-    printf("sample spec rate: %u\n", i->sample_spec.rate);
-    printf("sample spec format: %s\n", pa_sample_format_to_string(i->sample_spec.format));
-    printf("sample spec channels: %u\n", i->sample_spec.channels);
-    printf("default sink name: %s\n", i->default_sink_name);
-    printf("default source name: %s\n", i->default_source_name);
-    printf("cookie: %d\n", i->cookie);
-    // channel_map.
+    if (!cb_userdata->invalid_t_and_inx) {
+        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    }
 
+    printf("user_name=\"%s\" ", i->user_name);
+    printf("host_name=\"%s\" ", i->host_name);
+    printf("server_version=\"%s\" ", i->server_version);
+    printf("server_name=\"%s\" ", i->server_name);
+    printf("sample_spec_rate=%u ", i->sample_spec.rate);
+    printf("sample_spec_format=%s ", pa_sample_format_str(i->sample_spec.format));
+    printf("sample_spec_channels=%u ", i->sample_spec.channels);
+    printf("default_sink_name=\"%s\" ", i->default_sink_name);
+    printf("default_source_name=\"%s\" ", i->default_source_name);
+    printf("cookie=%d\n", i->cookie);
+    // TODO: channel_map.
+
+    fflush(stdout);
     free(userdata);
 }
 
@@ -388,29 +451,32 @@ void ctx_card_info_callback(pa_context *ctx, const pa_card_info *i, int eol, voi
     if (eol > 0 || !i) return;
 
     context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("\nEVENT\n");
-    printf("Pulseaudio obj id/index that caused the event: %d\n", cb_userdata->idx);
-    printf("event type: %s\n", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-    printf("event facility: %s\n", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    printf("type=cardinfo ");
 
-    printf("name: %s\n", i->name);
-    printf("index: %d\n", i->index);
-    printf("owner module: %d\n", i->owner_module);
-    printf("driver: %s\n", i->driver);
-    printf("n profiles: %d\n", i->n_profiles);
-    // profiles.
-    // active_profile.
-    // proplist.
-    printf("n ports: %d\n", i->n_ports);
-    // ports.
-    // profiles2.
-    // active_profile2.
+    if (!cb_userdata->invalid_t_and_inx) {
+        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+    }
+
+    printf("name=\"%s\" ", i->name);
+    printf("index=%d ", i->index);
+    printf("owner_module=%d ", i->owner_module);
+    printf("driver=\"%s\" ", i->driver);
+    printf("n_profiles=%d ", i->n_profiles);
+    // TODO: profiles.
+    // TODO: active_profile.
+    // TODO: proplist.
+    printf("n_ports=%d\n", i->n_ports);
+    // TODO: ports.
+    // TODO: profiles2.
+    // TODO: active_profile2.
     
+    fflush(stdout);
     free(userdata);
 }
 
 // Convert a pa_sample_format enum value to a human-readable string.
-const char *pa_sample_format_to_string(pa_sample_format_t format) {
+const char *pa_sample_format_str(pa_sample_format_t format) {
     switch (format) {
         case PA_SAMPLE_U8:
             return "Unsigned 8 Bit PCM (PA_SAMPLE_U8)";
@@ -447,7 +513,7 @@ const char *pa_sample_format_to_string(pa_sample_format_t format) {
 }
 
 // Convert a pa_sink_state enum value to a human-readable string.
-const char *pa_sink_state_to_string(pa_sink_state_t state) {
+const char *pa_sink_state_str(pa_sink_state_t state) {
     switch (state) {
         case PA_SINK_INVALID_STATE:
             return "Invalid state (PA_SINK_INVALID_STATE): server does not support sink state introspection.";

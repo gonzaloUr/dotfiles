@@ -25,12 +25,13 @@ void ctx_card_info_callback(pa_context *ctx, const pa_card_info *i, int eol, voi
 // Utils.
 typedef struct {
     void *userdata;
+    int invalid_t_and_inx;
     pa_subscription_event_type_t t;
     uint32_t idx;
 } context_get_callback_userdata;
 
-const char *pa_sample_format_to_string(pa_sample_format_t format);
-const char *pa_sink_state_to_string(pa_sink_state_t state);
+const char *pa_sample_format_str(pa_sample_format_t format);
+const char *pa_sink_state_str(pa_sink_state_t state);
 const char *pa_subscribe_event_type_t_event_type_str(pa_subscription_event_type_t);
 const char *pa_subscribe_event_type_t_event_facility_str(pa_subscription_event_type_t);
 
