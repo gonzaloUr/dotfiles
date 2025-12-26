@@ -130,7 +130,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 
-	{ 0,                            XK_Print,              spawn,          {.v = prtscr } },
+	// { 0,                            XK_Print,              spawn,          {.v = prtscr } },
 	{ MODKEY,                       XK_a,                  spawn,          {.v = clipmgr } },
 	{ 0,                            XF86MonBrightnessDown, spawn,          {.v = brigdown } },
 	{ 0,                            XF86MonBrightnessUp,   spawn,          {.v = brigup } },
@@ -151,7 +151,6 @@ static const Key keys[] = {
     /* WIP
 	{ MODKEY,						XK_o, 	   hidewin, 	     {0}},
     { MODKEY|ShiftMask, 			XK_o, 	   restorewin, 	     {0}},
-    /* WIP
     { MODKEY, 						XK_w, 	   hideotherwins,    {0}},
     { MODKEY|ShiftMask, 			XK_w, 	   restoreotherwins, {0}},
     */

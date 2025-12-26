@@ -11,7 +11,18 @@ void ctx_event_callback(pa_context *ctx, const char *name, pa_proplist *pl, void
 void ctx_state_callback(pa_context *ctx, void *userdata);
 void ctx_subscribe_callback(pa_context *ctx, pa_subscription_event_type_t t, uint32_t idx, void *userdata);
 
+// Callbacks used after context is ready to print current status of pulseaudio and enable ctx callback notifications.
+void init_ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata);
+void init_ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata);
+void init_ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata);
+
 // Introspect operation callbacks.
+typedef struct {
+    void *userdata;
+    pa_subscription_event_type_t t;
+    uint32_t idx;
+} callback_userdata;
+
 void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata);
 void ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata);
 void ctx_sink_input_info_callback(pa_context *ctx, const pa_sink_input_info *i, int eol, void *userdata);
@@ -22,17 +33,22 @@ void ctx_sample_info_callback(pa_context *ctx, const pa_sample_info *i, int eol,
 void ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata);
 void ctx_card_info_callback(pa_context *ctx, const pa_card_info *i, int eol, void *userdata);
 
-// Utils.
-typedef struct {
-    void *userdata;
-    int invalid_t_and_inx;
-    pa_subscription_event_type_t t;
-    uint32_t idx;
-} context_get_callback_userdata;
+// Print infos to stdout.
+void print_pa_sink_info(const pa_sink_info *i, const callback_userdata *cb_userdata);
+void print_pa_source_info(const pa_source_info *i, const callback_userdata *cb_userdata);
+void print_pa_sink_input_info(const pa_sink_input_info *i, const callback_userdata *cb_userdata);
+void print_pa_source_output_info(const pa_source_output_info *i, const callback_userdata *cb_userdata);
+void print_pa_module_info(const pa_module_info *i, const callback_userdata *cb_userdata);
+void print_pa_client_info(const pa_client_info *i, const callback_userdata *cb_userdata);
+void print_pa_sample_info(const pa_sample_info *i, const callback_userdata *cb_userdata);
+void print_pa_server_info(const pa_server_info *i, const callback_userdata *cb_userdata);
+void print_pa_card_info(const pa_card_info *i, const callback_userdata *cb_userdata);
 
+// To strings functions.
 const char *pa_sample_format_str(pa_sample_format_t format);
 const char *pa_sink_state_str(pa_sink_state_t state);
 const char *pa_subscribe_event_type_t_event_type_str(pa_subscription_event_type_t);
 const char *pa_subscribe_event_type_t_event_facility_str(pa_subscription_event_type_t);
+const char *pa_device_port_type_str(pa_device_port_type_t);
 
 #endif

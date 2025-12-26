@@ -8,4 +8,7 @@ R --interactive <<EOT
 install.packages("rmarkdown", repo="https://cran.r-project.org/")
 install.packages("languageserver", repo="https://cran.r-project.org/")
 install.packages("reticulate", repo="https://cran.r-project.org/")
+install.packages("ggplot2", repo="https://cran.r-project.org/")
+install.packages("dplyr", repo="https://cran.r-project.org/")
+install.packages("tidyr", repo="https://cran.r-project.org/")
 EOT

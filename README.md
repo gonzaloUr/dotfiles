@@ -13,3 +13,6 @@ secret-tool store --label="MySecret" my password
 secret-tool lookup my MySecret
 secret-tool clear my MySecret
 ```
+### Nerd fonts
+Las versiones de fuentes con nerdfont icons que son mono en general los iconos de nerd se ven muy chicos.
+Fijarse si fc-list dice si la fuente es mono, si lo es lo mas probable es que los iconos sean pequeños.

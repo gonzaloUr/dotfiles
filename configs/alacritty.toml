@@ -2,19 +2,19 @@
 size = 6
 
 [font.bold]
-family = "JetBrainsMono"
+family = "HackNerdFont"
 style = "Bold"
 
 [font.bold_italic]
-family = "JetBrainsMono"
+family = "HackNerdFont"
 style = "Regular"
 
 [font.italic]
-family = "JetBrainsMono"
+family = "HackNerdFont"
 style = "Italic"
 
 [font.normal]
-family = "JetBrainsMono"
+family = "HackNerdFont"
 style = "Regular"
 
 [[keyboard.bindings]]

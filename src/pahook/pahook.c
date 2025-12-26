@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define FS (",")
+#define RS ("\n")
+
 int main() {
     // Create mainloop.
     pa_mainloop *mainloop = pa_mainloop_new();
@@ -65,52 +68,124 @@ void ctx_state_callback(pa_context *ctx, void *userdata) {
 
     switch (state) {
         case PA_CONTEXT_UNCONNECTED:
-            printf("type=state value=PA_CONTEXT_UNCONNECTED\n");
+            printf("type");
+            printf(FS);
+            printf("state");
+            printf(FS);
+            printf("value");
+            printf(FS);
+            printf("PA_CONTEXT_UNCONNECTED");
+            printf(RS);
+            fflush(stdout);
+
             break;
 
         case PA_CONTEXT_CONNECTING:
-            printf("type=state value=PA_CONTEXT_CONNECTING\n");
+            printf("type");
+            printf(FS);
+            printf("state");
+            printf(FS);
+            printf("value");
+            printf(FS);
+            printf("PA_CONTEXT_CONNECTING");
+            printf(RS);
+            fflush(stdout);
+
             break;
 
         case PA_CONTEXT_AUTHORIZING:
-            printf("type=state value=PA_CONTEXT_AUTHORIZING\n");
+            printf("type");
+            printf(FS);
+            printf("states"); 
+            printf(FS);
+            printf("value");
+            printf(FS);
+            printf("PA_CONTEXT_AUTHORIZING");
+            printf(RS);
+            fflush(stdout);
+
             break;
 
         case PA_CONTEXT_SETTING_NAME:
-            printf("type=state value=PA_CONTEXT_SETTING_NAME\n");
+            printf("type");
+            printf(FS);
+            printf("state");
+            printf(FS);
+            printf("value");
+            printf(FS);
+            printf("PA_CONTEXT_SETTING_NAME");
+            printf(RS);
+            fflush(stdout);
+
             break;
 
         case PA_CONTEXT_READY:
-            printf("type=state value=PA_CONTEXT_READY\n");
+            printf("type");
+            printf(FS);
+            printf("state");
+            printf(FS);
+            printf("value");
+            printf(FS);
+            printf("PA_CONTEXT_READY");
+            printf(RS);
+            fflush(stdout);
 
-            pa_operation *op; 
-
-            // Activate subscriptions to event.
-            op = pa_context_subscribe(ctx, PA_SUBSCRIPTION_MASK_ALL, NULL, NULL);
-            pa_operation_unref(op);
-
-            // Force a call to ctx_server_info_callback even there is no event in order to get the current state of pulseaudio.
-            context_get_callback_userdata *userdata = malloc(sizeof(context_get_callback_userdata));
-            userdata->invalid_t_and_inx = 1;
-            userdata->userdata = mainloop;
-
-            op = pa_context_get_server_info(ctx, ctx_server_info_callback, userdata);
-            pa_operation_unref(op);
+            pa_context_get_server_info(ctx, init_ctx_server_info_callback, NULL);
 
             break;
 
         case PA_CONTEXT_FAILED:
-            printf("type=state value=PA_CONTEXT_FAILED\n");
+            printf("type");
+            printf(FS);
+            printf("state");
+            printf(FS);
+            printf("value");
+            printf(FS);
+            printf("PA_CONTEXT_FAILED");
+            printf(RS);
+            fflush(stdout);
+
             pa_mainloop_quit(mainloop, 1);
             break;
 
         case PA_CONTEXT_TERMINATED:
-            printf("type=state value=PA_CONTEXT_TERMINATED\n");
+            printf("type");
+            printf(FS);
+            printf("state"); 
+            printf(FS);
+            printf("value");
+            printf(FS);
+            printf("PA_CONTEXT_TERMINATED");
+            printf(RS);
+            fflush(stdout);
+
             pa_mainloop_quit(mainloop, 0);
             break;
     }
 
     fflush(stdout);
+}
+
+void init_ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata) {
+    print_pa_server_info(i, NULL);
+    pa_context_get_sink_info_by_name(ctx, i->default_sink_name, init_ctx_sink_info_callback, (void*) i);
+}
+
+void init_ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
+
+    print_pa_sink_info(i, NULL);
+
+    pa_server_info *server_info = (pa_server_info*) userdata;
+    pa_context_get_source_info_by_name(ctx, server_info->default_source_name, init_ctx_source_info_callback, NULL);
+}
+
+void init_ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata) {
+    if (eol > 0 || !i) return;
+
+    print_pa_source_info(i, NULL);
+
+    pa_context_subscribe(ctx, PA_SUBSCRIPTION_MASK_ALL, NULL, NULL);
 }
 
 void ctx_event_callback(pa_context *ctx, const char *name, pa_proplist *pl, void *userdata) {
@@ -119,39 +194,38 @@ void ctx_event_callback(pa_context *ctx, const char *name, pa_proplist *pl, void
 
 void ctx_subscribe_callback(pa_context *ctx, pa_subscription_event_type_t t, uint32_t idx, void *userdata) {
 
-    context_get_callback_userdata *new_userdata = malloc(sizeof(context_get_callback_userdata));
-    new_userdata->invalid_t_and_inx = 0;
-    new_userdata->userdata = userdata;
-    new_userdata->t = t;
-    new_userdata->idx = idx;
+    callback_userdata *cb_userdata = malloc(sizeof(callback_userdata));
+    cb_userdata->userdata = userdata;
+    cb_userdata->t = t;
+    cb_userdata->idx = idx;
 
     switch (t & PA_SUBSCRIPTION_EVENT_FACILITY_MASK) {
         case PA_SUBSCRIPTION_EVENT_SINK:
-            pa_context_get_sink_info_by_index(ctx, idx, ctx_sink_info_callback, new_userdata);
+            pa_context_get_sink_info_by_index(ctx, idx, ctx_sink_info_callback, cb_userdata);
             break;
         case PA_SUBSCRIPTION_EVENT_SOURCE:
-            pa_context_get_source_info_by_index(ctx, idx, ctx_source_info_callback, new_userdata);
+            pa_context_get_source_info_by_index(ctx, idx, ctx_source_info_callback, cb_userdata);
             break;
         case PA_SUBSCRIPTION_EVENT_SINK_INPUT:
-            pa_context_get_sink_input_info(ctx, idx, ctx_sink_input_info_callback, new_userdata);
+            pa_context_get_sink_input_info(ctx, idx, ctx_sink_input_info_callback, cb_userdata);
             break;
         case PA_SUBSCRIPTION_EVENT_SOURCE_OUTPUT:
-            pa_context_get_source_output_info(ctx, idx, ctx_source_output_info_callback, new_userdata);
+            pa_context_get_source_output_info(ctx, idx, ctx_source_output_info_callback, cb_userdata);
             break;
         case PA_SUBSCRIPTION_EVENT_MODULE:
-            pa_context_get_module_info(ctx, idx, ctx_module_info_callback, new_userdata);
+            pa_context_get_module_info(ctx, idx, ctx_module_info_callback, cb_userdata);
             break;
         case PA_SUBSCRIPTION_EVENT_CLIENT:
-            pa_context_get_client_info(ctx, idx, ctx_client_info_callback, new_userdata);
+            pa_context_get_client_info(ctx, idx, ctx_client_info_callback, cb_userdata);
             break;
         case PA_SUBSCRIPTION_EVENT_SAMPLE_CACHE:
-            pa_context_get_sample_info_by_index(ctx, idx, ctx_sample_info_callback, new_userdata);
+            pa_context_get_sample_info_by_index(ctx, idx, ctx_sample_info_callback, cb_userdata);
             break;
         case PA_SUBSCRIPTION_EVENT_SERVER:
-            pa_context_get_server_info(ctx, ctx_server_info_callback, new_userdata);
+            pa_context_get_server_info(ctx, ctx_server_info_callback, cb_userdata);
             break;
         case PA_SUBSCRIPTION_EVENT_CARD:
-            pa_context_get_card_info_by_index(ctx, idx, ctx_card_info_callback, new_userdata);
+            pa_context_get_card_info_by_index(ctx, idx, ctx_card_info_callback, cb_userdata);
             break;
     }
 }
@@ -160,52 +234,8 @@ void ctx_subscribe_callback(pa_context *ctx, pa_subscription_event_type_t t, uin
 void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
-    context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("type=sinkinfo ");
-
-    if (!cb_userdata->invalid_t_and_inx) {
-        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
-    }
-
-    printf("name=\"%s\" ", i->name);
-    printf("index=%d ", i->index);
-    printf("desc=\"%s\" ", i->description);
-    printf("sample_spec_rate=%u ", i->sample_spec.rate);
-    printf("sample_spec_format=\"%s\" ", pa_sample_format_str(i->sample_spec.format));
-    printf("sample_spec_channels=%u ", i->sample_spec.channels);
-    // TODO: channel_map.
-    // TODO: owner_module.
-
-    /*
-    printf("volume=\"");
-    if (i->volume.channels) {
-        for (uint8_t k = 0; k < i->volume.channels - 1; k++) printf("%d,", i->volume.values[k]);
-        printf("%d", i->volume.values[i->volume.channels - 1]);
-    }
-    printf("\" ");
-    */
-    printf("volume=%d ", pa_cvolume_max(&i->volume));
-
-    printf("mute=%d ", i->mute);
-    printf("monitor_source_index=%u ", i->monitor_source);
-    printf("monitor_source_name=\"%s\" ", i->monitor_source_name);
-    printf("latency=%llu ", (unsigned long long)i->latency);
-    printf("driver=\"%s\" ", i->driver);
-    // TODO: flags.
-    // TODO: proplist.
-    printf("configured_latency=%llu ", (unsigned long long)i->configured_latency);
-    printf("base_volume=%u ", i->base_volume);
-    printf("state=\"%s\" ", pa_sink_state_str(i->state));
-    printf("n_volume_steps=%u ", i->n_volume_steps);
-    printf("card=%u\n", i->card);
-    // TODO: n_ports.
-    // TODO: ports.
-    // TODO: active_port.
-    // TODO: n_formats.
-    // TODO: formats.
-
-    fflush(stdout);
+    callback_userdata *cb_userdata = (callback_userdata*) userdata;
+    print_pa_sink_info(i, cb_userdata);
     free(userdata);
 }
 
@@ -213,51 +243,8 @@ void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, voi
 void ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
-    context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("type=sourceinfo ");
-
-    if (!cb_userdata->invalid_t_and_inx) {
-        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
-    }
-
-    printf("name=\"%s\" ", i->name);
-    printf("index=%d ", i->index);
-    printf("desc=\"%s\" ", i->description);
-    printf("sample_spec_rate=%u ", i->sample_spec.rate);
-    printf("sample_spec_format=\"%s\" ", pa_sample_format_str(i->sample_spec.format));
-    printf("sample_spec_channels=%u ", i->sample_spec.channels);
-    // TODO: channel_map.
-    // TODO: owner_module.
-
-    /*
-    printf("volume=\"");
-    if (i->volume.channels) {
-        for (uint8_t k = 0; k < i->volume.channels - 1; k++) printf("%d,", i->volume.values[k]);
-        printf("%d", i->volume.values[i->volume.channels - 1]);
-    }
-    printf("\" ");
-    */
-
-    printf("volume=%d ", pa_cvolume_max(&i->volume));
-
-    printf("mute=%d ", i->mute);
-    printf("monitor_of_sink=%d ", i->monitor_of_sink);
-    printf("monitor_of_sink_name=\"%s\" ", i->monitor_of_sink_name);
-    printf("latency=%llu ", (unsigned long long)i->latency);
-    printf("driver=\"%s\" ", i->driver);
-    // TODO: flags.
-    // TODO: proplist.
-    printf("configured_latency=%llu ", (unsigned long long)i->configured_latency);
-    printf("base_volume=%u ", i->base_volume);
-    printf("state=\"%s\"\n", pa_sink_state_str(i->state));
-    // TODO: n_ports.
-    // TODO: ports.
-    // TODO: active_port.
-    // TODO: n_formats.
-    // TODO: formats.
-
-    fflush(stdout);
+    callback_userdata *cb_userdata = (callback_userdata*) userdata;
+    print_pa_source_info(i, cb_userdata);
     free(userdata);
 }
 
@@ -265,43 +252,8 @@ void ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol,
 void ctx_sink_input_info_callback(pa_context *ctx, const pa_sink_input_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
-    context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("type=sinkinputinfo ");
-
-    if (!cb_userdata->invalid_t_and_inx) {
-        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
-    }
-
-    printf("name=\"%s\" ", i->name);
-    printf("index=%d ", i->index);
-    printf("owner_module=%d ", i->owner_module);
-    printf("client=%d ", i->client);
-    printf("sink=%d ", i->sink);
-    printf("sample_spec_rate=%u ", i->sample_spec.rate);
-    printf("sample_spec_format=%s ", pa_sample_format_str(i->sample_spec.format));
-    printf("sample_spec_channels=%u ", i->sample_spec.channels);
-    // TODO: channel map.
-
-    printf("volume=\"");
-    if (i->volume.channels) {
-        for (uint8_t k = 0; k < i->volume.channels - 1; k++) printf("%d,", i->volume.values[k]);
-        printf("%d", i->volume.values[i->volume.channels - 1]);
-    }
-    printf("\" ");
-
-    printf("buffer_usec=%llu ", (unsigned long long)i->buffer_usec);
-    printf("sink_usec=%llu ", (unsigned long long)i->sink_usec);
-    printf("resample_method=\"%s\" ", i->resample_method);
-    printf("driver=\"%s\" ", i->driver);
-    printf("mute=%d ", i->mute);
-    // TODO: proplist
-    printf("corked=%d ", i->corked);
-    printf("has_volume=%d ", i->has_volume);
-    printf("volume_writable=%d\n", i->volume_writable);
-    // TODO: format.
-
-    fflush(stdout);
+    callback_userdata *cb_userdata = (callback_userdata*) userdata;
+    print_pa_sink_input_info(i, cb_userdata);
     free(userdata);
 }
 
@@ -309,34 +261,8 @@ void ctx_sink_input_info_callback(pa_context *ctx, const pa_sink_input_info *i, 
 void ctx_source_output_info_callback(pa_context *ctx, const pa_source_output_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
-    context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("type=sourceoutputinfo ");
-
-    if (!cb_userdata->invalid_t_and_inx) {
-        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
-    }
-
-    printf("name=\"%s\" ", i->name);
-    printf("index=%d ", i->index);
-    printf("owner_module=%d ", i->owner_module);
-    printf("client=%d ", i->client);
-    printf("source=%d ", i->client);
-    // TODO: sample_spec.
-    // TODO: channel_map.
-    printf("buffer_usec=%llu ", (unsigned long long)i->buffer_usec);
-    printf("source_usec=%llu ", (unsigned long long)i->source_usec);
-    printf("resample_method=\"%s\" ", i->resample_method);
-    printf("driver=\"%s\" ", i->driver);
-    // TODO: proplist.
-    printf("corked=%d ", i->corked);
-    // TODO: pa_cvolume.
-    printf("mute=%d ", i->mute);
-    printf("has_volume=%d ", i->has_volume);
-    printf("volume_writable=%d\n", i->volume_writable);
-    // TODO: format.
-
-    fflush(stdout);
+    callback_userdata *cb_userdata = (callback_userdata*) userdata;
+    print_pa_source_output_info(i, cb_userdata);
     free(userdata);
 }
 
@@ -344,21 +270,8 @@ void ctx_source_output_info_callback(pa_context *ctx, const pa_source_output_inf
 void ctx_module_info_callback(pa_context *ctx, const pa_module_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
-    context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("type=moduleinfo ");
-
-    if (!cb_userdata->invalid_t_and_inx) {
-        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
-    }
-
-    printf("name=\"%s\" ", i->name);
-    printf("index=%d ", i->index);
-    printf("argument=\"%s\" ", i->argument);
-    printf("n_used=%d\n", i->n_used);
-    // TODO: proplist.
-
-    fflush(stdout);
+    callback_userdata *cb_userdata = (callback_userdata*) userdata;
+    print_pa_module_info(i, cb_userdata);
     free(userdata);
 }
 
@@ -366,21 +279,8 @@ void ctx_module_info_callback(pa_context *ctx, const pa_module_info *i, int eol,
 void ctx_client_info_callback(pa_context *ctx, const pa_client_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
-    context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("type=clientinfo ");
-
-    if (!cb_userdata->invalid_t_and_inx) {
-        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
-    }
-
-    printf("name=\"%s\" ", i->name);
-    printf("index=%d ", i->index);
-    printf("owner_module=%d ", i->owner_module);
-    printf("driver=\"%s\"\n", i->driver);
-    // TODO: proplist.
-
-    fflush(stdout);
+    callback_userdata *cb_userdata = (callback_userdata*) userdata;
+    print_pa_client_info(i, cb_userdata);
     free(userdata);
 }
 
@@ -388,61 +288,15 @@ void ctx_client_info_callback(pa_context *ctx, const pa_client_info *i, int eol,
 void ctx_sample_info_callback(pa_context *ctx, const pa_sample_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
-    context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("type=sampleinfo ");
-
-    if (!cb_userdata->invalid_t_and_inx) {
-        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
-    }
-
-    printf("name=\"%s\" ", i->name);
-    printf("index=%d ", i->index);
-
-    printf("volume=\"");
-    if (i->volume.channels) {
-        for (uint8_t k = 0; k < i->volume.channels - 1; k++) printf("%d,", i->volume.values[k]);
-        printf("%d", i->volume.values[i->volume.channels - 1]);
-    }
-    printf("\" ");
-
-    printf("sample_spec_rate=%u ", i->sample_spec.rate);
-    printf("sample_spec_format=%s ", pa_sample_format_str(i->sample_spec.format));
-    printf("sample_spec_channels=%u ", i->sample_spec.channels);
-    // TODO: channel_map.
-    printf("duration=%llu ", (unsigned long long)i->duration);
-    printf("bytes=%d ", i->bytes);
-    printf("lazy=%d ", i->lazy);
-    printf("filename=\"%s\"\n", i->filename);
-    // TODO: proplist.
-
-    fflush(stdout);
+    callback_userdata *cb_userdata = (callback_userdata*) userdata;
+    print_pa_sample_info(i, cb_userdata);
     free(userdata);
 }
 
 // Indicates a global server state change.
 void ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata) {
-    context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("type=serverinfo ");
-
-    if (!cb_userdata->invalid_t_and_inx) {
-        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
-    }
-
-    printf("user_name=\"%s\" ", i->user_name);
-    printf("host_name=\"%s\" ", i->host_name);
-    printf("server_version=\"%s\" ", i->server_version);
-    printf("server_name=\"%s\" ", i->server_name);
-    printf("sample_spec_rate=%u ", i->sample_spec.rate);
-    printf("sample_spec_format=%s ", pa_sample_format_str(i->sample_spec.format));
-    printf("sample_spec_channels=%u ", i->sample_spec.channels);
-    printf("default_sink_name=\"%s\" ", i->default_sink_name);
-    printf("default_source_name=\"%s\" ", i->default_source_name);
-    printf("cookie=%d\n", i->cookie);
-    // TODO: channel_map.
-
-    fflush(stdout);
+    callback_userdata *cb_userdata = (callback_userdata*) userdata;
+    print_pa_server_info(i, cb_userdata);
     free(userdata);
 }
 
@@ -450,29 +304,649 @@ void ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *us
 void ctx_card_info_callback(pa_context *ctx, const pa_card_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
-    context_get_callback_userdata *cb_userdata = (context_get_callback_userdata*) userdata;
-    printf("type=cardinfo ");
+    callback_userdata *cb_userdata = (callback_userdata*) userdata;
+    print_pa_card_info(i, cb_userdata);
+    free(userdata);
+}
 
-    if (!cb_userdata->invalid_t_and_inx) {
-        printf("event_type=\"%s\" ", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
-        printf("event_facility=\"%s\" ", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+void print_pa_sink_info(const pa_sink_info *i, const callback_userdata *cb_userdata) {
+    printf("type"); 
+    printf(FS);
+    printf("sinkinfo");
+    printf(FS);
+
+    if (cb_userdata) {
+        printf("event_type");
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf(FS);
+        printf("event_facility"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+        printf(FS);
     }
 
-    printf("name=\"%s\" ", i->name);
-    printf("index=%d ", i->index);
-    printf("owner_module=%d ", i->owner_module);
-    printf("driver=\"%s\" ", i->driver);
-    printf("n_profiles=%d ", i->n_profiles);
+    printf("name"); 
+    printf(FS);
+    printf("\"%s\"", i->name);
+    printf(FS);
+    printf("index"); 
+    printf(FS);
+    printf("%d", i->index);
+    printf(FS);
+    printf("desc"); 
+    printf(FS);
+    printf("\"%s\"", i->description);
+    printf(FS);
+    printf("sample_spec_rate"); 
+    printf(FS);
+    printf("%u", i->sample_spec.rate);
+    printf(FS);
+    printf("sample_spec_format"); 
+    printf(FS);
+    printf("\"%s\"", pa_sample_format_str(i->sample_spec.format));
+    printf(FS);
+    printf("sample_spec_channels"); 
+    printf(FS);
+    printf("%u", i->sample_spec.channels);
+    printf(FS);
+    // TODO: channel_map.
+    // TODO: owner_module.
+    printf("volume");
+    printf(FS);
+    printf("%d", pa_cvolume_max(&i->volume));
+    printf(FS);
+    printf("mute"); 
+    printf(FS);
+    printf("%d", i->mute);
+    printf(FS);
+    printf("monitor_source_index"); 
+    printf(FS);
+    printf("%u", i->monitor_source);
+    printf(FS);
+    printf("monitor_source_name"); 
+    printf(FS);
+    printf("\"%s\"", i->monitor_source_name);
+    printf(FS);
+    printf("latency"); 
+    printf(FS);
+    printf("%llu", (unsigned long long)i->latency);
+    printf(FS);
+    printf("driver"); 
+    printf(FS);
+    printf("\"%s\"", i->driver);
+    printf(FS);
+    // TODO: flags.
+    // TODO: proplist.
+    printf("configured_latency"); 
+    printf(FS);
+    printf("%llu", (unsigned long long)i->configured_latency);
+    printf(FS);
+    printf("base_volume"); 
+    printf(FS);
+    printf("%u", i->base_volume);
+    printf(FS);
+    printf("state"); 
+    printf(FS);
+    printf("\"%s\"", pa_sink_state_str(i->state));
+    printf(FS);
+    printf("n_volume_steps"); 
+    printf(FS);
+    printf("%u", i->n_volume_steps);
+    printf(FS);
+    printf("card"); 
+    printf(FS);
+    printf("%u", i->card);
+    printf(FS);
+    // TODO: n_ports.
+    // TODO: ports.
+
+    if (i->active_port) {
+        printf("active_port_name");
+        printf(FS);
+        printf("\"%s\"", i->active_port->name);
+        printf(FS);
+        printf("active_port_desc");
+        printf(FS);
+        printf("\"%s\"", i->active_port->description);
+        printf(FS);
+        printf("active_port_type");
+        printf(FS);
+        printf("\"%s\"", pa_device_port_type_str(i->active_port->type));
+    }
+
+    // TODO: n_formats.
+    // TODO: formats.
+    printf(RS);
+
+    fflush(stdout);
+}
+
+void print_pa_source_info(const pa_source_info *i, const callback_userdata *cb_userdata) {
+    printf("type"); 
+    printf(FS);
+    printf("sourceinfo");
+    printf(FS);
+
+    if (cb_userdata) {
+        printf("event_type"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf(FS);
+        printf("event_facility"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+        printf(FS);
+    }
+
+    printf("name"); 
+    printf(FS);
+    printf("\"%s\"", i->name);
+    printf(FS);
+    printf("index"); 
+    printf(FS);
+    printf("%d", i->index);
+    printf(FS);
+    printf("desc"); 
+    printf(FS);
+    printf("\"%s\"", i->description);
+    printf(FS);
+    printf("sample_spec_rate"); 
+    printf(FS);
+    printf("%u", i->sample_spec.rate);
+    printf(FS);
+    printf("sample_spec_format"); 
+    printf(FS);
+    printf("\"%s\"", pa_sample_format_str(i->sample_spec.format));
+    printf(FS);
+    printf("sample_spec_channels"); 
+    printf(FS);
+    printf("%u", i->sample_spec.channels);
+    printf(FS);
+    // TODO: channel_map.
+    // TODO: owner_module.
+    printf("volume"); 
+    printf(FS);
+    printf("%d", pa_cvolume_max(&i->volume));
+    printf(FS);
+    printf("mute"); 
+    printf(FS);
+    printf("%d", i->mute);
+    printf(FS);
+    printf("monitor_of_sink"); 
+    printf(FS);
+    printf("%d", i->monitor_of_sink);
+    printf(FS);
+    printf("monitor_of_sink_name"); 
+    printf(FS);
+    printf("\"%s\"", i->monitor_of_sink_name);
+    printf(FS);
+    printf("latency"); 
+    printf(FS);
+    printf("%llu", (unsigned long long)i->latency);
+    printf(FS);
+    printf("driver"); 
+    printf(FS);
+    printf("\"%s\"", i->driver);
+    printf(FS);
+    // TODO: flags.
+    // TODO: proplist.
+    printf("configured_latency"); 
+    printf(FS);
+    printf("%llu", (unsigned long long)i->configured_latency);
+    printf(FS);
+    printf("base_volume"); 
+    printf(FS);
+    printf("%u", i->base_volume);
+    printf(FS);
+    printf("state"); 
+    printf(FS);
+    printf("\"%s\"", pa_sink_state_str(i->state));
+    printf(FS);
+    // TODO: n_ports.
+    // TODO: ports.
+
+    if (i->active_port) {
+        printf("active_port_name");
+        printf(FS);
+        printf("\"%s\"", i->active_port->name);
+        printf(FS);
+        printf("active_port_desc");
+        printf(FS);
+        printf("\"%s\"", i->active_port->description);
+        printf(FS);
+        printf("active_port_type");
+        printf(FS);
+        printf("\"%s\"", pa_device_port_type_str(i->active_port->type));
+    }
+
+    // TODO: n_formats.
+    // TODO: formats.
+    printf(RS);
+
+    fflush(stdout);
+}
+
+void print_pa_sink_input_info(const pa_sink_input_info *i, const callback_userdata *cb_userdata) {
+    printf("type"); 
+    printf(FS);
+    printf("sinkinputinfo");
+    printf(FS);
+
+    if (cb_userdata) {
+        printf("event_type");
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf(FS);
+        printf("event_facility"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+        printf(FS);
+    }
+
+    printf("name"); 
+    printf(FS);
+    printf("\"%s\"", i->name);
+    printf(FS);
+    printf("index"); 
+    printf(FS);
+    printf("%d", i->index);
+    printf(FS);
+    printf("owner_module"); 
+    printf(FS);
+    printf("%d", i->owner_module);
+    printf(FS);
+    printf("client"); 
+    printf(FS);
+    printf("%d", i->client);
+    printf(FS);
+    printf("sink"); 
+    printf(FS);
+    printf("%d", i->sink);
+    printf(FS);
+    printf("sample_spec_rate"); 
+    printf(FS);
+    printf("%u", i->sample_spec.rate);
+    printf(FS);
+    printf("sample_spec_format"); 
+    printf(FS);
+    printf("%s", pa_sample_format_str(i->sample_spec.format));
+    printf(FS);
+    printf("sample_spec_channels"); 
+    printf(FS);
+    printf("%u ", i->sample_spec.channels);
+    printf(FS);
+    // TODO: channel map.
+    printf("volume"); 
+    printf(FS);
+    printf("%d", pa_cvolume_max(&i->volume));
+    printf(FS);
+    printf("buffer_usec"); 
+    printf(FS);
+    printf("%llu", (unsigned long long)i->buffer_usec);
+    printf(FS);
+    printf("sink_usec"); 
+    printf(FS);
+    printf("%llu", (unsigned long long)i->sink_usec);
+    printf(FS);
+    printf("resample_method"); 
+    printf(FS);
+    printf("\"%s\"", i->resample_method);
+    printf(FS);
+    printf("driver"); 
+    printf(FS);
+    printf("\"%s\"", i->driver);
+    printf(FS);
+    printf("mute"); 
+    printf(FS);
+    printf("%d", i->mute);
+    printf(FS);
+    // TODO: proplist
+    printf("corked"); 
+    printf(FS);
+    printf("%d", i->corked);
+    printf(FS);
+    printf("has_volume"); 
+    printf(FS);
+    printf("%d", i->has_volume);
+    printf(FS);
+    printf("volume_writable"); 
+    printf(FS);
+    printf("%d", i->volume_writable);
+    // TODO: format.
+    printf(RS);
+
+    fflush(stdout);
+}
+
+void print_pa_source_output_info(const pa_source_output_info *i, const callback_userdata *cb_userdata) {
+    printf("type"); 
+    printf(FS);
+    printf("sourceoutputinfo");
+    printf(FS);
+
+    if (cb_userdata) {
+        printf("event_type"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf(FS);
+        printf("event_facility"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+        printf(FS);
+    }
+
+    printf("name"); 
+    printf(FS);
+    printf("\"%s\"", i->name);
+    printf(FS);
+    printf("index"); 
+    printf(FS);
+    printf("%d", i->index);
+    printf(FS);
+    printf("owner_module"); 
+    printf(FS);
+    printf("%d", i->owner_module);
+    printf(FS);
+    printf("client"); 
+    printf(FS);
+    printf("%d", i->client);
+    printf(FS);
+    printf("source"); 
+    printf(FS);
+    printf("%d", i->client);
+    printf(FS);
+    // TODO: sample_spec.
+    // TODO: channel_map.
+    printf("buffer_usec"); 
+    printf(FS);
+    printf("%llu", (unsigned long long)i->buffer_usec);
+    printf(FS);
+    printf("source_usec"); 
+    printf(FS);
+    printf("%llu", (unsigned long long)i->source_usec);
+    printf(FS);
+    printf("resample_method"); 
+    printf(FS);
+    printf("\"%s\"", i->resample_method);
+    printf(FS);
+    printf("driver"); 
+    printf(FS);
+    printf("\"%s\"", i->driver);
+    printf(FS);
+    // TODO: proplist.
+    printf("corked"); 
+    printf(FS);
+    printf("%d", i->corked);
+    printf(FS);
+    // TODO: pa_cvolume.
+    printf("mute"); 
+    printf(FS);
+    printf("%d", i->mute);
+    printf(FS);
+    printf("has_volume"); 
+    printf(FS);
+    printf("%d", i->has_volume);
+    printf(FS);
+    printf("volume_writable"); 
+    printf(FS);
+    printf("%d", i->volume_writable);
+    // TODO: format.
+    printf(RS);
+
+    fflush(stdout);
+}
+
+void print_pa_module_info(const pa_module_info *i, const callback_userdata *cb_userdata) {
+    printf("type"); 
+    printf(FS);
+    printf("moduleinfo");
+    printf(FS);
+
+    if (cb_userdata) {
+        printf("event_type");
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf(FS);
+        printf("event_facility"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+        printf(FS);
+    }
+
+    printf("name"); 
+    printf(FS);
+    printf("\"%s\"", i->name);
+    printf(FS);
+    printf("index"); 
+    printf(FS);
+    printf("%d", i->index);
+    printf(FS);
+    printf("argument"); 
+    printf(FS);
+    printf("\"%s\"", i->argument);
+    printf(FS);
+    printf("n_used"); 
+    printf(FS);
+    printf("%d", i->n_used);
+    // TODO: proplist.
+    printf(RS);
+
+    fflush(stdout);
+}
+
+void print_pa_client_info(const pa_client_info *i, const callback_userdata *cb_userdata) {
+    printf("type"); 
+    printf(FS);
+    printf("clientinfo");
+    printf(FS);
+
+    if (cb_userdata) {
+        printf("event_type");
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf(FS);
+        printf("event_facility"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+        printf(FS);
+    }
+
+    printf("name"); 
+    printf(FS);
+    printf("\"%s\"", i->name);
+    printf(FS);
+    printf("index"); 
+    printf(FS);
+    printf("%d", i->index);
+    printf(FS);
+    printf("owner_module"); 
+    printf(FS);
+    printf("%d", i->owner_module);
+    printf(FS);
+    printf("driver"); 
+    printf(FS);
+    printf("\"%s\"", i->driver);
+    // TODO: proplist.
+    printf(RS);
+
+    fflush(stdout);
+}
+
+void print_pa_sample_info(const pa_sample_info *i, const callback_userdata *cb_userdata) {
+    printf("type"); 
+    printf(FS);
+    printf("sampleinfo");
+    printf(FS);
+
+    if (cb_userdata) {
+        printf("event_type");
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf(FS);
+        printf("event_facility"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+        printf(FS);
+    }
+
+    printf("name"); 
+    printf(FS);
+    printf("\"%s\"", i->name);
+    printf(FS);
+    printf("index"); 
+    printf(FS);
+    printf("%d", i->index);
+    printf(FS);
+    printf("volume"); 
+    printf(FS);
+    printf("%d", pa_cvolume_max(&i->volume));
+    printf(FS);
+    printf("sample_spec_rate"); 
+    printf(FS);
+    printf("%u", i->sample_spec.rate);
+    printf(FS);
+    printf("sample_spec_format"); 
+    printf(FS);
+    printf("\"%s\"", pa_sample_format_str(i->sample_spec.format));
+    printf(FS);
+    printf("sample_spec_channels"); 
+    printf(FS);
+    printf("%u", i->sample_spec.channels);
+    printf(FS);
+    // TODO: channel_map.
+    printf("duration"); 
+    printf(FS);
+    printf("%llu", (unsigned long long)i->duration);
+    printf(FS);
+    printf("bytes"); 
+    printf(FS);
+    printf("%d", i->bytes);
+    printf(FS);
+    printf("lazy"); 
+    printf(FS);
+    printf("%d", i->lazy);
+    printf(FS);
+    printf("filename"); 
+    printf(FS);
+    printf("\"%s\"", i->filename);
+    // TODO: proplist.
+    printf(RS);
+
+    fflush(stdout);
+}
+
+void print_pa_server_info(const pa_server_info *i, const callback_userdata *cb_userdata) {
+    printf("type"); 
+    printf(FS);
+    printf("serverinfo");
+    printf(FS);
+
+    if (cb_userdata) {
+        printf("event_type");
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf(FS);
+        printf("event_facility"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+        printf(FS);
+    }
+
+    printf("user_name"); 
+    printf(FS);
+    printf("\"%s\"", i->user_name);
+    printf(FS);
+    printf("host_name"); 
+    printf(FS);
+    printf("\"%s\"", i->host_name);
+    printf(FS);
+    printf("server_version"); 
+    printf(FS);
+    printf("\"%s\"", i->server_version);
+    printf(FS);
+    printf("server_name"); 
+    printf(FS);
+    printf("\"%s\"", i->server_name);
+    printf(FS);
+    printf("sample_spec_rate"); 
+    printf(FS);
+    printf("%u", i->sample_spec.rate);
+    printf(FS);
+    printf("sample_spec_format"); 
+    printf(FS);
+    printf("\"%s\"", pa_sample_format_str(i->sample_spec.format));
+    printf(FS);
+    printf("sample_spec_channels"); 
+    printf(FS);
+    printf("%u", i->sample_spec.channels);
+    printf(FS);
+    printf("default_sink_name"); 
+    printf(FS);
+    printf("\"%s\"", i->default_sink_name);
+    printf(FS);
+    printf("default_source_name"); 
+    printf(FS);
+    printf("\"%s\"", i->default_source_name);
+    printf(FS);
+    printf("cookie"); 
+    printf(FS);
+    printf("%d", i->cookie);
+    // TODO: channel_map.
+    printf(RS);
+
+    fflush(stdout);
+}
+
+void print_pa_card_info(const pa_card_info *i, const callback_userdata *cb_userdata) {
+    printf("type");
+    printf(FS);
+    printf("cardinfo");
+    printf(FS);
+
+    if (cb_userdata) {
+        printf("event_type");
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
+        printf(FS);
+        printf("event_facility"); 
+        printf(FS);
+        printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
+        printf(FS);
+    }
+
+    printf("name");
+    printf(FS);
+    printf("\"%s\"", i->name);
+    printf(FS);
+    printf("index"); 
+    printf(FS);
+    printf("%d", i->index);
+    printf(FS);
+    printf("owner_module"); 
+    printf(FS);
+    printf("%d", i->owner_module);
+    printf(FS);
+    printf("driver"); 
+    printf(FS);
+    printf("\"%s\"", i->driver);
+    printf(FS);
+    printf("n_profiles"); 
+    printf(FS);
+    printf("%d", i->n_profiles);
+    printf(FS);
     // TODO: profiles.
     // TODO: active_profile.
     // TODO: proplist.
-    printf("n_ports=%d\n", i->n_ports);
+    printf("n_ports"); 
+    printf(FS);
+    printf("%d", i->n_ports);
     // TODO: ports.
     // TODO: profiles2.
     // TODO: active_profile2.
-    
+    printf(RS);
+
     fflush(stdout);
-    free(userdata);
 }
 
 // Convert a pa_sample_format enum value to a human-readable string.
@@ -563,6 +1037,60 @@ const char *pa_subscribe_event_type_t_event_facility_str(pa_subscription_event_t
             return "PA_SUBSCRIPTION_EVENT_SERVER";
         case PA_SUBSCRIPTION_EVENT_CARD:
             return "PA_SUBSCRIPTION_EVENT_CARD";
+    }
+
+    return NULL;
+}
+
+// Return device port type as a string.
+const char *pa_device_port_type_str(pa_device_port_type_t t) {
+    switch (t) {
+        case PA_DEVICE_PORT_TYPE_UNKNOWN:
+            return "PA_DEVICE_PORT_TYPE_UNKNOWN";
+        case PA_DEVICE_PORT_TYPE_AUX:
+            return "PA_DEVICE_PORT_TYPE_AUX";
+        case PA_DEVICE_PORT_TYPE_SPEAKER:
+            return "PA_DEVICE_PORT_TYPE_SPEAKER";
+        case PA_DEVICE_PORT_TYPE_HEADPHONES:
+            return "PA_DEVICE_PORT_TYPE_HEADPHONES";
+        case PA_DEVICE_PORT_TYPE_LINE:
+            return "PA_DEVICE_PORT_TYPE_LINE";
+        case PA_DEVICE_PORT_TYPE_MIC:
+            return "PA_DEVICE_PORT_TYPE_MIC";
+        case PA_DEVICE_PORT_TYPE_HEADSET:
+            return "PA_DEVICE_PORT_TYPE_HEADSET";
+        case PA_DEVICE_PORT_TYPE_HANDSET:
+            return "PA_DEVICE_PORT_TYPE_HANDSET";
+        case PA_DEVICE_PORT_TYPE_EARPIECE:
+            return "PA_DEVICE_PORT_TYPE_EARPIECE";
+        case PA_DEVICE_PORT_TYPE_SPDIF:
+            return "PA_DEVICE_PORT_TYPE_SPDIF";
+        case PA_DEVICE_PORT_TYPE_HDMI:
+            return "PA_DEVICE_PORT_TYPE_HDMI";
+        case PA_DEVICE_PORT_TYPE_TV:
+            return "PA_DEVICE_PORT_TYPE_TV";
+        case PA_DEVICE_PORT_TYPE_RADIO:
+            return "PA_DEVICE_PORT_TYPE_RADIO";
+        case PA_DEVICE_PORT_TYPE_VIDEO:
+            return "PA_DEVICE_PORT_TYPE_VIDEO";
+        case PA_DEVICE_PORT_TYPE_USB:
+            return "PA_DEVICE_PORT_TYPE_USB";
+        case PA_DEVICE_PORT_TYPE_BLUETOOTH:
+            return "PA_DEVICE_PORT_TYPE_BLUETOOTH";
+        case PA_DEVICE_PORT_TYPE_PORTABLE:
+            return "PA_DEVICE_PORT_TYPE_PORTABLE";
+        case PA_DEVICE_PORT_TYPE_HANDSFREE:
+            return "PA_DEVICE_PORT_TYPE_HANDSFREE";
+        case PA_DEVICE_PORT_TYPE_CAR:
+            return "PA_DEVICE_PORT_TYPE_CAR";
+        case PA_DEVICE_PORT_TYPE_HIFI:
+            return "PA_DEVICE_PORT_TYPE_HIFI";
+        case PA_DEVICE_PORT_TYPE_PHONE:
+            return "PA_DEVICE_PORT_TYPE_PHONE";
+        case PA_DEVICE_PORT_TYPE_NETWORK:
+            return "PA_DEVICE_PORT_TYPE_NETWORK";
+        case PA_DEVICE_PORT_TYPE_ANALOG:
+            return "PA_DEVICE_PORT_TYPE_ANALOG";
     }
 
     return NULL;

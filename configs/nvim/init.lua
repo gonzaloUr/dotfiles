@@ -1,18 +1,24 @@
-require('packer').startup(function(use)
-  -- oficial plugins.
-  use 'neovim/nvim-lspconfig'
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
 
-  -- third party lua plugins.
-  use 'folke/which-key.nvim'
-  use 'nvim-tree/nvim-tree.lua'
-  use { "catppuccin/nvim", as = "catppuccin" }
-  use { 'nvim-telescope/telescope.nvim', tag = '0.1.8', requires = { {'nvim-lua/plenary.nvim'} } }
+-- options, global variables.
 
-  -- vimscript plugins.
-  use 'whonore/Coqtail'
-end)
-
--- options and global variables.
+vim.g.mapleader = ','
+vim.g.maplocalleader = '-'
 
 vim.opt.wrap = false
 vim.opt.number = true
@@ -23,7 +29,24 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
--- colorscheme
+-- lazy
+
+require("lazy").setup({
+  -- oficial plugins.
+  "neovim/nvim-lspconfig",
+
+  -- third party lua plugins.
+  "folke/which-key.nvim",
+  "nvim-tree/nvim-tree.lua",
+  "lewis6991/gitsigns.nvim",
+  { "catppuccin/nvim", name = "catppuccin" },
+  { "nvim-telescope/telescope.nvim", tag = "0.1.8", dependencies = { "nvim-lua/plenary.nvim" } },
+
+  -- vimscript plugins.
+  "whonore/Coqtail",
+})
+
+-- colorscheme.
 
 require("catppuccin").setup({
   transparent_background = true
@@ -72,18 +95,16 @@ vim.lsp.config['hls'] = {
   cmd = { 'haskell-language-server-wrapper', '--lsp' },
 }
 
--- mappings and which key.
-
-vim.g.mapleader = ','
-vim.g.maplocalleader = '-'
-
-vim.keymap.set('n', '<Leader><Leader>', '<cmd>noh<cr>')
-vim.keymap.set('n', '<Leader>.', '<cmd>NvimTreeToggle<cr>')
+-- which key.
 
 local wk = require('which-key')
 local builtin = require('telescope.builtin')
 
 wk.add({
+    -- Basic keymaps
+    ["<Leader><Leader>"] = { "<cmd>noh<cr>", "Clear search highlights" },
+    ["<Leader>."] = { "<cmd>NvimTreeToggle<cr>", "Toggle NvimTree" },
+
     -- lsp keybindings.
     { '<Leader>a', function() vim.lsp.buf.code_action() end, desc = 'Code Action' },
     { '<Leader>d', function() vim.lsp.buf.definition() end, desc = 'Go to definition' },

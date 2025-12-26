@@ -1,4 +1,6 @@
 $include /etc/inputrc
+
+set bell-style none
 set editing-mode vi
 set show-mode-in-prompt on
 
