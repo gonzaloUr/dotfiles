@@ -2,8 +2,6 @@
 
 # yay
 yay -S --needed dragon-drop
-yay -S --needed nvim-packer-git
-yay -S --needed dropbox
 yay -S --needed dropbox-cli
 yay -S --needed light
 yay -S --needed librewolf-bin

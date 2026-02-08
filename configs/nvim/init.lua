@@ -41,6 +41,7 @@ require("lazy").setup({
   "lewis6991/gitsigns.nvim",
   { "catppuccin/nvim", name = "catppuccin" },
   { "nvim-telescope/telescope.nvim", tag = "0.1.8", dependencies = { "nvim-lua/plenary.nvim" } },
+  { "Zeta611/tex2uni.nvim", opts = { ft = { "*.v" } } },
 
   -- vimscript plugins.
   "whonore/Coqtail",
@@ -101,9 +102,8 @@ local wk = require('which-key')
 local builtin = require('telescope.builtin')
 
 wk.add({
-    -- Basic keymaps
-    ["<Leader><Leader>"] = { "<cmd>noh<cr>", "Clear search highlights" },
-    ["<Leader>."] = { "<cmd>NvimTreeToggle<cr>", "Toggle NvimTree" },
+    { "<Leader><Leader>", "<cmd>noh<cr>", desc = "Clear search highlights" },
+    { "<Leader>.", "<cmd>NvimTreeToggle<cr>", desc = "Toggle NvimTree" },
 
     -- lsp keybindings.
     { '<Leader>a', function() vim.lsp.buf.code_action() end, desc = 'Code Action' },
@@ -160,7 +160,8 @@ vim.api.nvim_create_autocmd('FileType', {
     'typescriptreact',
     'javascript',
     'ocaml',
-    'haskell'
+    'haskell',
+    'tex'
   },
   callback = function(args)
     vim.bo[args.buf].shiftwidth = 2
@@ -208,69 +209,3 @@ local function add_math_remaps(maps)
     vim.keymap.set("i", lhs, rhs, { noremap = true })
   end
 end
-
--- Rocq rewrite to unicode
-
--- local math_maps = {
---   ["\\forall"] = "∀",
---   ["\\exists"] = "∃",
---   ["\\nexists"] = "∄",
---   ["\\not"] = "¬",
---   ["\\->"] = "→",
---   ["\\-->"] = "⟶",
---   ["\\<-"] = "←",
---   ["\\<->"] = "↔",
---   ["\\=>"] = "⇒",
---   ["\\<="] = "⇐",
---   ["\\<=>"] = "⇔",
---   ["\\:="]   = "≔",
--- 
---   ["\\in"] = "∈",
---   ["\\notin"] = "∉",
---   ["\\subset"] = "⊂",
---   ["\\subseteq"] = "⊆",
---   ["\\superset"] = "⊃",
---   ["\\prop"] = "∝",
---   ["\\empty"] = "∅",
--- 
---   ["\\pm"] = "±",
---   ["\\cdot"] = "·",
---   ["\\times"] = "×",
--- 
---   ["\\fun"] = "λ",
---   ["\\lambda"] = "λ",
---   ["\\alpha"] = "α",
---   ["\\beta"]  = "β",
---   ["\\gamma"] = "γ",
---   ["\\delta"] = "δ",
---   ["\\eps"]   = "ε",
---   ["\\phi"]   = "φ",
---   ["\\pi"]    = "π",
---   ["\\theta"] = "θ",
--- 
---   ["\\|-"] = "⊢",
---   ["\\||-"] = "⊩",
--- 
---   ["\\mapsto"] = "↦",
---   ["\\to"]     = "→",
--- 
---   ["\\<<"]  = "⟪",
---   ["\\>>"]  = "⟫",
---   ["\\<["]  = "⟨",
---   ["\\]>"]  = "⟩",
---   ["\\<"]  = "⟨",
---   ["\\>"]  = "⟩",
--- }
--- 
--- local function add_math_remaps(maps)
---   for lhs, rhs in pairs(maps) do
---     vim.keymap.set("i", lhs, rhs, { noremap = true })
---   end
--- end
--- 
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "coq",
---   callback = function()
---     add_math_remaps(math_maps)
---   end,
--- })
