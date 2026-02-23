@@ -3,6 +3,9 @@
 
 #include <pulse/pulseaudio.h>
 
+#define FS (",")
+#define RS ("\n")
+
 // Signal handling.
 void signal_callback(pa_mainloop_api *api, pa_signal_event *e, int sig, void *userdata);
 
@@ -16,13 +19,19 @@ void init_ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, voi
 void init_ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata);
 void init_ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata);
 
-// Introspect operation callbacks.
+// Wrapper for introspect or subscribe operation callbacks.
 typedef struct {
+    // Original userdata.
     void *userdata;
+
+    // Even type recived in ctx_subscribe_callback.
     pa_subscription_event_type_t t;
+
+    // Idx recived in ctx_subscribe_callback.
     uint32_t idx;
 } callback_userdata;
 
+// Intrespect or subscribe operation callbacks.
 void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata);
 void ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata);
 void ctx_sink_input_info_callback(pa_context *ctx, const pa_sink_input_info *i, int eol, void *userdata);

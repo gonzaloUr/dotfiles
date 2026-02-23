@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define FS (",")
-#define RS ("\n")
-
 int main() {
     // Create mainloop.
     pa_mainloop *mainloop = pa_mainloop_new();
@@ -61,7 +58,7 @@ void signal_callback(pa_mainloop_api *api, pa_signal_event *e, int sig, void *us
     api->quit(api, 0);
 }
 
-// An event related to the mainloop of this pulseaudio client.
+// Callback related to the mainloop of this pulseaudio client.
 void ctx_state_callback(pa_context *ctx, void *userdata) {
     pa_mainloop *mainloop = userdata;
     pa_context_state_t state = pa_context_get_state(ctx);
@@ -130,6 +127,7 @@ void ctx_state_callback(pa_context *ctx, void *userdata) {
             printf(RS);
             fflush(stdout);
 
+            // Start printing initial state of the server using init functions.
             pa_context_get_server_info(ctx, init_ctx_server_info_callback, NULL);
 
             break;
@@ -166,32 +164,35 @@ void ctx_state_callback(pa_context *ctx, void *userdata) {
     fflush(stdout);
 }
 
+// Init function that prints the current server info.
 void init_ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata) {
     print_pa_server_info(i, NULL);
     pa_context_get_sink_info_by_name(ctx, i->default_sink_name, init_ctx_sink_info_callback, (void*) i);
 }
 
+// Init function that prints the current sink info.
 void init_ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
     print_pa_sink_info(i, NULL);
-
     pa_server_info *server_info = (pa_server_info*) userdata;
     pa_context_get_source_info_by_name(ctx, server_info->default_source_name, init_ctx_source_info_callback, NULL);
 }
 
+// Init function that prints the current sink info, also enables ctx_subscribe_callback for introspection of subscribe events.
 void init_ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
     print_pa_source_info(i, NULL);
-
     pa_context_subscribe(ctx, PA_SUBSCRIPTION_MASK_ALL, NULL, NULL);
 }
 
+// context callback for events.
 void ctx_event_callback(pa_context *ctx, const char *name, pa_proplist *pl, void *userdata) {
     // TODO.
 }
 
+// context callback for subscriptions, changes in the server pretty much, then dispatchs to different functions.
 void ctx_subscribe_callback(pa_context *ctx, pa_subscription_event_type_t t, uint32_t idx, void *userdata) {
 
     callback_userdata *cb_userdata = malloc(sizeof(callback_userdata));
@@ -230,7 +231,7 @@ void ctx_subscribe_callback(pa_context *ctx, pa_subscription_event_type_t t, uin
     }
 }
 
-// An event related to a sink, a sink is an audio output device, like your speakers, headphones, HDMI audio, etc.
+// A subscribe event related to a sink, a sink is an audio output device, like your speakers, headphones, HDMI audio, etc.
 void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
@@ -239,7 +240,7 @@ void ctx_sink_info_callback(pa_context *ctx, const pa_sink_info *i, int eol, voi
     free(userdata);
 }
 
-// An event related to a source, which is an audio input device, like a microphone or a virtual capture source.
+// A subscribe event related to a source, which is an audio input device, like a microphone or a virtual capture source.
 void ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
@@ -248,7 +249,7 @@ void ctx_source_info_callback(pa_context *ctx, const pa_source_info *i, int eol,
     free(userdata);
 }
 
-// An event about a sink input, which is an audio stream that’s going into a sink.
+// A subscribe event about a sink input, which is an audio stream that’s going into a sink.
 void ctx_sink_input_info_callback(pa_context *ctx, const pa_sink_input_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
@@ -257,7 +258,7 @@ void ctx_sink_input_info_callback(pa_context *ctx, const pa_sink_input_info *i, 
     free(userdata);
 }
 
-// An event about a source output, which is a stream being recorded from a source.
+// A subscribe event about a source output, which is a stream being recorded from a source.
 void ctx_source_output_info_callback(pa_context *ctx, const pa_source_output_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
@@ -266,7 +267,7 @@ void ctx_source_output_info_callback(pa_context *ctx, const pa_source_output_inf
     free(userdata);
 }
 
-// An event about a PulseAudio module. Modules are plug-ins that provide functionality, like Bluetooth support.
+// A subscribe event about a PulseAudio module. Modules are plug-ins that provide functionality, like Bluetooth support.
 void ctx_module_info_callback(pa_context *ctx, const pa_module_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
@@ -275,7 +276,7 @@ void ctx_module_info_callback(pa_context *ctx, const pa_module_info *i, int eol,
     free(userdata);
 }
 
-// An event about a PulseAudio client, which is any process connected to the server.
+// A subscribe event about a PulseAudio client, which is any process connected to the server.
 void ctx_client_info_callback(pa_context *ctx, const pa_client_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
@@ -284,7 +285,7 @@ void ctx_client_info_callback(pa_context *ctx, const pa_client_info *i, int eol,
     free(userdata);
 }
 
-// An event about a sample cache item, which is an audio sample stored for quick playback.
+// A subscribe event about a sample cache item, which is an audio sample stored for quick playback.
 void ctx_sample_info_callback(pa_context *ctx, const pa_sample_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
@@ -300,7 +301,7 @@ void ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *us
     free(userdata);
 }
 
-// An event about an audio card, which is a representation of a physical or virtual sound device.
+// A subscribe event about an audio card, which is a representation of a physical or virtual sound device.
 void ctx_card_info_callback(pa_context *ctx, const pa_card_info *i, int eol, void *userdata) {
     if (eol > 0 || !i) return;
 
@@ -356,6 +357,18 @@ void print_pa_sink_info(const pa_sink_info *i, const callback_userdata *cb_userd
     printf(FS);
     printf("%d", pa_cvolume_max(&i->volume));
     printf(FS);
+    printf("volume_norm");
+    printf(FS);
+    printf("%d", PA_VOLUME_NORM);
+    printf(FS);
+    printf("volume_max");
+    printf(FS);
+    printf("%d", PA_VOLUME_MAX);
+    printf(FS);
+    printf("volume_muted");
+    printf(FS);
+    printf("%d", PA_VOLUME_MUTED);
+    printf(FS);
     printf("mute"); 
     printf(FS);
     printf("%d", i->mute);
@@ -397,11 +410,11 @@ void print_pa_sink_info(const pa_sink_info *i, const callback_userdata *cb_userd
     printf("card"); 
     printf(FS);
     printf("%u", i->card);
-    printf(FS);
     // TODO: n_ports.
     // TODO: ports.
 
     if (i->active_port) {
+        printf(FS);
         printf("active_port_name");
         printf(FS);
         printf("\"%s\"", i->active_port->name);
@@ -469,6 +482,18 @@ void print_pa_source_info(const pa_source_info *i, const callback_userdata *cb_u
     printf(FS);
     printf("%d", pa_cvolume_max(&i->volume));
     printf(FS);
+    printf("volume_norm");
+    printf(FS);
+    printf("%d", PA_VOLUME_NORM);
+    printf(FS);
+    printf("volume_max");
+    printf(FS);
+    printf("%d", PA_VOLUME_MAX);
+    printf(FS);
+    printf("volume_muted");
+    printf(FS);
+    printf("%d", PA_VOLUME_MUTED);
+    printf(FS);
     printf("mute"); 
     printf(FS);
     printf("%d", i->mute);
@@ -502,11 +527,11 @@ void print_pa_source_info(const pa_source_info *i, const callback_userdata *cb_u
     printf("state"); 
     printf(FS);
     printf("\"%s\"", pa_sink_state_str(i->state));
-    printf(FS);
     // TODO: n_ports.
     // TODO: ports.
 
     if (i->active_port) {
+        printf(FS);
         printf("active_port_name");
         printf(FS);
         printf("\"%s\"", i->active_port->name);

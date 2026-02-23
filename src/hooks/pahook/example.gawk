@@ -8,11 +8,13 @@ BEGIN {
     active_port_type = "??"
     volumne = "??"
     muted = "??"
+    norm = "??"
 
     default_source = "??"
     mic_active_port_type = "??"
     mic_volume = "??"
     mic_muted = "??"
+    mic_norm = "??"
 }
 
 {
@@ -44,7 +46,8 @@ $2 == "sinkinfo" {
 
     volume = kv["volume"]
     muted = kv["mute"]
-    active_port_type = port_icon(kv["active_port_type"])
+    active_port_type = active_port_icon(kv["active_port_type"])
+    norm = kv["volume_norm"]
 
     print_status()
 }
@@ -61,7 +64,8 @@ $2 == "sourceinfo" {
 
     mic_volume = kv["volume"]
     mic_muted = kv["mute"]
-    mic_active_port_type = port_icon(kv["active_port_type"])
+    mic_active_port_type = active_port_icon(kv["active_port_type"])
+    mic_norm = kv["volume_norm"]
 
     print_status()
 }
@@ -97,8 +101,12 @@ $2 == "cardinfo" {
 }
 
 function print_status() {
-    print type, event_type
-    print "sink [", muted, volume, active_port_type, "] source [", mic_muted, mic_volume, mic_active_port_type, "]"
+    volume_percentage = volume_perc()
+    mic_volume_percentage = mic_volume_perc()
+
+    print "last type:", type ",", "last event type:", event_type
+    print "sink:", default_sink, muted, volume_percentage, active_port_type
+    print "source:", default_source, mic_muted, mic_volume_percentage, mic_active_port_type
     print ""
 }
 
@@ -108,34 +116,50 @@ function debug_kv() {
     }
 }
 
-function port_icon(type) {
+function volume_perc() {
+    if (volume == "??") {
+        return "??"
+    }
+
+    return round(100 * (volume / norm))
+}
+
+function mic_volume_perc() {
+    if (mic_volume == "??") {
+        return "??"
+    }
+
+    return round(100 * (mic_volume / mic_norm))
+}
+
+function active_port_icon(type) {
     switch (type) {
         case "PA_DEVICE_PORT_TYPE_UNKNOWN":
             return ""
         case "PA_DEVICE_PORT_TYPE_AUX":
-            return ""
+            return ""
         case "PA_DEVICE_PORT_TYPE_SPEAKER":
             return ""
         case "PA_DEVICE_PORT_TYPE_HEADPHONES":
             return ""
         case "PA_DEVICE_PORT_TYPE_LINE":
-            return ""
+            return ""
         case "PA_DEVICE_PORT_TYPE_MIC":
             return ""
         case "PA_DEVICE_PORT_TYPE_HEADSET":
-            return ""
+            return ""
         case "PA_DEVICE_PORT_TYPE_HANDSET":
             return ""
         case "PA_DEVICE_PORT_TYPE_EARPIECE":
-            return ""
+            return ""
         case "PA_DEVICE_PORT_TYPE_SPDIF":
-            return ""
+            return "󱑽"
         case "PA_DEVICE_PORT_TYPE_HDMI":
-            return ""
+            return "󰡁"
         case "PA_DEVICE_PORT_TYPE_TV":
             return ""
         case "PA_DEVICE_PORT_TYPE_RADIO":
-            return ""
+            return ""
         case "PA_DEVICE_PORT_TYPE_VIDEO":
             return ""
         case "PA_DEVICE_PORT_TYPE_USB":
@@ -145,18 +169,22 @@ function port_icon(type) {
         case "PA_DEVICE_PORT_TYPE_PORTABLE":
             return ""
         case "PA_DEVICE_PORT_TYPE_HANDSFREE":
-            return ""
+            return ""
         case "PA_DEVICE_PORT_TYPE_CAR":
             return ""
         case "PA_DEVICE_PORT_TYPE_HIFI":
-            return ""
+            return ""
         case "PA_DEVICE_PORT_TYPE_PHONE":
             return ""
         case "PA_DEVICE_PORT_TYPE_NETWORK":
-            return ""
+            return "󰛳"
         case "PA_DEVICE_PORT_TYPE_ANALOG":
-            return ""
+            return ""
         default:
-            return ""
+            return ""
     }
+}
+
+function round(x) {
+    return (x >= 0) ? int(x + 0.5) : int(x - 0.5)
 }
