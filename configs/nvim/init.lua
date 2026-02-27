@@ -15,8 +15,24 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- options, global variables.
+-- lazy
+require("lazy").setup({
+  -- oficial plugins.
+  "neovim/nvim-lspconfig",
 
+  -- third party lua plugins.
+  "folke/which-key.nvim",
+  "nvim-tree/nvim-tree.lua",
+  { "catppuccin/nvim", name = "catppuccin" },
+  { "nvim-telescope/telescope.nvim", tag = "0.1.8", dependencies = { "nvim-lua/plenary.nvim" } },
+  { "Zeta611/tex2uni.nvim", opts = { ft = { "*.v" } } },
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+
+  -- vimscript plugins.
+  "whonore/Coqtail",
+})
+
+-- options, global variables.
 vim.g.mapleader = ','
 vim.g.maplocalleader = '-'
 
@@ -29,26 +45,7 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
--- lazy
-
-require("lazy").setup({
-  -- oficial plugins.
-  "neovim/nvim-lspconfig",
-
-  -- third party lua plugins.
-  "folke/which-key.nvim",
-  "nvim-tree/nvim-tree.lua",
-  "lewis6991/gitsigns.nvim",
-  { "catppuccin/nvim", name = "catppuccin" },
-  { "nvim-telescope/telescope.nvim", tag = "0.1.8", dependencies = { "nvim-lua/plenary.nvim" } },
-  { "Zeta611/tex2uni.nvim", opts = { ft = { "*.v" } } },
-
-  -- vimscript plugins.
-  "whonore/Coqtail",
-})
-
 -- colorscheme.
-
 require("catppuccin").setup({
   transparent_background = true
 })
@@ -56,17 +53,30 @@ require("catppuccin").setup({
 vim.cmd.colorscheme("catppuccin")
 
 -- nvim-tree plugin.
-
 require('nvim-tree').setup({
   sort_by = 'extension'
 })
 
 -- telescope plugin.
-
 require('telescope').setup {}
 
--- lsp.
+-- treesitter plugin.
+local treesitter = require('nvim-treesitter')
 
+treesitter.setup {
+   install_dir = vim.fn.stdpath('data') .. '/site'
+}
+
+treesitter.install {
+  'elixir', 'eex', 'heex'
+}
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'elixir', 'eex', 'heex' },
+  callback = function() vim.treesitter.start() end
+})
+
+-- lsp.
 vim.lsp.config['gopls'] = {
   cmd = { 'gopls' },
   settings = {
@@ -97,7 +107,6 @@ vim.lsp.config['hls'] = {
 }
 
 -- which key.
-
 local wk = require('which-key')
 local builtin = require('telescope.builtin')
 
@@ -130,7 +139,6 @@ wk.add({
 wk.setup()
 
 -- autocmds
-
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
   callback = function()

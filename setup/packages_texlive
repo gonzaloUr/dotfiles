@@ -1,4 +1,4 @@
 #!/bin/sh
 
-pacman -S --needed texlive-langspanish
 pacman -S --needed texlive-meta
+pacman -S --needed texlive-langspanish

@@ -104,32 +104,11 @@ function print_status() {
     volume_percentage = volume_perc()
     mic_volume_percentage = mic_volume_perc()
 
+    print "---"
     print "last type:", type ",", "last event type:", event_type
     print "sink:", default_sink, muted, volume_percentage, active_port_type
     print "source:", default_source, mic_muted, mic_volume_percentage, mic_active_port_type
-    print ""
-}
-
-function debug_kv() {
-    for (k in kv) {
-        printf("key='%s' value='%s'\n", k, kv[k])
-    }
-}
-
-function volume_perc() {
-    if (volume == "??") {
-        return "??"
-    }
-
-    return round(100 * (volume / norm))
-}
-
-function mic_volume_perc() {
-    if (mic_volume == "??") {
-        return "??"
-    }
-
-    return round(100 * (mic_volume / mic_norm))
+    print "---"
 }
 
 function active_port_icon(type) {
@@ -181,10 +160,47 @@ function active_port_icon(type) {
         case "PA_DEVICE_PORT_TYPE_ANALOG":
             return ""
         default:
-            return ""
+            return "??"
+    }
+}
+
+function volume_perc() {
+    if (volume == "??") {
+        return "??"
+    }
+
+    return round(100 * (volume / norm))
+}
+
+function mic_volume_perc() {
+    if (mic_volume == "??") {
+        return "??"
+    }
+
+    return round(100 * (mic_volume / mic_norm))
+}
+
+function debug_kv() {
+    for (k in kv) {
+        printf("key='%s' value='%s'\n", k, kv[k])
     }
 }
 
 function round(x) {
     return (x >= 0) ? int(x + 0.5) : int(x - 0.5)
+}
+
+function debug_fields() {
+    print "---"
+    print $0
+
+    print "---"
+    print "Total Records:", NF
+    print "---"
+
+    for (i = 1; i <= NF; i++) {
+        printf("Position %d: %s\n", i, $i)
+    }
+
+    print "---"
 }

@@ -1,5 +1,3 @@
-#define _POSIX_C_SOURCE 200809L
-
 #include "udevhook.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,65 +79,60 @@ int main() {
             struct udev_device *dev = udev_monitor_receive_device(mon);
             if (dev) {
 
-                // Create memstream to buffer the printing of the whole record so it happens at once.
-                char *buffer = NULL;
-                size_t size = 0;
-                FILE *memstream = open_memstream(&buffer, &size);
-
-                fprintf(memstream, "subsystem");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%s\"", udev_device_get_subsystem(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "devtype");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%s\"", udev_device_get_devtype(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "devpath");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%s\"", udev_device_get_devpath(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "syspath");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%s\"", udev_device_get_syspath(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "sysname");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%s\"", udev_device_get_sysname(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "sysnum");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%s\"", udev_device_get_sysnum(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "devnode");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%s\"", udev_device_get_devnode(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "initialized");
-                fprintf(memstream, FS);
-                fprintf(memstream, "%d", udev_device_get_is_initialized(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "driver");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%s\"", udev_device_get_driver(dev));
-                fprintf(memstream, FS);
+                printf("subsystem");
+                printf(FS);
+                printf("\"%s\"", udev_device_get_subsystem(dev));
+                printf(FS);
+                printf("devtype");
+                printf(FS);
+                printf("\"%s\"", udev_device_get_devtype(dev));
+                printf(FS);
+                printf("devpath");
+                printf(FS);
+                printf("\"%s\"", udev_device_get_devpath(dev));
+                printf(FS);
+                printf("syspath");
+                printf(FS);
+                printf("\"%s\"", udev_device_get_syspath(dev));
+                printf(FS);
+                printf("sysname");
+                printf(FS);
+                printf("\"%s\"", udev_device_get_sysname(dev));
+                printf(FS);
+                printf("sysnum");
+                printf(FS);
+                printf("\"%s\"", udev_device_get_sysnum(dev));
+                printf(FS);
+                printf("devnode");
+                printf(FS);
+                printf("\"%s\"", udev_device_get_devnode(dev));
+                printf(FS);
+                printf("initialized");
+                printf(FS);
+                printf("%d", udev_device_get_is_initialized(dev));
+                printf(FS);
+                printf("driver");
+                printf(FS);
+                printf("\"%s\"", udev_device_get_driver(dev));
+                printf(FS);
 
                 dev_t devnum = udev_device_get_devnum(dev);
-                fprintf(memstream, "devnum");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%d-%d\"", major(devnum), minor(devnum));
-                fprintf(memstream, FS);
-                fprintf(memstream, "action");
-                fprintf(memstream, FS);
-                fprintf(memstream, "\"%s\"", udev_device_get_action(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "seqnum");
-                fprintf(memstream, FS);
-                fprintf(memstream, "%llu", udev_device_get_seqnum(dev));
-                fprintf(memstream, FS);
-                fprintf(memstream, "usec_since_initialized");
-                fprintf(memstream, FS);
-                fprintf(memstream, "%llu", udev_device_get_usec_since_initialized(dev));
-                fprintf(memstream, FS);
+                printf("devnum");
+                printf(FS);
+                printf("\"%d-%d\"", major(devnum), minor(devnum));
+                printf(FS);
+                printf("action");
+                printf(FS);
+                printf("\"%s\"", udev_device_get_action(dev));
+                printf(FS);
+                printf("seqnum");
+                printf(FS);
+                printf("%llu", udev_device_get_seqnum(dev));
+                printf(FS);
+                printf("usec_since_initialized");
+                printf(FS);
+                printf("%llu", udev_device_get_usec_since_initialized(dev));
+                printf(FS);
 
                 // For printing devlinks, properties, tags and sysfs attrs.
                 struct udev_list_entry *list, *entry, *next;
@@ -153,17 +146,17 @@ int main() {
                     len++;
                 }
 
-                fprintf(memstream, "len_devlinks");
-                fprintf(memstream, FS);
-                fprintf(memstream, "%d", len);
-                fprintf(memstream, FS);
+                printf("len_devlinks");
+                printf(FS);
+                printf("%d", len);
+                printf(FS);
 
                 idx = 0;
                 udev_list_entry_foreach(entry, list) {
-                    fprintf(memstream, "devlink_%d", idx);
-                    fprintf(memstream, FS);
-                    fprint_field(memstream, udev_list_entry_get_name(entry));
-                    fprintf(memstream, FS);
+                    printf("devlink_%d", idx);
+                    printf(FS);
+                    fprint_field(stdout, udev_list_entry_get_name(entry));
+                    printf(FS);
                     idx++;
                 }
 
@@ -175,21 +168,21 @@ int main() {
                     len++;
                 }
 
-                fprintf(memstream, "len_properties");
-                fprintf(memstream, FS);
-                fprintf(memstream, "%d", len);
-                fprintf(memstream, FS);
+                printf("len_properties");
+                printf(FS);
+                printf("%d", len);
+                printf(FS);
 
                 idx = 0;
                 udev_list_entry_foreach(entry, list) {
-                    fprintf(memstream, "property_name_%d", idx);
-                    fprintf(memstream, FS);
-                    fprint_field(memstream, udev_list_entry_get_name(entry));
-                    fprintf(memstream, FS);
-                    fprintf(memstream, "property_value_%d", idx);
-                    fprintf(memstream, FS);
-                    fprint_field(memstream, udev_list_entry_get_value(entry));
-                    fprintf(memstream, FS);
+                    printf("property_name_%d", idx);
+                    printf(FS);
+                    fprint_field(stdout, udev_list_entry_get_name(entry));
+                    printf(FS);
+                    printf("property_value_%d", idx);
+                    printf(FS);
+                    fprint_field(stdout, udev_list_entry_get_value(entry));
+                    printf(FS);
                     idx++;
                 }
 
@@ -201,17 +194,17 @@ int main() {
                     len++;
                 }
 
-                fprintf(memstream, "len_tags");
-                fprintf(memstream, FS);
-                fprintf(memstream, "%d", len);
-                fprintf(memstream, FS);
+                printf("len_tags");
+                printf(FS);
+                printf("%d", len);
+                printf(FS);
 
                 idx = 0;
                 udev_list_entry_foreach(entry, list) {
-                    fprintf(memstream, "tag_%d", idx);
-                    fprintf(memstream, FS);
-                    fprint_field(memstream, udev_list_entry_get_name(entry));
-                    fprintf(memstream, FS);
+                    printf("tag_%d", idx);
+                    printf(FS);
+                    fprint_field(stdout, udev_list_entry_get_name(entry));
+                    printf(FS);
                     idx++;
                 }
 
@@ -223,17 +216,17 @@ int main() {
                     len++;
                 }
 
-                fprintf(memstream, "len_current_tags");
-                fprintf(memstream, FS);
-                fprintf(memstream, "%d", len);
-                fprintf(memstream, FS);
+                printf("len_current_tags");
+                printf(FS);
+                printf("%d", len);
+                printf(FS);
 
                 idx = 0;
                 udev_list_entry_foreach(entry, list) {
-                    fprintf(memstream, "current_tag_%d", idx);
-                    fprintf(memstream, FS);
-                    fprint_field(memstream, udev_list_entry_get_name(entry));
-                    fprintf(memstream, FS);
+                    printf("current_tag_%d", idx);
+                    printf(FS);
+                    fprint_field(stdout, udev_list_entry_get_name(entry));
+                    printf(FS);
                     idx++;
                 }
 
@@ -245,39 +238,32 @@ int main() {
                     len++;
                 }
 
-                fprintf(memstream, "len_sysattrs");
-                fprintf(memstream, FS);
-                fprintf(memstream, "%d", len);
-                fprintf(memstream, FS);
+                printf("len_sysattrs");
+                printf(FS);
+                printf("%d", len);
+                printf(FS);
 
                 idx = 0;
                 for (entry = list; entry != NULL; entry = next) {
                     const char *name = udev_list_entry_get_name(entry);
                     const char *value = udev_device_get_sysattr_value(dev, name);
 
-                    fprintf(memstream, "sysattr_name_%d", idx);
-                    fprintf(memstream, FS);
-                    fprint_field(memstream, name);
-                    fprintf(memstream, FS);
-                    fprintf(memstream, "sysattr_value_%d", idx);
-                    fprintf(memstream, FS);
-                    fprint_field(memstream, value);
+                    printf("sysattr_name_%d", idx);
+                    printf(FS);
+                    fprint_field(stdout, name);
+                    printf(FS);
+                    printf("sysattr_value_%d", idx);
+                    printf(FS);
+                    fprint_field(stdout, value);
 
                     next = udev_list_entry_get_next(entry);
-                    if (next != NULL) fprintf(memstream, FS);
+                    if (next != NULL) printf(FS);
 
                     idx++;
                 }
 
-                fprintf(memstream, RS);
-                fclose(memstream);
-
-                if (buffer) {
-                    fputs(buffer, stdout);
-                    fflush(stdout);
-                    free(buffer);
-                }
-
+                printf(RS);
+                fflush(stdout);
                 udev_device_unref(dev);
             }
         }

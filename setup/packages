@@ -71,9 +71,7 @@ pacman -S --needed entr
 pacman -S --needed acpi
 
 # programs
-pacman -S --needed neovim
 pacman -S --needed python
-pacman -S --needed python-pynvim
 pacman -S --needed aspell
 pacman -S --needed aspell-en
 pacman -S --needed aspell-es
@@ -91,6 +89,11 @@ pacman -S --needed alacritty
 pacman -S --needed gnome-keyring
 pacman -S --needed seahorse
 pacman -S --needed pass
+
+# nvim
+pacman -S --needed neovim
+pacman -S --needed python-pynvim
+pacman -S --needed tree-sitter-cli
 
 # mount android, hay que asegurarse de estar en el grupo que crea este paquete, adbusers.
 pacman -S --needed android-file-transfer
