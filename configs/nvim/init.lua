@@ -17,16 +17,12 @@ vim.opt.rtp:prepend(lazypath)
 
 -- lazy
 require("lazy").setup({
-  -- oficial plugins.
-  "neovim/nvim-lspconfig",
-
   -- third party lua plugins.
+  { "vague-theme/vague.nvim", lazy = false, priority = 1000 },
   "folke/which-key.nvim",
   "nvim-tree/nvim-tree.lua",
-  { "catppuccin/nvim", name = "catppuccin" },
   { "nvim-telescope/telescope.nvim", tag = "0.1.8", dependencies = { "nvim-lua/plenary.nvim" } },
   { "Zeta611/tex2uni.nvim", opts = { ft = { "*.v" } } },
-  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
 
   -- vimscript plugins.
   "whonore/Coqtail",
@@ -46,11 +42,11 @@ vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
 -- colorscheme.
-require("catppuccin").setup({
-  transparent_background = true
-})
+require("vague").setup {
+  transparent = true
+}
 
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("vague")
 
 -- nvim-tree plugin.
 require('nvim-tree').setup({
@@ -60,51 +56,49 @@ require('nvim-tree').setup({
 -- telescope plugin.
 require('telescope').setup {}
 
--- treesitter plugin.
-local treesitter = require('nvim-treesitter')
-
-treesitter.setup {
-   install_dir = vim.fn.stdpath('data') .. '/site'
-}
-
-treesitter.install {
-  'elixir', 'eex', 'heex'
-}
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'elixir', 'eex', 'heex' },
-  callback = function() vim.treesitter.start() end
-})
-
 -- lsp.
 vim.lsp.config['gopls'] = {
   cmd = { 'gopls' },
-  settings = {
-    gopls = {
-      staticcheck = true
-    }
-  }
+  filetypes = { 'go', 'gomod' }
 }
 
 vim.lsp.config['pyright'] = {
   cmd = { 'pyright-langserver', '--stdio' },
+  filetypes = { 'python' }
 }
 
 vim.lsp.config['texlab'] = {
   cmd = { 'texlab' },
+  filetypes = { 'tex', 'plaintex', 'bib' }
 }
 
 vim.lsp.config['r_language_server'] = {
   cmd = { 'R', '--slave', '-e', 'languageserver::run()' },
+  filetypes = { 'r', 'rmd', 'quarto' }
 }
 
 vim.lsp.config['ocamllsp'] = {
   cmd = { 'ocamllsp' },
+  filetypes = { 'ocaml', 'dune' }
 }
 
 vim.lsp.config['hls'] = {
   cmd = { 'haskell-language-server-wrapper', '--lsp' },
+  filetypes = { 'haskell', 'lhaskell' }
 }
+
+vim.lsp.config['elixirls'] = {
+  cmd = { 'elixir-ls' },
+  filetypes = { 'elixir', 'eelixir', 'heex' }
+}
+
+vim.lsp.enable('gopls')
+vim.lsp.enable('pyright')
+vim.lsp.enable('texlab')
+vim.lsp.enable('r_language_server')
+vim.lsp.enable('ocamllsp')
+vim.lsp.enable('hls')
+vim.lsp.enable('elixirls')
 
 -- which key.
 local wk = require('which-key')
@@ -210,10 +204,3 @@ vim.api.nvim_create_autocmd('VimResized', {
     vim.api.nvim_command('wincmd =')
   end
 })
-
--- Create many insert-mode unicode remaps at once
-local function add_math_remaps(maps)
-  for lhs, rhs in pairs(maps) do
-    vim.keymap.set("i", lhs, rhs, { noremap = true })
-  end
-end

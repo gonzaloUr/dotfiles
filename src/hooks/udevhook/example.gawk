@@ -33,7 +33,7 @@ kv["subsystem"] == "block" && kv["devtype"] == "disk" && kv["action"] == "add" &
     system(cmd)
 }
 
-kv["subsystem"] == "block" && kv["devtype"] == "disk" && kv["action"] == "remove" && props["ID_BUS"] == "usb" {
+kv["subsystem"] == "block" && kv["action"] == "remove" && props["ID_BUS"] == "usb" {
     vendor = props["ID_VENDOR"]
     model = props["ID_USB_MODEL"]
     devnode = kv["devnode"]

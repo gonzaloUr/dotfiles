@@ -1,0 +1,4 @@
+#!/bin/sh
+
+pacman -S --needed elixir
+yay -S --needed elixir-ls

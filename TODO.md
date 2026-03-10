@@ -1,14 +1,19 @@
 ## Mejoras
 
+### Considerar remover de los configs cosas que tuve que agregar por instalar programas no descritos en setup
+Actualmente my zshrc tiene configs the pyenv y en el PATH hay cosas the ghcup.
+Capaz no es necesario removerlos pero cambiar el scripting para que sea opcional, como lo hice con ocaml, que chequeo si opam esta disponible como comando.
+
 ### Config file para librewolf.
 Ver si existe y crear una config incluso con mis bookmarks y eso.
 
-### Configurar backups con rclone o rsync.
+### Configurar backups con rclone o rsync y guardar en estos contraseñas, llaves ssh y gnugpg.
 Crear alguna forma de cordinar backups con estas heramientas de forma tal que cada sitio de backup sea como un "repo de git", indepeidente de otros backups e inclusive capaz que permita excluir ciertos archivos etc.
 Capaz cada backup tenga un archivo encriptado, un script o un config file, que describa a donde hacer rsycn/rclone de que archivos.
+Guardar llaves y contraseñas encriptadas en cada backup con una contraseña maestra.
 
-### Password manager y llaves ssh/gpgp.
-Tener un password manager e integralo con lo mas posible, usar pass obviamente y backaupearlo encryptado en mis backups con una password maestra. La misma idea de tener per backup un script o config que determine a donde backaupear que cosas
+### Ver si se puede usar pass como password manager en firefox y otras aplicaciones
+Tener un password manager e integralo con lo mas posible, usar pass obviamente y backaupearlo encryptado en mis backups con una password maestra.
 
 ### Capaz usar light y remover udev rule para permitir modificar el brightness para los usuarios en el grupo video
 La utilidad light ya agrega udev rules iguales y es mas practica.
@@ -42,12 +47,9 @@ Buscar alternativas o utilizar solo la funcionalidad de dbus secrets.
 ### Buscar una forma de mostrar que procesos crearon deamons sin pid padre.
 Quiero relacionar los deamons sin padre con servicios de runit.
 
-### Utilizar tree-sitter en vez de el highlighting de vim 
-nota: neovim depende de el paquete tree-sitter el cual se relaciona con otros paquetes que instalan gramaticas para cada lenjuage, por ejemplo: tree-sitter-c. Alugnas de estas gramaticas ya vienen con neovim pero otras no, capaz agregar en el script de setup una sección de donde se instalan gramaticas extra.
-
 ### Areglar el clipboard manager
 Podria ser que esta vez corre por debajo de xdg-autostart o lo que sea.
 
-### Crear una forma de administrar mejor documentos y backups.
-1. Organizar el home mejor, intentar que las dot folders sean XDG compatible.
-2. Tener carpetas especificas y configurar todo alrededor de ellas.
+### Crear una forma de administrar mejor documentos.
+- Organizar el home mejor, intentar que las dot folders sean XDG compatible.
+- Tener carpetas especificas y configurar todo alrededor de ellas.

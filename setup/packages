@@ -93,7 +93,6 @@ pacman -S --needed pass
 # nvim
 pacman -S --needed neovim
 pacman -S --needed python-pynvim
-pacman -S --needed tree-sitter-cli
 
 # mount android, hay que asegurarse de estar en el grupo que crea este paquete, adbusers.
 pacman -S --needed android-file-transfer
