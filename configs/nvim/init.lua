@@ -18,7 +18,7 @@ vim.opt.rtp:prepend(lazypath)
 -- lazy
 require("lazy").setup({
   -- third party lua plugins.
-  { "vague-theme/vague.nvim", lazy = false, priority = 1000 },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   "folke/which-key.nvim",
   "nvim-tree/nvim-tree.lua",
   { "nvim-telescope/telescope.nvim", tag = "0.1.8", dependencies = { "nvim-lua/plenary.nvim" } },
@@ -42,16 +42,16 @@ vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
 -- colorscheme.
-require("vague").setup {
-  transparent = true
+require('catppuccin').setup {
+  transparent_background = true
 }
 
-vim.cmd.colorscheme("vague")
+vim.cmd.colorscheme('catppuccin')
 
 -- nvim-tree plugin.
-require('nvim-tree').setup({
+require('nvim-tree').setup {
   sort_by = 'extension'
-})
+}
 
 -- telescope plugin.
 require('telescope').setup {}

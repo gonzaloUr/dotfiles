@@ -1,4 +1,4 @@
-#ifndef SYSHOOK_H
-#define SYSHOOK_H
+#ifndef POLLHOOK_H
+#define POLLHOOK_H
 
 #endif
