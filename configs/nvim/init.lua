@@ -21,7 +21,7 @@ require("lazy").setup({
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   "folke/which-key.nvim",
   "nvim-tree/nvim-tree.lua",
-  { "nvim-telescope/telescope.nvim", tag = "0.1.8", dependencies = { "nvim-lua/plenary.nvim" } },
+  { "nvim-telescope/telescope.nvim", tag = "*", dependencies = { "nvim-lua/plenary.nvim" } },
   { "Zeta611/tex2uni.nvim", opts = { ft = { "*.v" } } },
 
   -- vimscript plugins.
@@ -100,6 +100,9 @@ vim.lsp.enable('ocamllsp')
 vim.lsp.enable('hls')
 vim.lsp.enable('elixirls')
 
+-- custom keymaps.
+vim.api.nvim_set_keymap('t', '<C-\\>', '<C-\\><C-n>', { noremap = true, silent = true })
+
 -- which key.
 local wk = require('which-key')
 local builtin = require('telescope.builtin')
@@ -132,7 +135,7 @@ wk.add({
 
 wk.setup()
 
--- autocmds
+-- autocmds and related things.
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
   callback = function()
@@ -145,28 +148,6 @@ vim.api.nvim_create_autocmd('CompleteDone', {
     if vim.fn.pumvisible() then
       vim.api.nvim_command('pclose')
     end
-  end
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = {
-    'lua',
-    'yaml',
-    'json',
-    'dart',
-    'vim',
-    'html',
-    'scss',
-    'css',
-    'typescript',
-    'typescriptreact',
-    'javascript',
-    'ocaml',
-    'haskell',
-    'tex'
-  },
-  callback = function(args)
-    vim.bo[args.buf].shiftwidth = 2
   end
 })
 
@@ -186,6 +167,43 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.cmd("highlight Error NONE")
   end,
+})
+
+vim.filetype.add({
+  extension = {
+    mlg = "mlg"
+  }
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "mlg",
+  callback = function()
+    vim.cmd("syntax enable")
+    vim.cmd("setlocal syntax=ocaml")
+  end
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {
+    'lua',
+    'yaml',
+    'json',
+    'dart',
+    'vim',
+    'html',
+    'scss',
+    'css',
+    'typescript',
+    'typescriptreact',
+    'javascript',
+    'ocaml',
+    'haskell',
+    'tex',
+    'mlg'
+  },
+  callback = function(args)
+    vim.bo[args.buf].shiftwidth = 2
+  end
 })
 
 vim.api.nvim_create_autocmd('FileType', {

@@ -15,8 +15,6 @@ export XDG_CACHE_HOME="$HOME/.cache"
 
 # https://wiki.archlinux.org/index.php/XDG_Base_Directory#Partial
 export LESSHISTFILE='-'
-export GOPATH="$XDG_DATA_HOME"/go
-alias wget="wget --hsts-file=$XDG_CACHE_HOME/wget-hsts"
 
 # fix java apps
 export _JAVA_AWT_WM_NONREPARENTING=1
@@ -27,6 +25,9 @@ export DIFFPROGRAM=$EDITOR
 
 # android
 export ANDROID_HOME=~/Android/Sdk
+
+# go
+export GOPATH="$XDG_CONFIG_HOME/go"
 
 # path
 export PATH=$PATH:~/bin

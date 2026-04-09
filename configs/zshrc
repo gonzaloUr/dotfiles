@@ -8,6 +8,7 @@ zmodload zsh/complist
 
 # Source plugins.
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 
 # Styles.
 zstyle ':vcs_info:*' enable git cvs svn
@@ -44,6 +45,7 @@ bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -s '^o' 'lfcd\n'
 bindkey '^R' history-incremental-search-backward
+bindkey '^[l' autosuggest-accept
 
 # Zsh line editor custom widgets.
 zle -N zle-keymap-select

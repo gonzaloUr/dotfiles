@@ -14,7 +14,7 @@ pacman -S --needed tlp-runit
 pacman -S --needed zsh
 
 # zsh
-# pacman -S --needed zsh-autosuggestions
+pacman -S --needed zsh-autosuggestions
 pacman -S --needed zsh-syntax-highlighting
 
 # dbus
@@ -86,8 +86,6 @@ pacman -S --needed git
 pacman -S --needed htop
 pacman -S --needed pavucontrol
 pacman -S --needed alacritty
-pacman -S --needed gnome-keyring
-pacman -S --needed seahorse
 pacman -S --needed pass
 
 # nvim

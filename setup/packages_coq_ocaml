@@ -30,11 +30,8 @@ opam install ocaml-manual odig
 # add repos.
 opam repo add rocq-released 'https://rocq-prover.org/opam/released'
 
-# pins are like installs but fixed to a specific version that should not change on upgrades
-# of packages that depend on the pin.
-opam pin add rocq-prover '9.0.0'
-
-# coq compatibity layer.
+# install rocq and coq compatibity layer.
+opam install rocq-prover
 opam install coq
 
 # rocqide dependency and rocqide itself
