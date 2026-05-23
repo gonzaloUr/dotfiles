@@ -1,4 +1,4 @@
--- Bootstrap lazy.nvim
+-- bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -15,23 +15,9 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- lazy
-require("lazy").setup({
-  -- third party lua plugins.
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-  "folke/which-key.nvim",
-  "nvim-tree/nvim-tree.lua",
-  { "nvim-telescope/telescope.nvim", tag = "*", dependencies = { "nvim-lua/plenary.nvim" } },
-  { "Zeta611/tex2uni.nvim", opts = { ft = { "*.v" } } },
-
-  -- vimscript plugins.
-  "whonore/Coqtail",
-})
-
 -- options, global variables.
 vim.g.mapleader = ','
 vim.g.maplocalleader = '-'
-
 vim.opt.wrap = false
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -41,57 +27,46 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
--- colorscheme.
-require('catppuccin').setup {
-  transparent_background = true
+-- custom maps.
+vim.api.nvim_set_keymap('t', '<C-\\>', '<C-\\><C-n>', { noremap = true, silent = true })
+
+-- plugin setups.
+require("lazy").setup {
+  -- third party lua plugins.
+  { "catppuccin/nvim", version = "*", name = "catppuccin", priority = 1000 },
+  { "neovim/nvim-lspconfig", version = "*" },
+  { "folke/which-key.nvim", version = "*" },
+  { "nvim-tree/nvim-tree.lua", version = "*" },
+  { "nvim-telescope/telescope.nvim", version = "*", dependencies = { "nvim-lua/plenary.nvim" } },
+  { "Zeta611/tex2uni.nvim", version = "*", opts = { ft = { "*.v" } } },
+
+  -- vimscript plugins.
+  { "whonore/Coqtail", version = "*" },
+  { "tpope/vim-fugitive", version = "*" }
 }
-
-vim.cmd.colorscheme('catppuccin')
-
--- nvim-tree plugin.
-require('nvim-tree').setup {
-  sort_by = 'extension'
-}
-
--- telescope plugin.
+require('catppuccin').setup { transparent_background = true }
+require('nvim-tree').setup { sort_by = 'extension' }
 require('telescope').setup {}
 
--- lsp.
-vim.lsp.config['gopls'] = {
-  cmd = { 'gopls' },
-  filetypes = { 'go', 'gomod' }
-}
+-- set colorscheme.
+vim.cmd.colorscheme('catppuccin')
 
-vim.lsp.config['pyright'] = {
-  cmd = { 'pyright-langserver', '--stdio' },
-  filetypes = { 'python' }
-}
+-- add custom settings to nvim lspconfigs defaults.
+vim.lsp.config('ltex_plus', {
+  settings = {
+    ltex = {
+      language = "es-AR",
+      latex = {
+        environments = {
+          minted = "ignore",
+          mathpar = "ignore"
+        }
+      }
+    }
+  }
+})
 
-vim.lsp.config['texlab'] = {
-  cmd = { 'texlab' },
-  filetypes = { 'tex', 'plaintex', 'bib' }
-}
-
-vim.lsp.config['r_language_server'] = {
-  cmd = { 'R', '--slave', '-e', 'languageserver::run()' },
-  filetypes = { 'r', 'rmd', 'quarto' }
-}
-
-vim.lsp.config['ocamllsp'] = {
-  cmd = { 'ocamllsp' },
-  filetypes = { 'ocaml', 'dune' }
-}
-
-vim.lsp.config['hls'] = {
-  cmd = { 'haskell-language-server-wrapper', '--lsp' },
-  filetypes = { 'haskell', 'lhaskell' }
-}
-
-vim.lsp.config['elixirls'] = {
-  cmd = { 'elixir-ls' },
-  filetypes = { 'elixir', 'eelixir', 'heex' }
-}
-
+-- enable lsp servers.
 vim.lsp.enable('gopls')
 vim.lsp.enable('pyright')
 vim.lsp.enable('texlab')
@@ -99,43 +74,48 @@ vim.lsp.enable('r_language_server')
 vim.lsp.enable('ocamllsp')
 vim.lsp.enable('hls')
 vim.lsp.enable('elixirls')
+vim.lsp.enable('ltex_plus')
 
--- custom keymaps.
-vim.api.nvim_set_keymap('t', '<C-\\>', '<C-\\><C-n>', { noremap = true, silent = true })
-
--- which key.
+-- which key and telescope.
 local wk = require('which-key')
 local builtin = require('telescope.builtin')
 
 wk.add({
-    { "<Leader><Leader>", "<cmd>noh<cr>", desc = "Clear search highlights" },
-    { "<Leader>.", "<cmd>NvimTreeToggle<cr>", desc = "Toggle NvimTree" },
+  { "<Leader><Leader>", "<cmd>noh<cr>", desc = "Clear search highlights" },
+  { "<Leader>.", "<cmd>NvimTreeToggle<cr>", desc = "Toggle NvimTree" },
 
-    -- lsp keybindings.
-    { '<Leader>a', function() vim.lsp.buf.code_action() end, desc = 'Code Action' },
-    { '<Leader>d', function() vim.lsp.buf.definition() end, desc = 'Go to definition' },
-    { '<Leader>D', function() vim.lsp.buf.declaration() end, desc = 'Go to declaration' },
-    { '<Leader>i', function() vim.lsp.buf.implementation() end, desc = 'Go to implementation' },
-    { '<Leader>e', function() vim.diagnostic.open_float() end, desc = 'Show errors' },
-    { '<Leader>f', function() vim.lsp.buf.format() end, desc = 'Format' },
-    { '<Leader>Fa', function() vim.lsp.buf.add_workspace_folder() end, desc = 'Add file path to lsp root' },
-    { '<Leader>Fr', function() vim.lsp.buf.remove_workspace_folder() end, desc = 'Remove file path from lsp root' },
-    { '<Leader>Fl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, desc = 'List dirs as root in lsp' },
-    { '<Leader>h', function() vim.lsp.buf.hover() end, desc = 'Hover' },
-    { '<Leader>r', function() vim.lsp.buf.rename() end, desc = 'Rename' },
-    { '<Leader>s', function() vim.lsp.buf.signature_help() end, desc = 'Show signature' },
-    { '<Leader>u', function() vim.lsp.buf.references() end, desc = 'Usages' },
-    { '<Leader>n', function() vim.diagnostic.goto_next() end, desc = 'Go next error' },
-    { '<Leader>p', function() vim.diagnostic.goto_prev() end, desc = 'Go prev error' },
+  -- lsp keybindings.
+  { '<Leader>a', function() vim.lsp.buf.code_action() end, desc = 'Code Action' },
+  { '<Leader>d', function() vim.lsp.buf.definition() end, desc = 'Go to definition' },
+  { '<Leader>D', function() vim.lsp.buf.declaration() end, desc = 'Go to declaration' },
+  { '<Leader>i', function() vim.lsp.buf.implementation() end, desc = 'Go to implementation' },
+  { '<Leader>e', function() vim.diagnostic.open_float() end, desc = 'Show errors' },
+  { '<Leader>f', function() vim.lsp.buf.format() end, desc = 'Format' },
+  { '<Leader>Fa', function() vim.lsp.buf.add_workspace_folder() end, desc = 'Add file path to lsp root' },
+  { '<Leader>Fr', function() vim.lsp.buf.remove_workspace_folder() end, desc = 'Remove file path from lsp root' },
+  { '<Leader>Fl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, desc = 'List dirs as root in lsp' },
+  { '<Leader>h', function() vim.lsp.buf.hover() end, desc = 'Hover' },
+  { '<Leader>r', function() vim.lsp.buf.rename() end, desc = 'Rename' },
+  { '<Leader>s', function() vim.lsp.buf.signature_help() end, desc = 'Show signature' },
+  { '<Leader>u', function() vim.lsp.buf.references() end, desc = 'Usages' },
+  { '<Leader>n', function() vim.diagnostic.jump({count = 1}) end, desc = 'Go next error' },
+  { '<Leader>p', function() vim.diagnostic.jump({count = -1}) end, desc = 'Go prev error' },
 
-    -- telescope bindings.
-    { '<Leader>t', builtin.find_files, desc = 'Telescope find files' },
-    { '<Leader>b', builtin.buffers, desc = 'Telescope buffers' },
-});
+  -- telescope bindings.
+  { '<Leader>t', builtin.find_files, desc = 'Telescope find files' },
+  { '<Leader>b', builtin.buffers, desc = 'Telescope buffers' }
+})
 
 wk.setup()
 
--- autocmds and related things.
+-- custom filetypes.
+vim.filetype.add({
+  extension = {
+    mlg = "mlg"
+  }
+})
+
+-- autocmds.
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
   callback = function()
@@ -169,12 +149,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.filetype.add({
-  extension = {
-    mlg = "mlg"
-  }
-})
-
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "mlg",
   callback = function()
@@ -196,6 +170,7 @@ vim.api.nvim_create_autocmd('FileType', {
     'typescript',
     'typescriptreact',
     'javascript',
+    'markdown',
     'ocaml',
     'haskell',
     'tex',

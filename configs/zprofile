@@ -27,7 +27,7 @@ export DIFFPROGRAM=$EDITOR
 export ANDROID_HOME=~/Android/Sdk
 
 # go
-export GOPATH="$XDG_CONFIG_HOME/go"
+export GOPATH="$XDG_DATA_HOME/go"
 
 # path
 export PATH=$PATH:~/bin

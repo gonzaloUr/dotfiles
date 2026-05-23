@@ -2,38 +2,41 @@
 
 # installar opam
 #
-# Opam gestiona instalacciones de ocaml, es parecido a un venv de python.
+# opam gestiona instalacciones de ocaml, es parecido a un venv de python.
 #
-# Los compandos siguientes instalan ocaml y dependencias en la carpeta de usuario en ~/.opam/default donde
-# default es el nombre de la instalacion por defecto.
+# opam instala en el home directory distinatas versiones del compilador de ocaml, cada una de ellas se le llama
+# switch, y atravez de opam instala dependencias para cada switch.
 #
-# El compilador de ocaml busca dependencias en ciertas subcarpetas de la instalacion default, opam maneja
-# e installa paquetes en estos directorios de forma tal que el compilador conoce de su existencia.
+# Los compandos siguientes instalan ocaml y dependencias para el switch por defecto llamado default en la carpeta 
+# de usuario en ~/.opam/default.
+#
+# El compilador de ocaml busca dependencias en ciertas subcarpetas del switch actual, opam maneja e installa 
+# paquetes en estos directorios de forma tal que el compilador conoce de su existencia.
 sudo pacman --needed -S opam
 
 # Configura una instalaicion de ocaml en ~/.opam.
 opam init
 eval $(opam env)
 
-# installs the latest versions of the packages.
+# Installs the latest versions of the packages.
 #
 # Dune es una build tool de ocaml. Basicamente define stanzas, que son como reglas de compilacion conocidas.
 #
-# Dune realiza estas tareas utilizando el compilador encontrado en el PATH, es decir dune es una herramienta a parte
-# de opam.
+# Dune realiza estas tareas utilizando el compilador encontrado en el PATH, es decir el switch actual.
 opam install dune
 opam install utop
 opam install ocaml-lsp-server
 opam install ocamlformat
-opam install ocaml-manual odig
+opam install ocaml-manual
+opam install odig
 
 # add repos.
 opam repo add rocq-released 'https://rocq-prover.org/opam/released'
 
-# install rocq and coq compatibity layer.
-opam install rocq-prover
-opam install coq
+# install and pin rocq dependencies to a specific version.
+opam pin add rocq-runtime '9.1.1'
+opam pin add rocq-core '9.1.1'
+opam pin add rocq-stdlib '9.1.0'
 
-# rocqide dependency and rocqide itself
-sudo pacman -S gtksourceview3
-opam install rocqide
+# finally install rocq-prover metapackage with its dependencies pinned to a particular version.
+opam install rocq-prover

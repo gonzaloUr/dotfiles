@@ -12,6 +12,7 @@ pacman -S --needed cronie-runit
 pacman -S --needed tlp
 pacman -S --needed tlp-runit
 pacman -S --needed zsh
+pacman -S --needed openssh
 
 # zsh
 pacman -S --needed zsh-autosuggestions
@@ -46,6 +47,7 @@ pacman -S --needed libnotify
 pacman -S --needed xcompmgr
 pacman -S --needed xwallpaper
 pacman -S --needed maim
+pacman -S --needed light
 
 # multimedia
 pacman -S --needed sof-firmware
@@ -87,6 +89,7 @@ pacman -S --needed htop
 pacman -S --needed pavucontrol
 pacman -S --needed alacritty
 pacman -S --needed pass
+pacman -S --needed librewolf
 
 # nvim
 pacman -S --needed neovim
