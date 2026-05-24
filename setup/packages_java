@@ -1,5 +1,9 @@
 #!/bin/sh
 
 # jdks/jres.
+pacman -S --needed jdk-openjdk
 pacman -S --needed jre11-openjdk
 pacman -S --needed jre17-openjdk
+
+# languagetool
+pacman -S --needed languagetool

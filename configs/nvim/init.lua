@@ -51,21 +51,6 @@ require('telescope').setup {}
 -- set colorscheme.
 vim.cmd.colorscheme('catppuccin')
 
--- add custom settings to nvim lspconfigs defaults.
-vim.lsp.config('ltex_plus', {
-  settings = {
-    ltex = {
-      language = "es-AR",
-      latex = {
-        environments = {
-          minted = "ignore",
-          mathpar = "ignore"
-        }
-      }
-    }
-  }
-})
-
 -- enable lsp servers.
 vim.lsp.enable('gopls')
 vim.lsp.enable('pyright')
@@ -74,7 +59,6 @@ vim.lsp.enable('r_language_server')
 vim.lsp.enable('ocamllsp')
 vim.lsp.enable('hls')
 vim.lsp.enable('elixirls')
-vim.lsp.enable('ltex_plus')
 
 -- which key and telescope.
 local wk = require('which-key')

@@ -1,4 +1,4 @@
-# for zsh install as ~/.zprofile
+# install at ~/.zprofile
 
 # programs
 export EDITOR=nvim

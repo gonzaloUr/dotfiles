@@ -1,8 +1,8 @@
-# ~/.config/zathura/zathurarc
+# install at ~/.config/zathura/zathurarc
 
 set window-title-basename "true"
 set selection-clipboard "clipboard"
-set render-loading              true
+set render-loading true
 
 # Startup options
 set adjust-open width

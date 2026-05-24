@@ -1,3 +1,5 @@
+# install at ~/.config/dunst/dunstrc
+#
 set sortby ext
 set info size:time
 
