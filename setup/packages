@@ -73,6 +73,7 @@ pacman -S --needed entr
 pacman -S --needed acpi
 
 # programs
+pacman -S --needed lf
 pacman -S --needed python
 pacman -S --needed aspell
 pacman -S --needed aspell-en
@@ -116,3 +117,5 @@ pacman -S --needed ttf-inconsolata-go-nerd
 pacman -S --needed ttf-sourcecodepro-nerd
 pacman -S --needed ttf-go-nerd
 pacman -S --needed ttf-iosevka-nerd
+pacman -S --needed ttf-firacode-nerd
+pacman -S --needed otf-hasklig-nerd

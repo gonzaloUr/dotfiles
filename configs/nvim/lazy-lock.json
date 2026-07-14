@@ -1,12 +1,12 @@
 {
   "Coqtail": { "branch": "main", "commit": "abd905d27e45fcb49009074aa6bcdaebb637594a" },
   "catppuccin": { "branch": "main", "commit": "605b4603797de970e9f3a4238c199c850da03186" },
+  "gitsigns.nvim": { "branch": "main", "commit": "a462f416e2ce4744531c6256252dee99a7d34a83" },
   "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
-  "nvim-lspconfig": { "branch": "master", "commit": "f6738ef65dabade340b473d4ff2a1ad3352c10e7" },
-  "nvim-tree.lua": { "branch": "master", "commit": "85d1145ac71c1b8e1423862c78165a1f609faf60" },
+  "nvim-lspconfig": { "branch": "master", "commit": "229b79051b380377664edc4cbd534930154921a1" },
+  "nvim-tree.lua": { "branch": "master", "commit": "531b807b8f0d6f75016a0ee1e0cd5ce2086e9d95" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
   "telescope.nvim": { "branch": "master", "commit": "5255aa27c422de944791318024167ad5d40aad20" },
   "tex2uni.nvim": { "branch": "main", "commit": "1ab909c64cde8db9227b51d9596e5d75af9fc77c" },
-  "vim-fugitive": { "branch": "master", "commit": "96c1009fcf8ce60161cc938d149dd5a66d570756" },
   "which-key.nvim": { "branch": "main", "commit": "fcbf4eea17cb299c02557d576f0d568878e354a4" }
 }

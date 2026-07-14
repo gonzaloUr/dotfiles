@@ -42,4 +42,7 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/emulator
 
 # opam ocaml
-command -v opam 2>&1 >/dev/null && eval $(opam env)
+command -v opam 2>&1 >/dev/null && eval "$(opam env)"
+
+# luarocks paths
+command -v luarocks 2>&1 >/dev/null && eval "$(luarocks path)"

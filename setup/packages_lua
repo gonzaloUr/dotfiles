@@ -1,0 +1,5 @@
+#!/bin/sh
+
+pacman -S --needed lua
+pacman -S --needed luajit
+pacman -S --needed luarocks

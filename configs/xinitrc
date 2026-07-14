@@ -24,4 +24,4 @@ xset -b
 source /etc/X11/xinit/xinitrc.d/80-dbus.sh
 
 # Launch dwm.
-exec /usr/local/src/dwm/dwm
+exec dwm

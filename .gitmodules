@@ -1,0 +1,9 @@
+[submodule "src/dwm"]
+	path = src/dwm
+	url = https://git.suckless.org/dwm
+[submodule "src/dmenu"]
+	path = src/dmenu
+	url = https://git.suckless.org/dmenu
+[submodule "src/slock"]
+	path = src/slock
+	url = https://git.suckless.org/slock
