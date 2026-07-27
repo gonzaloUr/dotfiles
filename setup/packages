@@ -42,7 +42,7 @@ pacman -S --needed xf86-input-wacom
 pacman -S --needed xclip
 pacman -S --needed xsel
 pacman -S --needed xdotool
-pacman -S --needed dunst 
+pacman -S --needed dunst
 pacman -S --needed libnotify
 pacman -S --needed xcompmgr
 pacman -S --needed xwallpaper
@@ -91,6 +91,7 @@ pacman -S --needed pavucontrol
 pacman -S --needed alacritty
 pacman -S --needed pass
 pacman -S --needed librewolf
+pacman -S --needed rclone
 
 # nvim
 pacman -S --needed neovim

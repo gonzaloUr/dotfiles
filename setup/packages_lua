@@ -3,3 +3,4 @@
 pacman -S --needed lua
 pacman -S --needed luajit
 pacman -S --needed luarocks
+pacman -S --needed lua-language-server

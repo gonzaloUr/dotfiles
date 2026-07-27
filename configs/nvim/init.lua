@@ -1,18 +1,17 @@
--- bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+-- bootstrap lazyvim.
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-  local out = vim.fn.system({ 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath })
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+
   if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { 'Failed to clone lazy.nvim:\n', 'ErrorMsg' },
-      { out, 'WarningMsg' },
-      { '\nPress any key to exit...' },
-    }, true, {})
+    vim.api.nvim_echo({ { "Failed to clone lazy.nvim:\n"}, { out } }, true, {})
     vim.fn.getchar()
     os.exit(1)
   end
 end
+
 vim.opt.rtp:prepend(lazypath)
 
 -- its mandatory to setup mapleader and maplocalleader before seting up lazy
@@ -25,16 +24,29 @@ require('lazy').setup {
   { 'neovim/nvim-lspconfig', version = '*' },
 
   -- third party lua plugins
-  { 'catppuccin/nvim', version = '*', name = 'catppuccin', priority = 1000 },
   { 'folke/which-key.nvim', version = '*' },
   { 'nvim-tree/nvim-tree.lua', version = '*' },
   { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
-  { 'Zeta611/tex2uni.nvim', version = '*', opts = { ft = { '*.v' } } },
+  { 'sindrets/diffview.nvim', version = '*' },
   { 'lewis6991/gitsigns.nvim', version = '*' },
+  { 'Zeta611/tex2uni.nvim', version = '*', opts = { ft = { '*.v' } } },
+  { 'nvim-mini/mini.completion', version = '*' },
 
   -- third party vimscript plugins
-  { 'whonore/Coqtail', version = '*' }
+  { 'whonore/Coqtail', version = '*' },
+
+  -- development.
+  -- { dir = '~/Dropbox/nvim-plugins/nvim-vsrocq', name = 'nvim-vsrocq' }
 }
+
+-- development.
+-- vim.g.loaded_coqtail = 1
+-- vim.g["coqtail#supported"] = 0
+-- require('nvim-vsrocq').setup()
+-- vim.lsp.enable('vsrocqtop')
+
+-- colorscheme.
+vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
 
 -- setup options
 vim.opt.wrap = false
@@ -46,13 +58,6 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
--- setup colorscheme
-require('catppuccin').setup {
-  transparent_background = true
-}
-
-vim.cmd.colorscheme('catppuccin')
-
 -- setup nvim-tree
 require('nvim-tree').setup {
   sort = {
@@ -62,6 +67,17 @@ require('nvim-tree').setup {
 
 -- setup telescope
 require('telescope').setup {}
+
+-- setup diffview.
+require('diffview').setup {
+  use_icons = false
+}
+
+-- setup mini.completion
+require('mini.completion').setup {}
+
+vim.keymap.set('i', '<Tab>', [[pumvisible() ? "\<C-n>" : "\<Tab>"]], { expr = true })
+vim.keymap.set('i', '<S-Tab>', [[pumvisible() ? "\<C-p>" : "\<S-Tab>"]], { expr = true })
 
 -- setup mappings and then which key
 local builtin = require('telescope.builtin')
@@ -85,7 +101,32 @@ vim.keymap.set('n', '<Leader>b', builtin.buffers, { desc = 'Telescope buffers' }
 
 require('which-key').setup {}
 
--- enable lsp configs from nvim-lspconfig
+-- config and enable lsp configs some from nvim-lspconfig.
+vim.lsp.config('lua_ls', {
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim' }
+      }
+    }
+  }
+})
+
+vim.lsp.config('ltex_plus', {
+  settings = {
+    ltex = {
+      language = "es-AR",
+      latex = {
+        environments = {
+          minted = "ignore",
+          mathpar = "ignore"
+        }
+      }
+    }
+  }
+})
+
+vim.lsp.enable('ltex_plus')
 vim.lsp.enable('gopls')
 vim.lsp.enable('pyright')
 vim.lsp.enable('texlab')
@@ -93,6 +134,7 @@ vim.lsp.enable('r_language_server')
 vim.lsp.enable('ocamllsp')
 vim.lsp.enable('hls')
 vim.lsp.enable('elixirls')
+vim.lsp.enable('lua_ls')
 
 -- custom filetypes
 vim.filetype.add({
@@ -105,7 +147,7 @@ vim.filetype.add({
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
   callback = function()
-    vim.cmd.substitute('/\\s\\+$//e')
+    vim.cmd([[%s/\s\+$//e]])
   end
 })
 
@@ -172,14 +214,14 @@ vim.api.nvim_create_autocmd('FileType', {
     'tex',
     'lhaskell'
   },
-  callback = function(args)
+  callback = function(_)
     vim.wo.wrap = true
   end
 })
 
 vim.api.nvim_create_autocmd('VimResized', {
   pattern = '*',
-  callback = function(args)
+  callback = function(_)
     vim.api.nvim_command('wincmd =')
   end
 })

@@ -1,8 +1,25 @@
 #!/bin/sh
 
+sudo pacman -S --needed r
+
+if [ ! -e ~/.Renviron ]; then
+    echo 'File ~/.Renviron does not exist' >&2
+    exit 1
+fi
+
+if [ ! -L ~/.Renviron ]; then
+    echo 'File ~/.Renviron is not a symbolic link' >&2
+    exit 1
+fi
+
+if [ ! "$(readlink ~/.Renviron)" = "$(realpath '../configs/Renviron')" ]; then
+    echo 'File ~/.Renviron points to a different file than ../configs/Renviron' >&2
+    exit 1
+fi
+
 # Create folder for R_LIBS_USER, see Renviron config file.
 mkdir -p ~/R
-
+ 
 # Install packages.
 R --interactive <<EOT
 install.packages("rmarkdown", repo="https://cran.r-project.org/")
