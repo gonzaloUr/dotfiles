@@ -36,17 +36,17 @@ require('lazy').setup {
   { 'whonore/Coqtail', version = '*' },
 
   -- development.
-  -- { dir = '~/Dropbox/nvim-plugins/nvim-vsrocq', name = 'nvim-vsrocq' }
+  -- { dir = '~/Documents/nvim-plugins/nvim-vsrocq', name = 'nvim-vsrocq' }
 }
 
 -- development.
 -- vim.g.loaded_coqtail = 1
 -- vim.g["coqtail#supported"] = 0
--- require('nvim-vsrocq').setup()
+-- require('nvim-vsrocq').setup {}
 -- vim.lsp.enable('vsrocqtop')
 
--- colorscheme.
-vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
+-- colorscheme
+vim.api.nvim_set_hl(0, 'Normal', { bg = "none" })
 
 -- setup options
 vim.opt.wrap = false
@@ -212,7 +212,8 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
     'tex',
-    'lhaskell'
+    'lhaskell',
+    'markdown'
   },
   callback = function(_)
     vim.wo.wrap = true

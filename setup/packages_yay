@@ -3,3 +3,4 @@
 # yay
 yay -S --needed dragon-drop
 yay -S --needed dropbox-cli
+yay -S --needed ttf-juliamono

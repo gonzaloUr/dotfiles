@@ -1,8 +1,41 @@
 #include "pahook.h"
+#include "../parser.h"
+#include "../y.tab.h"
+#include "../lex.yy.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
+int main(int argc, char **argv) {
+    // Check arguments.
+    if (argc < 2) {
+        fprintf(stderr, "usage: %s <string>\n", argv[0]);
+        return 1;
+    }
+
+    // Lex first program argument.
+    YY_BUFFER_STATE buffer = yy_scan_string(argv[1]);
+    int result = yyparse();
+    yy_delete_buffer(buffer);
+
+    if (result) return 1;
+
+    // Iterate over tokens.
+    for (struct token *t = tokens; t != NULL; t = t->next) {
+        switch (t->type) {
+        case TEXT:
+            printf("TEXT: %s\n", t->text);
+            break;
+
+        case STRING:
+            printf("STRING: %s\n", t->text);
+            break;
+
+        case ESCAPE:
+            printf("ESCAPE: text=%s escape=%s\n", t->text ? t->text : "(null)", t->escape ? t->escape : "(null)");
+            break;
+        }
+    }
+
     // Create mainloop.
     pa_mainloop *mainloop = pa_mainloop_new();
     if (!mainloop) {
@@ -93,7 +126,7 @@ void ctx_state_callback(pa_context *ctx, void *userdata) {
         case PA_CONTEXT_AUTHORIZING:
             printf("type");
             printf(FS);
-            printf("states"); 
+            printf("states");
             printf(FS);
             printf("value");
             printf(FS);
@@ -149,7 +182,7 @@ void ctx_state_callback(pa_context *ctx, void *userdata) {
         case PA_CONTEXT_TERMINATED:
             printf("type");
             printf(FS);
-            printf("state"); 
+            printf("state");
             printf(FS);
             printf("value");
             printf(FS);
@@ -311,7 +344,7 @@ void ctx_card_info_callback(pa_context *ctx, const pa_card_info *i, int eol, voi
 }
 
 void print_pa_sink_info(const pa_sink_info *i, const callback_userdata *cb_userdata) {
-    printf("type"); 
+    printf("type");
     printf(FS);
     printf("sinkinfo");
     printf(FS);
@@ -321,33 +354,33 @@ void print_pa_sink_info(const pa_sink_info *i, const callback_userdata *cb_userd
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
         printf(FS);
-        printf("event_facility"); 
+        printf("event_facility");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
         printf(FS);
     }
 
-    printf("name"); 
+    printf("name");
     printf(FS);
     printf("\"%s\"", i->name);
     printf(FS);
-    printf("index"); 
+    printf("index");
     printf(FS);
     printf("%d", i->index);
     printf(FS);
-    printf("desc"); 
+    printf("desc");
     printf(FS);
     printf("\"%s\"", i->description);
     printf(FS);
-    printf("sample_spec_rate"); 
+    printf("sample_spec_rate");
     printf(FS);
     printf("%u", i->sample_spec.rate);
     printf(FS);
-    printf("sample_spec_format"); 
+    printf("sample_spec_format");
     printf(FS);
     printf("\"%s\"", pa_sample_format_str(i->sample_spec.format));
     printf(FS);
-    printf("sample_spec_channels"); 
+    printf("sample_spec_channels");
     printf(FS);
     printf("%u", i->sample_spec.channels);
     printf(FS);
@@ -369,45 +402,45 @@ void print_pa_sink_info(const pa_sink_info *i, const callback_userdata *cb_userd
     printf(FS);
     printf("%d", PA_VOLUME_MUTED);
     printf(FS);
-    printf("mute"); 
+    printf("mute");
     printf(FS);
     printf("%d", i->mute);
     printf(FS);
-    printf("monitor_source_index"); 
+    printf("monitor_source_index");
     printf(FS);
     printf("%u", i->monitor_source);
     printf(FS);
-    printf("monitor_source_name"); 
+    printf("monitor_source_name");
     printf(FS);
     printf("\"%s\"", i->monitor_source_name);
     printf(FS);
-    printf("latency"); 
+    printf("latency");
     printf(FS);
     printf("%llu", (unsigned long long)i->latency);
     printf(FS);
-    printf("driver"); 
+    printf("driver");
     printf(FS);
     printf("\"%s\"", i->driver);
     printf(FS);
     // TODO: flags.
     // TODO: proplist.
-    printf("configured_latency"); 
+    printf("configured_latency");
     printf(FS);
     printf("%llu", (unsigned long long)i->configured_latency);
     printf(FS);
-    printf("base_volume"); 
+    printf("base_volume");
     printf(FS);
     printf("%u", i->base_volume);
     printf(FS);
-    printf("state"); 
+    printf("state");
     printf(FS);
     printf("\"%s\"", pa_sink_state_str(i->state));
     printf(FS);
-    printf("n_volume_steps"); 
+    printf("n_volume_steps");
     printf(FS);
     printf("%u", i->n_volume_steps);
     printf(FS);
-    printf("card"); 
+    printf("card");
     printf(FS);
     printf("%u", i->card);
     // TODO: n_ports.
@@ -436,49 +469,49 @@ void print_pa_sink_info(const pa_sink_info *i, const callback_userdata *cb_userd
 }
 
 void print_pa_source_info(const pa_source_info *i, const callback_userdata *cb_userdata) {
-    printf("type"); 
+    printf("type");
     printf(FS);
     printf("sourceinfo");
     printf(FS);
 
     if (cb_userdata) {
-        printf("event_type"); 
+        printf("event_type");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
         printf(FS);
-        printf("event_facility"); 
+        printf("event_facility");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
         printf(FS);
     }
 
-    printf("name"); 
+    printf("name");
     printf(FS);
     printf("\"%s\"", i->name);
     printf(FS);
-    printf("index"); 
+    printf("index");
     printf(FS);
     printf("%d", i->index);
     printf(FS);
-    printf("desc"); 
+    printf("desc");
     printf(FS);
     printf("\"%s\"", i->description);
     printf(FS);
-    printf("sample_spec_rate"); 
+    printf("sample_spec_rate");
     printf(FS);
     printf("%u", i->sample_spec.rate);
     printf(FS);
-    printf("sample_spec_format"); 
+    printf("sample_spec_format");
     printf(FS);
     printf("\"%s\"", pa_sample_format_str(i->sample_spec.format));
     printf(FS);
-    printf("sample_spec_channels"); 
+    printf("sample_spec_channels");
     printf(FS);
     printf("%u", i->sample_spec.channels);
     printf(FS);
     // TODO: channel_map.
     // TODO: owner_module.
-    printf("volume"); 
+    printf("volume");
     printf(FS);
     printf("%d", pa_cvolume_max(&i->volume));
     printf(FS);
@@ -494,37 +527,37 @@ void print_pa_source_info(const pa_source_info *i, const callback_userdata *cb_u
     printf(FS);
     printf("%d", PA_VOLUME_MUTED);
     printf(FS);
-    printf("mute"); 
+    printf("mute");
     printf(FS);
     printf("%d", i->mute);
     printf(FS);
-    printf("monitor_of_sink"); 
+    printf("monitor_of_sink");
     printf(FS);
     printf("%d", i->monitor_of_sink);
     printf(FS);
-    printf("monitor_of_sink_name"); 
+    printf("monitor_of_sink_name");
     printf(FS);
     printf("\"%s\"", i->monitor_of_sink_name);
     printf(FS);
-    printf("latency"); 
+    printf("latency");
     printf(FS);
     printf("%llu", (unsigned long long)i->latency);
     printf(FS);
-    printf("driver"); 
+    printf("driver");
     printf(FS);
     printf("\"%s\"", i->driver);
     printf(FS);
     // TODO: flags.
     // TODO: proplist.
-    printf("configured_latency"); 
+    printf("configured_latency");
     printf(FS);
     printf("%llu", (unsigned long long)i->configured_latency);
     printf(FS);
-    printf("base_volume"); 
+    printf("base_volume");
     printf(FS);
     printf("%u", i->base_volume);
     printf(FS);
-    printf("state"); 
+    printf("state");
     printf(FS);
     printf("\"%s\"", pa_sink_state_str(i->state));
     // TODO: n_ports.
@@ -553,7 +586,7 @@ void print_pa_source_info(const pa_source_info *i, const callback_userdata *cb_u
 }
 
 void print_pa_sink_input_info(const pa_sink_input_info *i, const callback_userdata *cb_userdata) {
-    printf("type"); 
+    printf("type");
     printf(FS);
     printf("sinkinputinfo");
     printf(FS);
@@ -563,79 +596,79 @@ void print_pa_sink_input_info(const pa_sink_input_info *i, const callback_userda
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
         printf(FS);
-        printf("event_facility"); 
+        printf("event_facility");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
         printf(FS);
     }
 
-    printf("name"); 
+    printf("name");
     printf(FS);
     printf("\"%s\"", i->name);
     printf(FS);
-    printf("index"); 
+    printf("index");
     printf(FS);
     printf("%d", i->index);
     printf(FS);
-    printf("owner_module"); 
+    printf("owner_module");
     printf(FS);
     printf("%d", i->owner_module);
     printf(FS);
-    printf("client"); 
+    printf("client");
     printf(FS);
     printf("%d", i->client);
     printf(FS);
-    printf("sink"); 
+    printf("sink");
     printf(FS);
     printf("%d", i->sink);
     printf(FS);
-    printf("sample_spec_rate"); 
+    printf("sample_spec_rate");
     printf(FS);
     printf("%u", i->sample_spec.rate);
     printf(FS);
-    printf("sample_spec_format"); 
+    printf("sample_spec_format");
     printf(FS);
     printf("%s", pa_sample_format_str(i->sample_spec.format));
     printf(FS);
-    printf("sample_spec_channels"); 
+    printf("sample_spec_channels");
     printf(FS);
     printf("%u ", i->sample_spec.channels);
     printf(FS);
     // TODO: channel map.
-    printf("volume"); 
+    printf("volume");
     printf(FS);
     printf("%d", pa_cvolume_max(&i->volume));
     printf(FS);
-    printf("buffer_usec"); 
+    printf("buffer_usec");
     printf(FS);
     printf("%llu", (unsigned long long)i->buffer_usec);
     printf(FS);
-    printf("sink_usec"); 
+    printf("sink_usec");
     printf(FS);
     printf("%llu", (unsigned long long)i->sink_usec);
     printf(FS);
-    printf("resample_method"); 
+    printf("resample_method");
     printf(FS);
     printf("\"%s\"", i->resample_method);
     printf(FS);
-    printf("driver"); 
+    printf("driver");
     printf(FS);
     printf("\"%s\"", i->driver);
     printf(FS);
-    printf("mute"); 
+    printf("mute");
     printf(FS);
     printf("%d", i->mute);
     printf(FS);
     // TODO: proplist
-    printf("corked"); 
+    printf("corked");
     printf(FS);
     printf("%d", i->corked);
     printf(FS);
-    printf("has_volume"); 
+    printf("has_volume");
     printf(FS);
     printf("%d", i->has_volume);
     printf(FS);
-    printf("volume_writable"); 
+    printf("volume_writable");
     printf(FS);
     printf("%d", i->volume_writable);
     // TODO: format.
@@ -645,75 +678,75 @@ void print_pa_sink_input_info(const pa_sink_input_info *i, const callback_userda
 }
 
 void print_pa_source_output_info(const pa_source_output_info *i, const callback_userdata *cb_userdata) {
-    printf("type"); 
+    printf("type");
     printf(FS);
     printf("sourceoutputinfo");
     printf(FS);
 
     if (cb_userdata) {
-        printf("event_type"); 
+        printf("event_type");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
         printf(FS);
-        printf("event_facility"); 
+        printf("event_facility");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
         printf(FS);
     }
 
-    printf("name"); 
+    printf("name");
     printf(FS);
     printf("\"%s\"", i->name);
     printf(FS);
-    printf("index"); 
+    printf("index");
     printf(FS);
     printf("%d", i->index);
     printf(FS);
-    printf("owner_module"); 
+    printf("owner_module");
     printf(FS);
     printf("%d", i->owner_module);
     printf(FS);
-    printf("client"); 
+    printf("client");
     printf(FS);
     printf("%d", i->client);
     printf(FS);
-    printf("source"); 
+    printf("source");
     printf(FS);
     printf("%d", i->client);
     printf(FS);
     // TODO: sample_spec.
     // TODO: channel_map.
-    printf("buffer_usec"); 
+    printf("buffer_usec");
     printf(FS);
     printf("%llu", (unsigned long long)i->buffer_usec);
     printf(FS);
-    printf("source_usec"); 
+    printf("source_usec");
     printf(FS);
     printf("%llu", (unsigned long long)i->source_usec);
     printf(FS);
-    printf("resample_method"); 
+    printf("resample_method");
     printf(FS);
     printf("\"%s\"", i->resample_method);
     printf(FS);
-    printf("driver"); 
+    printf("driver");
     printf(FS);
     printf("\"%s\"", i->driver);
     printf(FS);
     // TODO: proplist.
-    printf("corked"); 
+    printf("corked");
     printf(FS);
     printf("%d", i->corked);
     printf(FS);
     // TODO: pa_cvolume.
-    printf("mute"); 
+    printf("mute");
     printf(FS);
     printf("%d", i->mute);
     printf(FS);
-    printf("has_volume"); 
+    printf("has_volume");
     printf(FS);
     printf("%d", i->has_volume);
     printf(FS);
-    printf("volume_writable"); 
+    printf("volume_writable");
     printf(FS);
     printf("%d", i->volume_writable);
     // TODO: format.
@@ -723,7 +756,7 @@ void print_pa_source_output_info(const pa_source_output_info *i, const callback_
 }
 
 void print_pa_module_info(const pa_module_info *i, const callback_userdata *cb_userdata) {
-    printf("type"); 
+    printf("type");
     printf(FS);
     printf("moduleinfo");
     printf(FS);
@@ -733,25 +766,25 @@ void print_pa_module_info(const pa_module_info *i, const callback_userdata *cb_u
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
         printf(FS);
-        printf("event_facility"); 
+        printf("event_facility");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
         printf(FS);
     }
 
-    printf("name"); 
+    printf("name");
     printf(FS);
     printf("\"%s\"", i->name);
     printf(FS);
-    printf("index"); 
+    printf("index");
     printf(FS);
     printf("%d", i->index);
     printf(FS);
-    printf("argument"); 
+    printf("argument");
     printf(FS);
     printf("\"%s\"", i->argument);
     printf(FS);
-    printf("n_used"); 
+    printf("n_used");
     printf(FS);
     printf("%d", i->n_used);
     // TODO: proplist.
@@ -761,7 +794,7 @@ void print_pa_module_info(const pa_module_info *i, const callback_userdata *cb_u
 }
 
 void print_pa_client_info(const pa_client_info *i, const callback_userdata *cb_userdata) {
-    printf("type"); 
+    printf("type");
     printf(FS);
     printf("clientinfo");
     printf(FS);
@@ -771,25 +804,25 @@ void print_pa_client_info(const pa_client_info *i, const callback_userdata *cb_u
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
         printf(FS);
-        printf("event_facility"); 
+        printf("event_facility");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
         printf(FS);
     }
 
-    printf("name"); 
+    printf("name");
     printf(FS);
     printf("\"%s\"", i->name);
     printf(FS);
-    printf("index"); 
+    printf("index");
     printf(FS);
     printf("%d", i->index);
     printf(FS);
-    printf("owner_module"); 
+    printf("owner_module");
     printf(FS);
     printf("%d", i->owner_module);
     printf(FS);
-    printf("driver"); 
+    printf("driver");
     printf(FS);
     printf("\"%s\"", i->driver);
     // TODO: proplist.
@@ -799,7 +832,7 @@ void print_pa_client_info(const pa_client_info *i, const callback_userdata *cb_u
 }
 
 void print_pa_sample_info(const pa_sample_info *i, const callback_userdata *cb_userdata) {
-    printf("type"); 
+    printf("type");
     printf(FS);
     printf("sampleinfo");
     printf(FS);
@@ -809,50 +842,50 @@ void print_pa_sample_info(const pa_sample_info *i, const callback_userdata *cb_u
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
         printf(FS);
-        printf("event_facility"); 
+        printf("event_facility");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
         printf(FS);
     }
 
-    printf("name"); 
+    printf("name");
     printf(FS);
     printf("\"%s\"", i->name);
     printf(FS);
-    printf("index"); 
+    printf("index");
     printf(FS);
     printf("%d", i->index);
     printf(FS);
-    printf("volume"); 
+    printf("volume");
     printf(FS);
     printf("%d", pa_cvolume_max(&i->volume));
     printf(FS);
-    printf("sample_spec_rate"); 
+    printf("sample_spec_rate");
     printf(FS);
     printf("%u", i->sample_spec.rate);
     printf(FS);
-    printf("sample_spec_format"); 
+    printf("sample_spec_format");
     printf(FS);
     printf("\"%s\"", pa_sample_format_str(i->sample_spec.format));
     printf(FS);
-    printf("sample_spec_channels"); 
+    printf("sample_spec_channels");
     printf(FS);
     printf("%u", i->sample_spec.channels);
     printf(FS);
     // TODO: channel_map.
-    printf("duration"); 
+    printf("duration");
     printf(FS);
     printf("%llu", (unsigned long long)i->duration);
     printf(FS);
-    printf("bytes"); 
+    printf("bytes");
     printf(FS);
     printf("%d", i->bytes);
     printf(FS);
-    printf("lazy"); 
+    printf("lazy");
     printf(FS);
     printf("%d", i->lazy);
     printf(FS);
-    printf("filename"); 
+    printf("filename");
     printf(FS);
     printf("\"%s\"", i->filename);
     // TODO: proplist.
@@ -862,7 +895,7 @@ void print_pa_sample_info(const pa_sample_info *i, const callback_userdata *cb_u
 }
 
 void print_pa_server_info(const pa_server_info *i, const callback_userdata *cb_userdata) {
-    printf("type"); 
+    printf("type");
     printf(FS);
     printf("serverinfo");
     printf(FS);
@@ -872,49 +905,49 @@ void print_pa_server_info(const pa_server_info *i, const callback_userdata *cb_u
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
         printf(FS);
-        printf("event_facility"); 
+        printf("event_facility");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
         printf(FS);
     }
 
-    printf("user_name"); 
+    printf("user_name");
     printf(FS);
     printf("\"%s\"", i->user_name);
     printf(FS);
-    printf("host_name"); 
+    printf("host_name");
     printf(FS);
     printf("\"%s\"", i->host_name);
     printf(FS);
-    printf("server_version"); 
+    printf("server_version");
     printf(FS);
     printf("\"%s\"", i->server_version);
     printf(FS);
-    printf("server_name"); 
+    printf("server_name");
     printf(FS);
     printf("\"%s\"", i->server_name);
     printf(FS);
-    printf("sample_spec_rate"); 
+    printf("sample_spec_rate");
     printf(FS);
     printf("%u", i->sample_spec.rate);
     printf(FS);
-    printf("sample_spec_format"); 
+    printf("sample_spec_format");
     printf(FS);
     printf("\"%s\"", pa_sample_format_str(i->sample_spec.format));
     printf(FS);
-    printf("sample_spec_channels"); 
+    printf("sample_spec_channels");
     printf(FS);
     printf("%u", i->sample_spec.channels);
     printf(FS);
-    printf("default_sink_name"); 
+    printf("default_sink_name");
     printf(FS);
     printf("\"%s\"", i->default_sink_name);
     printf(FS);
-    printf("default_source_name"); 
+    printf("default_source_name");
     printf(FS);
     printf("\"%s\"", i->default_source_name);
     printf(FS);
-    printf("cookie"); 
+    printf("cookie");
     printf(FS);
     printf("%d", i->cookie);
     // TODO: channel_map.
@@ -934,7 +967,7 @@ void print_pa_card_info(const pa_card_info *i, const callback_userdata *cb_userd
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_type_str(cb_userdata->t));
         printf(FS);
-        printf("event_facility"); 
+        printf("event_facility");
         printf(FS);
         printf("\"%s\"", pa_subscribe_event_type_t_event_facility_str(cb_userdata->t));
         printf(FS);
@@ -944,26 +977,26 @@ void print_pa_card_info(const pa_card_info *i, const callback_userdata *cb_userd
     printf(FS);
     printf("\"%s\"", i->name);
     printf(FS);
-    printf("index"); 
+    printf("index");
     printf(FS);
     printf("%d", i->index);
     printf(FS);
-    printf("owner_module"); 
+    printf("owner_module");
     printf(FS);
     printf("%d", i->owner_module);
     printf(FS);
-    printf("driver"); 
+    printf("driver");
     printf(FS);
     printf("\"%s\"", i->driver);
     printf(FS);
-    printf("n_profiles"); 
+    printf("n_profiles");
     printf(FS);
     printf("%d", i->n_profiles);
     printf(FS);
     // TODO: profiles.
     // TODO: active_profile.
     // TODO: proplist.
-    printf("n_ports"); 
+    printf("n_ports");
     printf(FS);
     printf("%d", i->n_ports);
     // TODO: ports.

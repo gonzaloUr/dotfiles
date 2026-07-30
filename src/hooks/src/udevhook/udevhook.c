@@ -1,4 +1,8 @@
 #include "udevhook.h"
+#include "../parser.h"
+#include "../y.tab.h"
+#include "../lex.yy.h"
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +39,22 @@ void fprint_field(FILE *file, const char *str) {
     free(str_escaped);
 }
 
-int main() {
+int main(int argc, char **argv) {
+    // Check arguments.
+    if (argc < 2) {
+        fprintf(stderr, "usage: %s <string>\n", argv[0]);
+        return 1;
+    }
+
+    // Lex first program argument.
+    YY_BUFFER_STATE buffer = yy_scan_string(argv[1]);
+    int result = yyparse();
+    yy_delete_buffer(buffer);
+
+    // Exit on lex error.
+    if (result) return 1;
+
+    // Variables.
     struct udev *udev;
     struct udev_monitor *mon;
     int fd;

@@ -7,10 +7,10 @@
 # opam instala en el home directory distinatas versiones del compilador de ocaml, cada una de ellas se le llama
 # switch, y atravez de opam instala dependencias para cada switch.
 #
-# Los compandos siguientes instalan ocaml y dependencias para el switch por defecto llamado default en la carpeta 
+# Los compandos siguientes instalan ocaml y dependencias para el switch por defecto llamado default en la carpeta
 # de usuario en ~/.opam/default.
 #
-# El compilador de ocaml busca dependencias en ciertas subcarpetas del switch actual, opam maneja e installa 
+# El compilador de ocaml busca dependencias en ciertas subcarpetas del switch actual, opam maneja e installa
 # paquetes en estos directorios de forma tal que el compilador conoce de su existencia.
 sudo pacman --needed -S opam
 
