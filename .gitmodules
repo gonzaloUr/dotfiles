@@ -7,6 +7,3 @@
 [submodule "src/slock"]
 	path = src/slock
 	url = https://git.suckless.org/slock
-[submodule "src/tabbed"]
-	path = src/tabbed
-	url = https://git.suckless.org/tabbed

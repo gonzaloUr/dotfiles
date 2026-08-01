@@ -19,23 +19,6 @@ int main(int argc, char **argv) {
 
     if (result) return 1;
 
-    // Iterate over tokens.
-    for (struct token *t = tokens; t != NULL; t = t->next) {
-        switch (t->type) {
-        case TEXT:
-            printf("TEXT: %s\n", t->text);
-            break;
-
-        case STRING:
-            printf("STRING: %s\n", t->text);
-            break;
-
-        case ESCAPE:
-            printf("ESCAPE: text=%s escape=%s\n", t->text ? t->text : "(null)", t->escape ? t->escape : "(null)");
-            break;
-        }
-    }
-
     // Create mainloop.
     pa_mainloop *mainloop = pa_mainloop_new();
     if (!mainloop) {

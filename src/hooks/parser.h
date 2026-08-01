@@ -4,7 +4,7 @@
 struct token {
     int type;
     char *text;
-    char *escape;
+    char escape;
     struct token *next;
 };
 

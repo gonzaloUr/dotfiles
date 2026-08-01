@@ -27,26 +27,18 @@ require('lazy').setup {
   { 'folke/which-key.nvim', version = '*' },
   { 'nvim-tree/nvim-tree.lua', version = '*' },
   { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
-  { 'sindrets/diffview.nvim', version = '*' },
-  { 'lewis6991/gitsigns.nvim', version = '*' },
   { 'Zeta611/tex2uni.nvim', version = '*', opts = { ft = { '*.v' } } },
   { 'nvim-mini/mini.completion', version = '*' },
 
   -- third party vimscript plugins
-  { 'whonore/Coqtail', version = '*' },
+  -- { 'whonore/Coqtail', version = '*' },
 
   -- development.
-  -- { dir = '~/Documents/nvim-plugins/nvim-vsrocq', name = 'nvim-vsrocq' }
+  { dir = '~/Documents/nvim-plugins/nvim-vsrocq/', name = 'nvim-vsrocq' }
 }
 
--- development.
--- vim.g.loaded_coqtail = 1
--- vim.g["coqtail#supported"] = 0
--- require('nvim-vsrocq').setup {}
--- vim.lsp.enable('vsrocqtop')
-
--- colorscheme
-vim.api.nvim_set_hl(0, 'Normal', { bg = "none" })
+-- colorscheme.
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 
 -- setup options
 vim.opt.wrap = false
@@ -58,6 +50,10 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
+-- development.
+vim.lsp.enable('vsrocqtop')
+require('nvim-vsrocq').setup {}
+
 -- setup nvim-tree
 require('nvim-tree').setup {
   sort = {
@@ -67,11 +63,6 @@ require('nvim-tree').setup {
 
 -- setup telescope
 require('telescope').setup {}
-
--- setup diffview.
-require('diffview').setup {
-  use_icons = false
-}
 
 -- setup mini.completion
 require('mini.completion').setup {}

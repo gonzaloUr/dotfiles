@@ -13,13 +13,12 @@ struct token *last = NULL;
 %union {
     char *text;
     struct {
+        char escape;
         char *text;
-        char *escape;
     } data;
 }
 
 %token <text> TEXT
-%token <text> STRING
 %token <data> ESCAPE
 
 %%
@@ -33,23 +32,6 @@ token:
         struct token *t = malloc(sizeof(*t));
         t->type = TEXT;
         t->text = $1;
-        t->escape = NULL;
-        t->next = NULL;
-
-        if (last)
-            last->next = t;
-        else
-            tokens = t;
-
-        last = t;
-    }
-
-  | STRING
-    {
-        struct token *t = malloc(sizeof(*t));
-        t->type = STRING;
-        t->text = $1;
-        t->escape = NULL;
         t->next = NULL;
 
         if (last)

@@ -2,45 +2,48 @@ include config.mk
 
 .PHONY: all clean install uninstall
 
-all: src/pahook/pahook src/udevhook/udevhook
+all: pahook/pahook udevhook/udevhook
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp src/pahook/pahook $(DESTDIR)$(PREFIX)/bin
-	cp src/pahook/udevhook $(DESTDIR)$(PREFIX)/bin
+	cp pahook/pahook $(DESTDIR)$(PREFIX)/bin
+	cp pahook/udevhook $(DESTDIR)$(PREFIX)/bin
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/pahook
 	rm -f $(DESTDIR)$(PREFIX)/bin/udevhook
 
 clean:
-	rm -f src/pahook/pahook.o src/pahook/pahook
-	rm -f src/udevhook/udevhook.o src/udevhook/udevhook
-	rm -f src/y.tab.c src/y.tab.h src/lex.yy.c src/y.tab.o src/lex.yy.o
+	rm -f pahook/pahook.o pahook/pahook
+	rm -f udevhook/udevhook.o udevhook/udevhook
+	rm -f y.tab.c y.tab.h lex.yy.c lex.yy.h y.tab.o lex.yy.o
 
-src/pahook/pahook: src/pahook/pahook.o src/y.tab.o src/lex.yy.o
-	$(CC) $(LDFLAGS_PAHOOK) src/pahook/pahook.o src/y.tab.o src/lex.yy.o -o src/pahook/pahook
+pahook/pahook: pahook/pahook.o y.tab.o lex.yy.o
+	$(CC) $(LDFLAGS_PAHOOK) pahook/pahook.o y.tab.o lex.yy.o -o pahook/pahook
 
-src/pahook/pahook.o: src/pahook/pahook.c src/y.tab.o src/lex.yy.o
-	$(CC) $(CFLAGS_PAHOOK) -c src/pahook/pahook.c -o src/pahook/pahook.o
+pahook/pahook.o: pahook/pahook.c pahook/config.h y.tab.o lex.yy.o
+	$(CC) $(CFLAGS_PAHOOK) -c pahook/pahook.c -o pahook/pahook.o
 
-src/udevhook/udevhook: src/udevhook/udevhook.o src/y.tab.o src/lex.yy.o
-	$(CC) $(LDFLAGS_UDEVHOOK) src/udevhook/udevhook.o src/y.tab.o src/lex.yy.o -o src/udevhook/udevhook
+pahook/config.h: pahook/config.def.h
+	cp pahook/config.def.h pahook/config.h
 
-src/udevhook/udevhook.o: src/udevhook/udevhook.c src/udevhook/config.h src/y.tab.o src/lex.yy.o
-	$(CC) $(CFLAGS_UDEVHOOK) -c src/udevhook/udevhook.c -o src/udevhook/udevhook.o
+udevhook/udevhook: udevhook/udevhook.o y.tab.o lex.yy.o
+	$(CC) $(LDFLAGS_UDEVHOOK) udevhook/udevhook.o y.tab.o lex.yy.o -o udevhook/udevhook
 
-src/udevhook/config.h: src/udevhook/config.def.h
-	cp src/udevhook/config.def.h src/udevhook/config.h
+udevhook/udevhook.o: udevhook/udevhook.c udevhook/config.h y.tab.o lex.yy.o
+	$(CC) $(CFLAGS_UDEVHOOK) -c udevhook/udevhook.c -o udevhook/udevhook.o
 
-src/y.tab.o: src/y.tab.c src/y.tab.h
-	$(CC) $(CFLAGS_PARSER) -c src/y.tab.c -o src/y.tab.o
+udevhook/config.h: udevhook/config.def.h
+	cp udevhook/config.def.h udevhook/config.h
 
-src/lex.yy.o: src/lex.yy.c src/y.tab.h
-	$(CC) $(CFLAGS_PARSER) -c src/lex.yy.c -o src/lex.yy.o
+y.tab.o: y.tab.c y.tab.h
+	$(CC) $(CFLAGS_PARSER) -c y.tab.c -o y.tab.o
 
-src/lex.yy.c src/lex.yy.h: src/lexer.l src/y.tab.h
-	$(LEX) --header-file=src/lex.yy.h -o src/lex.yy.c src/lexer.l
+lex.yy.o: lex.yy.c y.tab.h
+	$(CC) $(CFLAGS_PARSER) -c lex.yy.c -o lex.yy.o
 
-src/y.tab.c src/y.tab.h: src/parser.y src/parser.h
-	$(YACC) -o src/y.tab.c src/parser.y
+lex.yy.c lex.yy.h: lexer.l y.tab.h
+	$(LEX) --header-file=lex.yy.h -o lex.yy.c lexer.l
+
+y.tab.c y.tab.h: parser.y parser.h
+	$(YACC) -o y.tab.c parser.y

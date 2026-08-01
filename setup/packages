@@ -15,8 +15,8 @@ pacman -S --needed zsh
 pacman -S --needed openssh
 
 # zsh
-pacman -S --needed zsh-autosuggestions
-pacman -S --needed zsh-syntax-highlighting
+# pacman -S --needed zsh-autosuggestions
+# pacman -S --needed zsh-syntax-highlighting
 
 # dbus
 pacman -S --needed dbus
@@ -93,6 +93,7 @@ pacman -S --needed alacritty
 pacman -S --needed pass
 pacman -S --needed librewolf
 pacman -S --needed rclone
+pacman -S --needed lazygit
 
 # nvim
 pacman -S --needed neovim
