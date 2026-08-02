@@ -24,7 +24,6 @@ zstyle ':completion:*' menu select
 # Options.
 setopt promptsubst
 setopt globdots
-setopt SHARE_HISTORY
 
 # History setup.
 [ -e ~/.cache/zsh ] || mkdir -p ~/.cache/zsh
