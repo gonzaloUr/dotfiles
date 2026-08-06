@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# create folder
+mkdir -p ~/.config/service/
+
+# setup dbus service
+cp -a /etc/runit/user/sv/dbus ~/.config/service/dbus

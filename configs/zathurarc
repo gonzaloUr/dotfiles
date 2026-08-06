@@ -1,3 +1,6 @@
 # install at ~/.config/zathura/zathurarc
 
 set selection-clipboard "clipboard"
+
+set recolor-darkcolor "#d8dee9"
+set recolor-lightcolor "#2e3440"

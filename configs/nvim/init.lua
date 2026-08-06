@@ -42,7 +42,7 @@ vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 
 -- setup options
 vim.opt.wrap = false
-vim.opt.number = true
+vim.opt.number = false
 vim.opt.relativenumber = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
@@ -50,9 +50,15 @@ vim.opt.splitbelow = true
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 
+vim.diagnostic.config({ signs = false })
+
 -- development.
 vim.lsp.enable('vsrocqtop')
-require('nvim-vsrocq').setup {}
+require('nvim-vsrocq').setup {
+  misc = {
+    cursor_follow = false
+  }
+}
 
 -- setup nvim-tree
 require('nvim-tree').setup {
@@ -93,16 +99,6 @@ vim.keymap.set('n', '<Leader>b', builtin.buffers, { desc = 'Telescope buffers' }
 require('which-key').setup {}
 
 -- config and enable lsp configs some from nvim-lspconfig.
-vim.lsp.config('lua_ls', {
-  settings = {
-    Lua = {
-      diagnostics = {
-        globals = { 'vim' }
-      }
-    }
-  }
-})
-
 vim.lsp.config('ltex_plus', {
   settings = {
     ltex = {
@@ -112,6 +108,16 @@ vim.lsp.config('ltex_plus', {
           minted = "ignore",
           mathpar = "ignore"
         }
+      }
+    }
+  }
+})
+
+vim.lsp.config('lua_ls', {
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim' }
       }
     }
   }

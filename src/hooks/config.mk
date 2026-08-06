@@ -1,6 +1,13 @@
+# complier.
 CC = cc
 
-DESTDIR = /usr/local
+# instalation prefix.
+PREFIX = /usr/local
 
-CFLAGS = -std=c23 -pedantic -Wall -Os
-LDFLAGS = -lpulse -ludev
+# includes and libs.
+INCS =
+LIBS = -lpulse -ludev
+
+# flags
+CFLAGS = -std=c23 -pedantic -Wall -Os $(INCS)
+LDFLAGS = $(LIBS)

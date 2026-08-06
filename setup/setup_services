@@ -20,3 +20,6 @@ ln -s /etc/runit/sv/dbus /run/runit/service
 
 # setup bluez service
 ln -s /etc/runit/sv/bluetoothd /run/runit/service
+
+# setup userspawn-runit
+ln -s /etc/runit/sv/userspawn /run/runit/service

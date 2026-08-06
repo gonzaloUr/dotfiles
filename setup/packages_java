@@ -1,7 +1,8 @@
 #!/bin/sh
 
-# jdk.
+# development.
 pacman -S --needed jdk-openjdk
+pacman -S --needed maven
 
 # programs
 pacman -S --needed languagetool

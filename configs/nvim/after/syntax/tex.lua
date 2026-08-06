@@ -23,3 +23,11 @@ vim.api.nvim_command('syntax region texMintInlineZone matchgroup=texStatement st
 -- define how the text inside the minted regions should look.
 vim.api.nvim_command('highlight default link texMintedZone Normal')
 vim.api.nvim_command('highlight default link texMintInlineZone Normal')
+
+-- create syntax regions for latex listings inline and blocks.
+vim.api.nvim_command([[syntax region texListingsZone matchgroup=texStatement start="\\begin{lstlisting}" end="\\end{lstlisting}" keepend contains=NONE containedin=ALL]])
+vim.api.nvim_command([[syntax region texListingsInlineZone matchgroup=texStatement start="\\lstinline|" end="|" keepend contains=NONE containedin=ALL]])
+
+-- define how the text inside the listings regions should look.
+vim.api.nvim_command([[highlight default link texListingsZone Normal]])
+vim.api.nvim_command([[highlight default link texListingsInlineZone Normal]])

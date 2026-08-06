@@ -13,10 +13,11 @@ pacman -S --needed tlp
 pacman -S --needed tlp-runit
 pacman -S --needed zsh
 pacman -S --needed openssh
+pacman -S --needed userspawn-runit
 
 # zsh
-# pacman -S --needed zsh-autosuggestions
-# pacman -S --needed zsh-syntax-highlighting
+pacman -S --needed zsh-autosuggestions
+pacman -S --needed zsh-syntax-highlighting
 
 # dbus
 pacman -S --needed dbus
@@ -94,13 +95,11 @@ pacman -S --needed pass
 pacman -S --needed librewolf
 pacman -S --needed rclone
 pacman -S --needed lazygit
+pacman -S --needed android-file-transfer
 
 # nvim
 pacman -S --needed neovim
 pacman -S --needed python-pynvim
-
-# mount android, hay que asegurarse de estar en el grupo que crea este paquete, adbusers.
-pacman -S --needed android-file-transfer
 
 # fonts
 pacman -S --needed ttf-hack

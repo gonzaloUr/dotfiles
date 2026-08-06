@@ -1,14 +1,28 @@
-#include "pulseaudio.h"
-#include <pulse/pulseaudio.h>
+#include "pahook.h"
+#include <stdlib.h>
 
-pa_component* pa_component_new(const char *name) {
-    // Create component.
-    pa_component *ret = malloc(sizeof(pa_component));
+void* pa_init_component(int pipefd[2]) {
+    return NULL;
+}
+
+void pa_start_component(void *userdata) {
+}
+
+void pa_stop_component(void *userdata) {
+}
+
+void pa_free_component(void *userdata) {
+}
+
+pa_hook* pa_hook_new() {
+    // Create pa_hook.
+    pa_hook *ret = malloc(sizeof(pa_hook));
 
     // Create mainloop.
     ret->mainloop = pa_threaded_mainloop_new();
     if (!ret->mainloop) {
         free(ret);
+
         return NULL;
     }
 
@@ -16,25 +30,18 @@ pa_component* pa_component_new(const char *name) {
     ret->api = pa_threaded_mainloop_get_api(ret->mainloop);
 
     // Create context.
-    ret->ctx = pa_context_new(ret->api, name);
+    ret->ctx = pa_context_new(ret->api, "pahook");
     if (!ret->ctx) {
         pa_threaded_mainloop_free(ret->mainloop);
         free(ret);
+
         return NULL;
     }
 
     // Setup context callbacks.
     pa_context_set_state_callback(ret->ctx, ctx_state_callback, ret);
-    pa_context_set_subscribe_callback(ret->ctx, ctx_subscribe_callback, ret);
     pa_context_set_event_callback(ret->ctx, ctx_event_callback, ret);
-
-    // Start mainloop thread.
-    if (pa_threaded_mainloop_start(ret->mainloop) < 0) {
-        pa_context_unref(ret->ctx);
-        pa_threaded_mainloop_free(ret->mainloop);
-        free(ret);
-        return NULL;
-    }
+    pa_context_set_subscribe_callback(ret->ctx, ctx_subscribe_callback, ret);
 
     // Connect context.
     pa_threaded_mainloop_lock(ret->mainloop);
@@ -43,59 +50,60 @@ pa_component* pa_component_new(const char *name) {
         pa_context_unref(ret->ctx);
         pa_threaded_mainloop_free(ret->mainloop);
         free(ret);
+
         return NULL;
     }
 
     pa_threaded_mainloop_unlock(ret->mainloop);
 
+    // Return.
     return ret;
 }
 
-void pa_component_free(pa_component *component) {
-    pa_threaded_mainloop_stop(component->mainloop);
-    pa_context_disconnect(component->ctx);
-    pa_context_unref(component->ctx);
-    pa_threaded_mainloop_free(component->mainloop);
-    free(component);
+void pa_hook_free(pa_hook *h) {
+	pa_threaded_mainloop_stop(h->mainloop);
+	pa_context_disconnect(h->ctx);
+	pa_context_unref(h->ctx);
+	pa_threaded_mainloop_free(h->mainloop);
 }
 
+// Callback related to the mainloop of this pulseaudio client.
 void ctx_state_callback(pa_context *ctx, void *userdata) {
-    pa_component *comp = userdata;
-    pa_threaded_mainloop *mainloop = comp->mainloop;
     pa_context_state_t state = pa_context_get_state(ctx);
 
-    // Switch over the state of a connection context.
     switch (state) {
-        // The context hasn't been connected yet.
         case PA_CONTEXT_UNCONNECTED:
             break;
 
-        // A connection is being established.
         case PA_CONTEXT_CONNECTING:
             break;
 
-        // The client is authorizing itself to the daemon.
         case PA_CONTEXT_AUTHORIZING:
             break;
 
-        // The client is passing its application name to the daemon.
         case PA_CONTEXT_SETTING_NAME:
             break;
 
-        // The connection is established, the context is ready to execute operations.
         case PA_CONTEXT_READY:
             break;
 
-        // The connection failed or was disconnected.
         case PA_CONTEXT_FAILED:
             break;
 
-        // The connection was terminated cleanly.
         case PA_CONTEXT_TERMINATED:
             break;
     }
 }
 
+// Init function that prints the current server info.
+void init_ctx_server_info_callback(pa_context *ctx, const pa_server_info *i, void *userdata) {
+}
+
+// context callback for events.
+void ctx_event_callback(pa_context *ctx, const char *name, pa_proplist *pl, void *userdata) {
+}
+
+// context callback for subscriptions, changes in the server pretty much, then dispatchs to different functions.
 void ctx_subscribe_callback(pa_context *ctx, pa_subscription_event_type_t t, uint32_t idx, void *userdata) {
     switch (t & PA_SUBSCRIPTION_EVENT_FACILITY_MASK) {
         case PA_SUBSCRIPTION_EVENT_SINK:

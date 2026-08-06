@@ -1,28 +1,28 @@
 include config.mk
 
-.PHONY: all install clean
+.PHONY: all clean install uninstall
 
-all: stbar
+all: hooks
 
 install: all
-	mkdir -p $(DESTDIR)/bin
-	cp stbar $(DESTDIR)/bin
+	mkdir -p $(PREFIX)/bin
+	cp hooks $(PREFIX)/bin
 
 uninstall:
-	rm -rf $(DESTDIR)/bin/stbar
+	rm -f $(PREFIX)/bin/hooks
 
 clean:
-	rm -f *.o
-	rm -f stbar
+	rm -f hooks.o hooks
+	rm -f components/*.o
 
-stbar: stbar.o components/pulseaudio.o
-	$(CC) $(LDFLAGS) stbar.o components/pulseaudio.o -o stbar
+hooks: hooks.o components/pahook.o
+	$(CC) $(LDFLAGS) hooks.o components/*.o -o hooks
 
-stbar.o: stbar.c stbar.h config.h
-	$(CC) $(CFLAGS) -c stbar.c -o stbar.o
+hooks.o: hooks.c hooks.h config.h
+	$(CC) $(CFLAGS) -c hooks.c -o hooks.o
 
 config.h: config.def.h
 	cp config.def.h config.h
 
-components/pulseaudio.o: components/pulseaudio.c components/pulseaudio.h
-	$(CC) $(CFLAGS) -c components/pulseaudio.c -o components/pulseaudio.o
+components/pahook.o: components/pahook.c components/pahook.h
+	$(CC) $(CFLAGS) -c components/pahook.c -o components/pahook.o
